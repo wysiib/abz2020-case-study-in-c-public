@@ -15,12 +15,23 @@ typedef enum {
 
 typedef enum {NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition} keyState;
 
+typedef enum {
+    speed_min = 0,
+    // resolution: 0.1 km/h
+    speed_max = 5000
+} vehicleSpeed;
+
+typedef enum {
+    percentage_low = 0,
+    percentage_high = 100
+} percentage;
+
+
 
 keyState get_key_status(void);
 
 bool get_engine_status(void);
 
 Pedal get_brake_pedal_deflection(void);
-
 
 #endif

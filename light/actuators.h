@@ -3,10 +3,7 @@
 
 #include <stdbool.h>
 
-typedef enum {
-    percentage_low = 0,
-    percentage_high = 100
-} percentage;
+#include "../common/common.h"
 
 typedef enum {
     hbr_low = 0,

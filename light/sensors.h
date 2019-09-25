@@ -30,12 +30,6 @@ typedef enum {
     st_hard_right_max = 1022
 } steeringAngle;
 
-typedef enum {
-    speed_min = 0,
-    // resolution: 0.1 km/h
-    speed_max = 5000
-} vehicleSpeed;
-
 extern keyState get_key_status(void);
 
 extern bool get_engine_status(void);
