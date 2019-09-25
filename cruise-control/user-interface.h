@@ -1,9 +1,11 @@
-#ifndef __CRUISE_CONTROL_USER_INTERFACE_INCLUDED
-#define __CRUISE_CONTROL_USER_INTERFACE_INCLUDED
+#ifndef __CRUISE_CONTROL_USER_INTERFACE_H_INCLUDED
+#define __CRUISE_CONTROL_USER_INTERFACE_H_INCLUDED
+
+#include "../common/common.h"
 
 typedef enum {scs_Neutral, scs_Downward5, scs_Downward7, scs_Upward5, scs_Upward7, scs_Backward, scs_Forward} SCSLever;
 
-typedef enum {two-secs, two-point-five-secs, three-secs} safetyDistance;
+typedef enum {two_secs, two_point_five_secs, three_secs} safetyDistance;
 
 void lever_forward(void);
 
@@ -18,6 +20,12 @@ void turn_lever(safetyDistance distance);
 
 void press_button(void);
 
-// TODO: not finished yet
+void brakePedal(Pedal deflection);
+
+void gasPedal(Pedal deflection);
+
+void toggle_traffic_sign_detection(void);
+
+void toggle_adaptive_cruise_control(void);
 
 #endif

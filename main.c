@@ -5,6 +5,7 @@
 #include "light/actuators.h"
 
 #include "cruise-control/user-interface.h"
+#include "cruise-control/sensors.h"
 
 typedef enum { 
     leftHand, rightHand

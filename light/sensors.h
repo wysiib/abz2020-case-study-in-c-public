@@ -1,15 +1,9 @@
 #ifndef __LIGHT_SENSORS_H_INCLUDED
 #define __LIGHT_SENSORS_H_INCLUDED
 
-typedef enum {NoKeyInserted, KeyInserted, KeyInIgnitionOnPosition} keyState;
+#include "../common/common.h"
 
 typedef enum {brightness_min = 0, brightness_max = 100000} brightness;
-
-typedef enum {
-    pedal_deflection_min = 0,
-    // resolution: 0.2 degree
-    pedal_deflection_max = 225 // 45 degree
-} brakePedal;
 
 typedef enum {
     voltage_min = 0,
@@ -35,12 +29,6 @@ typedef enum {
     // resolution: 1 degree
     st_hard_right_max = 1022
 } steeringAngle;
-    
-typedef enum {
-    cam_Ready,
-    cam_Dirty,
-    cam_NotReady
-} cameraState;
 
 typedef enum {
     speed_min = 0,
@@ -48,13 +36,13 @@ typedef enum {
     speed_max = 5000
 } vehicleSpeed;
 
-keyState get_key_status(void);
+extern keyState get_key_status(void);
 
-bool get_engine_status(void);
+extern bool get_engine_status(void);
 
 brightness get_brightness(void);
 
-brakePedal get_brake_pedal_deflection(void);
+extern Pedal get_brake_pedal_deflection(void);
 
 voltage get_voltage_battery(void);
 
@@ -64,7 +52,7 @@ bool get_all_doors_closed(void);
 
 bool get_oncoming_traffic(void);
 
-cameraState get_camera_state(void);
+sensorState get_camera_state(void);
 
 vehicleSpeed get_current_speed(void);
 
