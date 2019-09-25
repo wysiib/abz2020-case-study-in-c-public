@@ -1,0 +1,42 @@
+#ifndef __LIGHT_USER_INTERFACE_INCLUDED
+#define __LIGHT_USER_INTERFACE_INCLUDED
+
+typedef enum {lrs_off, lrs_auto, lrs_on} lightRotarySwitch;
+
+typedef enum {pa_Neutral, pa_Downward5, pa_Downward7, pa_Upward5, pa_Upward7, pa_Backward, pa_Forward} pitmanArm;
+
+// permanent activation of the adaptive high beam, engages pitman arm
+void pitman_backward(void);
+
+// temporary activation of the high beam (non-engaging)
+void pitman_forward(void);
+
+void pitman_disengage_horizontal(void);
+
+// trigger direction indicator (which one: unspecified so far)
+// temporary activation: 5-7 degree
+// permanent activation: 7 degree
+void pitman_up(int deflection);
+
+// trigger direction indicator (which one: unspecified so far)
+// temporary activation: 5-7 degree
+// permanent activation: 7 degree
+void pitman_down(int deflection);
+
+// disengange automatically if steering wheel
+// turned more than 10 degrees
+void pitman_disengage_vertical(void);
+
+// change boolean value
+void toggle_hazard_warning(void);
+
+// change boolean value, armoured vehicle only
+void toggle_darkness_mode(void);
+
+// change boolean value
+void toggle_daytime_running_light(void);
+
+// change boolean value
+void toggle_ambient_light(void);
+
+#endif
