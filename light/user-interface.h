@@ -6,6 +6,9 @@ typedef enum {lrs_off, lrs_auto, lrs_on} lightRotarySwitch;
 typedef enum {pa_ud_Neutral, pa_Downward5, pa_Downward7, pa_Upward5, pa_Upward7} pitmanArmUpDown;
 typedef enum {pa_fb_Neutral, pa_Backward, pa_Forward} pitmanArmForthBack;
 
+
+void reset_user_interface(void);
+
 void set_light_rotary_switch(lightRotarySwitch val);
 lightRotarySwitch get_light_rotary_switch(void);
 
