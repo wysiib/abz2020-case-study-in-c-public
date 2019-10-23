@@ -345,11 +345,56 @@ void sequence2(void **state) {
 }
 
 
+// A test case that does something and succeeds.
+void sequence3(void **state) {
+    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    light_state ls, ref;
+
+    toggle_daytime_running_light();
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // key inserted
+    sensor_states = update_sensors(sensor_states, sensorTime, 1);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // engine start
+    sensor_states = update_sensors(sensor_states, sensorTime, 2);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 3);
+    set_light_rotary_switch(lrs_auto);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 5);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+}
+
 int main(int argc, char* argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
         unit_test_setup_teardown(sequence1, reset, reset),
         unit_test_setup_teardown(sequence2, reset, reset),
+        unit_test_setup_teardown(sequence3, reset, reset),
     };
     return run_tests(tests);
 }

@@ -66,7 +66,11 @@ void light_do_step(void) {
         }
     }
 
-    if (get_light_rotary_switch() == lrs_auto) {
+    if (engine_on == 1 && get_daytime_running_light()) {
+        set_all_lights(100);
+    }
+
+    if (!get_daytime_running_light() && get_light_rotary_switch() == lrs_auto) {
         if (engine_on && bb < 200 && when_light_on == 0) {
             when_light_on = tt;
             set_all_lights(100);
