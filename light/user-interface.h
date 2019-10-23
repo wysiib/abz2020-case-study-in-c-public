@@ -3,7 +3,8 @@
 
 typedef enum {lrs_off, lrs_auto, lrs_on} lightRotarySwitch;
 
-typedef enum {pa_Neutral, pa_Downward5, pa_Downward7, pa_Upward5, pa_Upward7, pa_Backward, pa_Forward} pitmanArm;
+typedef enum {pa_ud_Neutral, pa_Downward5, pa_Downward7, pa_Upward5, pa_Upward7} pitmanArmUpDown;
+typedef enum {pa_fb_Neutral, pa_Backward, pa_Forward} pitmanArmForthBack;
 
 void set_light_rotary_switch(lightRotarySwitch val);
 lightRotarySwitch get_light_rotary_switch(void);
@@ -19,12 +20,7 @@ void pitman_disengage_horizontal(void);
 // trigger direction indicator (which one: unspecified so far)
 // temporary activation: 5-7 degree
 // permanent activation: 7 degree
-void pitman_up(int deflection);
-
-// trigger direction indicator (which one: unspecified so far)
-// temporary activation: 5-7 degree
-// permanent activation: 7 degree
-void pitman_down(int deflection);
+void pitman_vertical(pitmanArmUpDown deflection);
 
 // disengange automatically if steering wheel
 // turned more than 10 degrees
@@ -41,5 +37,7 @@ void toggle_daytime_running_light(void);
 
 // change boolean value
 void toggle_ambient_light(void);
+
+pitmanArmUpDown get_pitman_vertical(void);
 
 #endif

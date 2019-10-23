@@ -246,6 +246,20 @@ void sequence1(void **state) {
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // pitman arm to downward7
+    sensor_states = update_sensors(sensor_states, sensorTime, 23);
+    pitman_vertical(pa_Downward7);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0}));
+
+    // switch to auto
+    sensor_states = update_sensors(sensor_states, sensorTime, 24);
+    set_light_rotary_switch(lrs_auto);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 int main(int argc, char* argv[]) {

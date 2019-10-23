@@ -41,12 +41,19 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
-    if (ks != KeyInIgnitionOnPosition) {
+    if (ks != KeyInIgnitionOnPosition && get_light_rotary_switch() != lrs_auto) {
         if (last_engine == 0 && ks == KeyInserted && get_light_rotary_switch() == lrs_on) {
             set_all_lights(50);
-        } else {
+        }  else {
             set_all_lights(0);
             when_light_on = 0;
+        }
+        if (get_pitman_vertical() == pa_Downward7) {
+            set_low_beam_left(10);
+            set_tail_lamp_left(10);
+        } else if (get_pitman_vertical() == pa_Upward7) {
+            set_low_beam_right(10);
+            set_tail_lamp_right(10);
         }
     }
 
