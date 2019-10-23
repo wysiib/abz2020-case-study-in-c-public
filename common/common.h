@@ -1,6 +1,9 @@
 #ifndef __COMMON_COMMON_H_INCLUDED
 #define __COMMON_COMMON_H_INCLUDED
 
+#include <stdlib.h>
+#include <stdbool.h>
+
 typedef enum {
     pedal_deflection_min = 0,
     // resolution: 0.2 degree
@@ -33,5 +36,7 @@ keyState get_key_status(void);
 bool get_engine_status(void);
 
 Pedal get_brake_pedal_deflection(void);
+
+size_t get_time(void);
 
 #endif

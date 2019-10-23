@@ -3,6 +3,7 @@
 #include "light/user-interface.h"
 #include "light/sensors.h"
 #include "light/actuators.h"
+#include "light/light-state.h"
 
 #include "cruise-control/user-interface.h"
 #include "cruise-control/sensors.h"

@@ -5,6 +5,9 @@ typedef enum {lrs_off, lrs_auto, lrs_on} lightRotarySwitch;
 
 typedef enum {pa_Neutral, pa_Downward5, pa_Downward7, pa_Upward5, pa_Upward7, pa_Backward, pa_Forward} pitmanArm;
 
+void set_light_rotary_switch(lightRotarySwitch val);
+lightRotarySwitch get_light_rotary_switch(void);
+
 // permanent activation of the adaptive high beam, engages pitman arm
 void pitman_backward(void);
 
