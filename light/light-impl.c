@@ -12,7 +12,14 @@ void set_all_lights(percentage p) {
 }
 
 void light_do_step(void) {
-    // TODO: read all sensors
+    keyState ks = get_key_status();
+    bool engine = get_engine_status();
+    bool all_doors_closed = get_all_doors_closed();
+    bool reverse_gear = get_reverse_gear();
+    voltage voltage_battery = get_voltage_battery();
+    steeringAngle angle = get_steering_angle();
+    bool oncomming_trafic = get_oncoming_traffic();
+
     brightness bb = get_brightness();
     size_t tt = get_time();
 
@@ -31,5 +38,10 @@ void light_do_step(void) {
     if (get_light_rotary_switch() == lrs_on) {
         // TODO: maybe manipulate when_light_on
         set_all_lights(100);
+    }
+
+    if (ks != KeyInIgnitionOnPosition) {
+        set_all_lights(0);
+        when_light_on = 0;
     }
 }

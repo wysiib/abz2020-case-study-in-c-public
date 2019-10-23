@@ -19,6 +19,34 @@ brightness get_brightness(void) {
     return (brightness) mock();
 }
 
+keyState get_key_status(void) {
+    return (keyState) mock();
+}
+
+bool get_engine_status(void) {
+    return (bool) mock();
+}
+
+bool get_all_doors_closed(void) {
+    return (bool) mock();
+}
+
+bool get_reverse_gear(void) {
+    return (bool) mock();
+}
+
+voltage get_voltage_battery(void) {
+    return (voltage) mock();
+}
+
+steeringAngle get_steering_angle(void) {
+    return (steeringAngle) mock();
+}
+
+bool get_oncoming_traffic(void) {
+    return (bool) mock();
+}
+
 size_t get_time(void) {
     return (size_t) mock();
 }
@@ -94,6 +122,13 @@ sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
 void mock_all_sensors(sensors_and_time data) {
     will_return(get_brightness, data.brightness_sensor);
     will_return(get_time, data.time);
+    will_return(get_key_status, data.key_state);
+    will_return(get_engine_status, data.engine_on);
+    will_return(get_all_doors_closed, data.all_doors_closed);
+    will_return(get_reverse_gear, data.reverse_gear);
+    will_return(get_voltage_battery, data.voltage_battery);
+    will_return(get_steering_angle, data.steering_angle);
+    will_return(get_oncoming_traffic, data.oncomming_trafic);
 }
 
 void mock_and_execute(sensors_and_time data) {
@@ -101,19 +136,16 @@ void mock_and_execute(sensors_and_time data) {
     light_do_step();
 }
 
-void assert_light_state(light_state ref) {
-    light_state ls = get_light_state();
-    assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
-}
+
+#define assert_light_state(x) ls = get_light_state(); ref = (light_state) x; assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
 
 
 // A test case that does nothing and succeeds.
 void sequence1(void **state) {
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    light_state ls, ref;
 
-    assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-
-    // TODO: mock?
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted
     sensor_states = update_sensors(sensor_states, sensorTime, 1);
@@ -128,61 +160,62 @@ void sequence1(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
-    set_light_rotary_switch(lrs_auto);
 
     // sensor: light outside
     sensor_states = update_sensors(sensor_states, sensorTime, 3);
+    set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // tunnel: value at border
     sensor_states = update_sensors(sensor_states, sensorTime, 4);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 200);
     mock_and_execute(sensor_states);
     
-    assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // brightness value below threshold
     sensor_states = update_sensors(sensor_states, sensorTime, 5);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
 
     // brightness exceeds value but no three seconds time
     sensor_states = update_sensors(sensor_states, sensorTime, 6);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 251);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
 
     // below threshold
     sensor_states = update_sensors(sensor_states, sensorTime, 7);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
 
     // exceeds hystheresis value
     sensor_states = update_sensors(sensor_states, sensorTime, 8);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 251);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // tunnel ride terminated
     sensor_states = update_sensors(sensor_states, sensorTime, 12);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // light switch to on
     sensor_states = update_sensors(sensor_states, sensorTime, 13);
+    set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
 
     
     // turning engine off
@@ -191,7 +224,7 @@ void sequence1(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
 
-    assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 int main(int argc, char* argv[]) {
