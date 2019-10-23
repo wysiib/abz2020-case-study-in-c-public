@@ -13,6 +13,8 @@
 
 #include "cruise-control/user-interface.h"
 
+#include "system.h"
+
 brightness get_brightness(void) {
     return (brightness) mock();
 }
@@ -26,13 +28,6 @@ typedef enum sensors_and_time_key {
     sensorKeyState,
     sensorEngineOn,
     sensorAllDoorsClosed,
-    sensorDaytimeLights,
-    sensorAmbientLighting,
-    sensorLightRotarySwitch,
-    sensorPitmanArmForthBack,
-    sensorPitmanArmUpDown,
-    sensorHazardWarningSwitchOn,
-    sensorDarknessModeSwitchOn,
     sensorBrightnessSensor,
     sensorReverseGear,
     sensorVoltageBattery,
@@ -45,13 +40,6 @@ typedef struct sensors_and_time {
     keyState key_state;
     bool engine_on;
     bool all_doors_closed;
-    bool daytime_lights;
-    bool ambient_lighting;
-    lightRotarySwitch light_rotary_switch;
-    pitmanArm pitman_arm_forth_back;
-    pitmanArm pitman_arm_up_down;
-    bool hazard_warning_switch_on;
-    bool darkness_mode_switch_on;
     brightness brightness_sensor;
     bool reverse_gear;
     voltage voltage_battery;
@@ -73,34 +61,6 @@ sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
         case sensorAllDoorsClosed:
             assert(value >= 0 && value <= 1);
             data.all_doors_closed = (bool) value;
-            break;
-        case sensorDaytimeLights:
-            assert(value >= 0 && value <= 1);
-            data.daytime_lights = (bool) value;
-            break;
-        case sensorAmbientLighting:
-            assert(value >= 0 && value <= 1);
-            data.ambient_lighting = (bool) value;
-            break;
-        case sensorLightRotarySwitch:
-            assert(value >= 0 && value <= 2);
-            data.light_rotary_switch = (lightRotarySwitch) value;
-            break;
-        case sensorPitmanArmForthBack:
-            // TODO
-            assert(0);
-            break;
-        case sensorPitmanArmUpDown:
-            // TODO
-            assert(0);
-            break;
-        case sensorHazardWarningSwitchOn:
-            assert(value >= 0 && value <= 1);
-            data.hazard_warning_switch_on = (bool) value;
-            break;
-        case sensorDarknessModeSwitchOn:
-            assert(value >= 0 && value <= 1);
-            data.darkness_mode_switch_on = (bool) value;
             break;
         case sensorBrightnessSensor:
             assert(value >= brightness_min && value <= brightness_max);
@@ -146,9 +106,10 @@ void assert_light_state(light_state ref) {
     assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
 }
 
+
 // A test case that does nothing and succeeds.
 void sequence1(void **state) {
-    sensors_and_time sensor_states = {0}; // TODO
+    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
 
@@ -167,7 +128,6 @@ void sequence1(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
-    // TODO: this is sensor (??)
     set_light_rotary_switch(lrs_auto);
 
     // sensor: light outside
@@ -219,7 +179,6 @@ void sequence1(void **state) {
     assert_light_state((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
 
     // light switch to on
-    set_light_rotary_switch(lrs_on); // TODO (?)
     sensor_states = update_sensors(sensor_states, sensorTime, 13);
     mock_and_execute(sensor_states);
 

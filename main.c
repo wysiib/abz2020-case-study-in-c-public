@@ -9,19 +9,7 @@
 #include "cruise-control/sensors.h"
 #include "cruise-control/actuators.h"
 
-typedef enum { 
-    leftHand, rightHand
-} driverPosition;
-
-typedef enum {
-    // USA + Canada: direction indicator is realised
-    // by blinking red tail light
-    USA = 1,
-    Canada = 2,
-    // Europe: blinker is extra yellow light
-    EU = 3 
-    // TODO: more?
-} marketCode;
+#include "system.h"
 
 
 int main(int argc, char *argv[]) {
