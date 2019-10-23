@@ -1,0 +1,3 @@
+Requirements:
+
+cmockery (https://github.com/google/cmockery.git) (clone, ./configure, make, make install, ldconfig)
