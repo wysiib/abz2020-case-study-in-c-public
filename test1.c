@@ -387,6 +387,18 @@ void sequence3(void **state) {
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 6);
+    set_light_rotary_switch(lrs_auto);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0}));
 }
 
 int main(int argc, char* argv[]) {

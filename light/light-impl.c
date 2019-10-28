@@ -9,6 +9,8 @@ static lightRotarySwitch last_lrs = lrs_off;
 static keyState last_key_state = NoKeyInserted;
 static bool last_all_door_closed = 0;
 
+static bool daytime_light_was_on = false;
+
 static size_t ambi_light_timer = 0;
 
 void reset(void) {
@@ -19,6 +21,8 @@ void reset(void) {
     last_lrs = lrs_off;
     last_key_state = NoKeyInserted;
     last_all_door_closed = 0;
+
+    daytime_light_was_on = false;
 
     ambi_light_timer = 0;
 }
@@ -50,7 +54,6 @@ void light_do_step(void) {
     brightness bb = get_brightness();
     size_t tt = get_time();
 
-
     // engine turned off
     if (last_engine == 1 && engine_on == 0 && get_ambient_light() == 0) {
         set_all_lights(0);
@@ -64,10 +67,6 @@ void light_do_step(void) {
         if (tt - ambi_light_timer >= 30) {
             set_all_lights(0);
         }
-    }
-
-    if (engine_on == 1 && get_daytime_running_light()) {
-        set_all_lights(100);
     }
 
     if (!get_daytime_running_light() && get_light_rotary_switch() == lrs_auto) {
@@ -87,7 +86,7 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
-    if (ks != KeyInIgnitionOnPosition && get_light_rotary_switch() != lrs_auto) {
+   if (ks != KeyInIgnitionOnPosition && get_light_rotary_switch() != lrs_auto) {
         if (ks == KeyInserted && get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
             set_all_lights(50);
         }  else {
@@ -100,6 +99,29 @@ void light_do_step(void) {
         } else if (get_pitman_vertical() == pa_Upward7) {
             set_low_beam_right(10);
             set_tail_lamp_right(10);
+        }
+    }
+
+    // ELS-17
+    // activated after starting the engine
+    if(get_daytime_running_light() && engine_on) {
+        set_all_lights(100);
+        daytime_light_was_on = true;
+    }
+    // stay on as long as key is inserted
+    if(daytime_light_was_on && get_key_status != NoKeyInserted) {
+        set_all_lights(100);
+    }
+
+    // ELS-16 (has priority over ELS-17)
+    if(!engine_on && last_lrs != lrs_auto && get_light_rotary_switch() == lrs_auto) {
+        set_all_lights(0);
+    }
+
+    // ELS-15 (appears to have priority over ELS-16 and ELS-17 in test scenario 3)
+    if(ks == KeyInserted) {
+        if(get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
+            set_all_lights(50);
         }
     }
 
