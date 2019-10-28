@@ -1,3 +1,9 @@
 Requirements:
 
 cmockery (https://github.com/google/cmockery.git) (clone, ./configure, make, make install, ldconfig)
+
+
+Time spend:
+C base code: 2h
+C first scenarios + test suite: 12h
+C further scenarios: 3h
