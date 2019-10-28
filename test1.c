@@ -136,11 +136,8 @@ void mock_and_execute(sensors_and_time data) {
     light_do_step();
 }
 
-
 #define assert_light_state(x) ls = get_light_state(); ref = (light_state) x; assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
 
-
-// A test case that does something and succeeds.
 void sequence1(void **state) {
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
@@ -262,7 +259,6 @@ void sequence1(void **state) {
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
-// A test case that does something and succeeds.
 void sequence2(void **state) {
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
@@ -345,7 +341,6 @@ void sequence2(void **state) {
 }
 
 
-// A test case that does something and succeeds.
 void sequence3(void **state) {
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
@@ -401,12 +396,55 @@ void sequence3(void **state) {
     assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0}));
 }
 
+void sequence4(void **state) {
+    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    light_state ls, ref;
+
+    toggle_daytime_running_light();
+    toggle_ambient_light();
+    // why doesnt this work? assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
+    sensor_states = update_sensors(sensor_states, sensorTime, 2);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 3);
+    set_light_rotary_switch(lrs_auto);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorTime, 24);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 34);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+}
+
+
 int main(int argc, char* argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
         unit_test_setup_teardown(sequence1, reset, reset),
         unit_test_setup_teardown(sequence2, reset, reset),
         unit_test_setup_teardown(sequence3, reset, reset),
+        unit_test_setup_teardown(sequence4, reset, reset)
     };
     return run_tests(tests);
 }

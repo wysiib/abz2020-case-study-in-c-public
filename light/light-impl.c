@@ -59,16 +59,6 @@ void light_do_step(void) {
         set_all_lights(0);
     }
 
-    update_ambient_light_timer(last_key_state, ks,
-                               last_all_door_closed, all_doors_closed,
-                               tt);
-
-    if (engine_on == 0 && get_ambient_light()) {
-        if (tt - ambi_light_timer >= 30) {
-            set_all_lights(0);
-        }
-    }
-
     if (!get_daytime_running_light() && get_light_rotary_switch() == lrs_auto) {
         if (engine_on && bb < 200 && when_light_on == 0) {
             when_light_on = tt;
@@ -122,6 +112,17 @@ void light_do_step(void) {
     if(ks == KeyInserted) {
         if(get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
             set_all_lights(50);
+        }
+    }
+
+    // ELS-19
+    update_ambient_light_timer(last_key_state, ks,
+                               last_all_door_closed, all_doors_closed,
+                               tt);
+
+    if (engine_on == 0 && get_ambient_light()) {
+        if (tt - ambi_light_timer >= 30) {
+            set_all_lights(0);
         }
     }
 
