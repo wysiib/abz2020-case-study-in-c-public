@@ -34,11 +34,24 @@ static void set_all_lights(percentage p) {
     set_tail_lamp_right(p);
 }
 
-static void update_ambient_light_timer(keyState old, keyState new,
+static void update_ambient_light_status(keyState old, keyState new,
                                        bool doors_old, bool doors_new,
-                                       size_t time) {
+                                       size_t time, bool engine_on) {
+    // ELS-19
     if (old != new || doors_old != doors_new) {
         ambi_light_timer = time;
+    }
+}
+
+static bool ambient_light_prevent_turnoff(size_t tt) {
+    if(get_ambient_light()) {
+        if (tt - ambi_light_timer >= 30) { // only prolongs light, check for light rather than engine?
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return false;
     }
 }
 
@@ -54,8 +67,12 @@ void light_do_step(void) {
     brightness bb = get_brightness();
     size_t tt = get_time();
 
+    update_ambient_light_status(last_key_state, ks,
+                               last_all_door_closed, all_doors_closed,
+                               tt, engine_on);
+
     // engine turned off
-    if (last_engine == 1 && engine_on == 0 && get_ambient_light() == 0) {
+    if (!engine_on && !ambient_light_prevent_turnoff(tt)) {
         set_all_lights(0);
     }
 
@@ -77,12 +94,6 @@ void light_do_step(void) {
     }
 
    if (ks != KeyInIgnitionOnPosition && get_light_rotary_switch() != lrs_auto) {
-        if (ks == KeyInserted && get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
-            set_all_lights(50);
-        }  else {
-            set_all_lights(0);
-            when_light_on = 0;
-        }
         if (get_pitman_vertical() == pa_Downward7) {
             set_low_beam_left(10);
             set_tail_lamp_left(10);
@@ -99,7 +110,7 @@ void light_do_step(void) {
         daytime_light_was_on = true;
     }
     // stay on as long as key is inserted
-    if(daytime_light_was_on && get_key_status != NoKeyInserted) {
+    if(daytime_light_was_on && ks != NoKeyInserted) {
         set_all_lights(100);
     }
 
@@ -109,21 +120,8 @@ void light_do_step(void) {
     }
 
     // ELS-15 (appears to have priority over ELS-16 and ELS-17 in test scenario 3)
-    if(ks == KeyInserted) {
-        if(get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
-            set_all_lights(50);
-        }
-    }
-
-    // ELS-19
-    update_ambient_light_timer(last_key_state, ks,
-                               last_all_door_closed, all_doors_closed,
-                               tt);
-
-    if (engine_on == 0 && get_ambient_light()) {
-        if (tt - ambi_light_timer >= 30) {
-            set_all_lights(0);
-        }
+    if(ks == KeyInserted && !ambient_light_prevent_turnoff(tt) && get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
+        set_all_lights(50);
     }
 
     last_lrs = get_light_rotary_switch();
