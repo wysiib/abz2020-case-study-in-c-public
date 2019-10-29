@@ -442,7 +442,7 @@ void sequence5(void **state) {
     light_state ls, ref;
 
     toggle_ambient_light();
-    // why doesnt this work? assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 1);
@@ -475,6 +475,12 @@ void sequence5(void **state) {
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 34);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 int main(int argc, char* argv[]) {

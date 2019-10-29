@@ -10,6 +10,7 @@ static keyState last_key_state = NoKeyInserted;
 static bool last_all_door_closed = 0;
 
 static bool daytime_light_was_on = false;
+static bool lrs_turned_on_while_key_inserted = false;
 
 static size_t ambi_light_timer = 0;
 
@@ -23,6 +24,7 @@ void reset(void) {
     last_all_door_closed = 0;
 
     daytime_light_was_on = false;
+    lrs_turned_on_while_key_inserted = false;
 
     ambi_light_timer = 0;
 }
@@ -70,6 +72,14 @@ void light_do_step(void) {
     update_ambient_light_status(last_key_state, ks,
                                last_all_door_closed, all_doors_closed,
                                tt, engine_on);
+
+    // update flags
+    if(ks == KeyInserted && get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
+        lrs_turned_on_while_key_inserted = true;
+    }
+    if(ks != KeyInserted) {
+        lrs_turned_on_while_key_inserted = false;
+    }
 
     // engine turned off
     if (!engine_on && !ambient_light_prevent_turnoff(tt)) {
@@ -120,8 +130,13 @@ void light_do_step(void) {
     }
 
     // ELS-15 (appears to have priority over ELS-16 and ELS-17 in test scenario 3)
-    if(ks == KeyInserted && !ambient_light_prevent_turnoff(tt) && get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
+    if(ks == KeyInserted && !ambient_light_prevent_turnoff(tt) && lrs_turned_on_while_key_inserted) {
         set_all_lights(50);
+    }
+
+    // ELS-14
+    if(engine_on && get_light_rotary_switch() == lrs_on) {
+        set_all_lights(100);
     }
 
     last_lrs = get_light_rotary_switch();
