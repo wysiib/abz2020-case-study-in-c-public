@@ -22,3 +22,11 @@ void set_tail_lamp_left(percentage p) {
 void set_tail_lamp_right(percentage p) {
     state.tailLampRight = p;
 }
+
+void set_blink_left(percentage p) {
+    state.blinkLeft = p;
+}
+
+void set_blink_right(percentage p) {
+    state.blinkRight = p;
+}

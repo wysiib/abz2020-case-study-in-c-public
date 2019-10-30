@@ -143,6 +143,11 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
+    // direction / blinking
+    if(engine_on && get_pitman_vertical() == pa_Downward5) {
+        set_blink_left(100);
+    }
+
     last_lrs = get_light_rotary_switch();
     last_engine = engine_on;
     last_key_state = ks;
