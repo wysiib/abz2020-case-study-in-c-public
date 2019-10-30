@@ -38,7 +38,7 @@ static void set_all_lights(percentage p) {
 
 static bool ambient_light_prevent_turnoff(size_t tt) {
     if(get_ambient_light()) {
-        if (tt - ambi_light_timer >= 30) { // only prolongs light, check for light rather than engine?
+        if (tt - ambi_light_timer >= 30000) { // only prolongs light, check for light rather than engine?
             return false;
         } else {
             return true;
@@ -96,7 +96,7 @@ void light_do_step(void) {
             set_all_lights(100);
         }
 
-        if (bb >= 250 && tt - when_light_on >= 3) {
+        if (bb >= 250 && tt - when_light_on >= 3000) {
             set_all_lights(0);
             when_light_on = 0;
         }
