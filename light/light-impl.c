@@ -36,15 +36,6 @@ static void set_all_lights(percentage p) {
     set_tail_lamp_right(p);
 }
 
-static void update_ambient_light_status(keyState old, keyState new,
-                                       bool doors_old, bool doors_new,
-                                       size_t time, bool engine_on) {
-    // ELS-19
-    if (old != new || doors_old != doors_new) {
-        ambi_light_timer = time;
-    }
-}
-
 static bool ambient_light_prevent_turnoff(size_t tt) {
     if(get_ambient_light()) {
         if (tt - ambi_light_timer >= 30) { // only prolongs light, check for light rather than engine?
@@ -56,6 +47,19 @@ static bool ambient_light_prevent_turnoff(size_t tt) {
         return false;
     }
 }
+
+static void update_ambient_light_status(keyState old, keyState new,
+                                       bool doors_old, bool doors_new,
+                                       size_t time, bool engine_on) {
+    // ELS-19
+    // only extend time if it has not yet passed
+    if(ambient_light_prevent_turnoff(time)) {
+        if (old != new || doors_old != doors_new) {
+            ambi_light_timer = time;
+        }
+    }
+}
+
 
 void light_do_step(void) {
     keyState ks = get_key_status();

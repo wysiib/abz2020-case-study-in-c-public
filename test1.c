@@ -264,6 +264,7 @@ void sequence2(void **state) {
     light_state ls, ref;
 
     toggle_ambient_light();
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // light switch to auto
