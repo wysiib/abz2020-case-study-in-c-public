@@ -635,6 +635,8 @@ void sequence6(void **state) {
 }
 
 void sequence7(void **state) {
+    init_system(leftHand, false, USA);
+
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 

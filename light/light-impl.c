@@ -137,12 +137,17 @@ void light_do_step(void) {
     // ELS-17
     // activated after starting the engine
     if(get_daytime_running_light() && engine_on) {
-        set_all_lights(100);
         daytime_light_was_on = true;
     }
     // stay on as long as key is inserted
     if(daytime_light_was_on && ks != NoKeyInserted) {
-        set_all_lights(100);
+        if(get_market_code() == USA) {
+            // from szenario 7 but not from specification?
+            set_low_beam_left(100);
+            set_low_beam_right(100);
+        } else {
+            set_all_lights(100);
+        }
     }
 
     // ELS-16 (has priority over ELS-17)
@@ -163,17 +168,29 @@ void light_do_step(void) {
     // direction / blinking
     
     // blink as soon as arm is moved unless in dark cycle
-    if(engine_on && get_pitman_vertical() == pa_Downward5 && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
-        set_blink_left(100);
-        blinking = true;
-        blink_timer = tt;
-        remaining_blinks = -1;
+    if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
+        if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+            set_blink_left(100);
+            if(get_market_code() == USA) {
+                set_low_beam_left(50);
+            }
+            blinking = true;
+            blinking_direction = blink_left;
+            blink_timer = tt;
+            remaining_blinks = -1;
+        }
     }
-    if(engine_on && get_pitman_vertical() == pa_Upward5 && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
-        set_blink_right(100);
-        blinking = true;
-        blink_timer = tt;
-        remaining_blinks = -1;
+    if(get_pitman_vertical() == pa_Upward5 || get_pitman_vertical() == pa_Upward7) {
+        if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+            set_blink_right(100);
+            if(get_market_code() == USA) {
+                set_low_beam_right(50);
+            }
+            blinking = true;
+            blinking_direction = blink_right;
+            blink_timer = tt;
+            remaining_blinks = -1;
+        }
     }
 
     // ELS-2
@@ -192,6 +209,15 @@ void light_do_step(void) {
     if(tt - blink_timer >= 500 && blinking) {
         set_blink_left(0);
         set_blink_right(0);
+
+        if(get_market_code() == USA) {
+            if(blink_left == blinking_direction) {
+                set_low_beam_left(50);
+            } else {
+                set_low_beam_right(50);
+            }
+        }
+
         blink_timer = tt;
         blinking = false;
     }
