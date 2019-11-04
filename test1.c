@@ -628,6 +628,104 @@ void sequence6(void **state) {
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
+void sequence7(void **state) {
+    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    light_state ls, ref;
+
+    toggle_daytime_running_light();
+
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    pitman_vertical(pa_Upward7);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4500);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 5000);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 5300);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10000);
+    pitman_vertical(pa_Downward5);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10200);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10800);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10999);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 11000);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 13300);
+    pitman_vertical(pa_Upward5);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 13400);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 14300);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 14500);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1500);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+}
+
 int main(int argc, char* argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -637,6 +735,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(sequence4, reset, reset),
         unit_test_setup_teardown(sequence5, reset, reset),
         unit_test_setup_teardown(sequence6, reset, reset),
+        unit_test_setup_teardown(sequence7, reset, reset),
     };
     return run_tests(tests);
 }
