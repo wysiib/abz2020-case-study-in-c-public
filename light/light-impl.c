@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "../system.h"
 
 #include "sensors.h"
@@ -22,7 +24,7 @@ static size_t remaining_blinks = 0;
 static size_t pitman_arm_move_time = 0;
 static pitmanArmUpDown last_pitman_arm = pa_ud_Neutral;
 static bool blinking = false;
-static blinkingDirection blinking_direction = blink_left;
+static blinkingDirection blinking_direction = none;
 
 void reset(void **state) {
     (void) state;
@@ -77,6 +79,65 @@ static void update_ambient_light_status(keyState old, keyState new,
     }
 }
 
+static void set_blinkers_off(size_t time) {
+    set_blink_left(0);
+    set_blink_right(0);
+
+    if(get_market_code() == USA) {
+        if(blink_left == blinking_direction) {
+            set_low_beam_left(50);
+            set_tail_lamp_left(0);
+        } else {
+            set_low_beam_right(50);
+            set_tail_lamp_right(0);
+        }
+    }
+
+    blinking = false;
+    blink_timer = time;
+}
+
+static void set_blinkers_on(size_t time) {
+    switch(blinking_direction) {
+        case blink_left:
+            set_blink_left(100);
+            break;
+        case blink_right:
+            set_blink_right(100);
+            break;
+        case hazard:
+            set_blink_left(100);
+            set_blink_right(100);
+            break;
+        default:
+            assert(0);
+    }
+       
+    if(get_market_code() == USA) {
+        switch(blinking_direction) {
+            case blink_left:
+                set_low_beam_left(50);
+                set_tail_lamp_left(100);
+                break;
+            case blink_right:
+                set_low_beam_right(50);
+                set_tail_lamp_right(100);
+                break;
+            case hazard:
+                set_low_beam_left(50);
+                set_tail_lamp_left(100);
+                set_low_beam_right(50);
+                set_tail_lamp_right(100);
+                break;
+            default:
+                assert(0);
+        }
+    }
+
+    blink_timer = time;
+    remaining_blinks--;
+    blinking = true;
+}
 
 void light_do_step(void) {
     keyState ks = get_key_status();
@@ -166,13 +227,13 @@ void light_do_step(void) {
     }
 
     // direction / blinking
-    
     // blink as soon as arm is moved unless in dark cycle
     if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
         if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             set_blink_left(100);
             if(get_market_code() == USA) {
                 set_low_beam_left(50);
+                set_tail_lamp_left(100);
             }
             blinking = true;
             blinking_direction = blink_left;
@@ -185,6 +246,7 @@ void light_do_step(void) {
             set_blink_right(100);
             if(get_market_code() == USA) {
                 set_low_beam_right(50);
+                set_tail_lamp_right(100);
             }
             blinking = true;
             blinking_direction = blink_right;
@@ -203,33 +265,35 @@ void light_do_step(void) {
         set_blink_left(0);
         set_blink_right(0);
         blinking = false;
-    }
-
-    // turn blinker off or on
-    if(tt - blink_timer >= 500 && blinking) {
-        set_blink_left(0);
-        set_blink_right(0);
 
         if(get_market_code() == USA) {
-            if(blink_left == blinking_direction) {
+            set_tail_lamp_right(0);
+            set_tail_lamp_left(0);
+        }
+    }
+
+    // blinker still on -> keep usa specific stuff
+    // another setting (i.e. daytime light) might have tried to turn them up again
+    if(remaining_blinks && get_market_code() == USA) {
+        if(blink_left == blinking_direction) {
                 set_low_beam_left(50);
             } else {
                 set_low_beam_right(50);
             }
-        }
+    }
 
-        blink_timer = tt;
-        blinking = false;
+    if(!blinking && get_hazard_warning()) {
+        blinking_direction = hazard;
+        remaining_blinks = -1; // does not reset timings but keeps cycle
+    }
+
+    // turn blinker off or on
+    if(tt - blink_timer >= 500 && blinking) {
+
+        set_blinkers_off(tt);
     }
     if(tt - blink_timer >= 500 && remaining_blinks && !blinking) {
-        if(blink_left == blinking_direction) {
-            set_blink_left(100);
-        } else {
-            set_blink_right(100);
-        }
-        blink_timer = tt;
-        remaining_blinks--;
-        blinking = true;
+        set_blinkers_on(tt);
     }
 
     // remember last time the pitman arm was moved

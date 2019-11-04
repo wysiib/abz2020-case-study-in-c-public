@@ -1,7 +1,7 @@
 #ifndef LIGHT_LIGHT_IMPL_H_INCLUDED
 #define LIGHT_LIGHT_IMPL_H_INCLUDED
 
-typedef enum {blink_left, blink_right} blinkingDirection;
+typedef enum {blink_left, blink_right, hazard, none} blinkingDirection;
 
 
 void reset(void **state);

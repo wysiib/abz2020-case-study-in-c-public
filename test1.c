@@ -657,7 +657,11 @@ void sequence7(void **state) {
     pitman_vertical(pa_Upward7);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    // from given test cases:
+    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    // but I think the tail light should be used for blicking whether its up5 or up7
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0}));
+
 
     sensor_states = update_sensors(sensor_states, sensorTime, 4500);
     mock_and_execute(sensor_states);
@@ -667,7 +671,9 @@ void sequence7(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 5000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    // see above: added tail light
+    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5300);
     pitman_vertical(pa_ud_Neutral);
