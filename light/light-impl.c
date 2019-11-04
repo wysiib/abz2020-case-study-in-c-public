@@ -1,6 +1,7 @@
 #include "sensors.h"
 #include "user-interface.h"
 #include "actuators.h"
+#include "light-impl.h"
 
 static size_t when_light_on = 0;
 
@@ -13,6 +14,13 @@ static bool daytime_light_was_on = false;
 static bool lrs_turned_on_while_key_inserted = false;
 
 static size_t ambi_light_timer = 0;
+
+static size_t blink_timer = 0;
+static size_t remaining_blinks = 0;
+static size_t pitman_arm_move_time = 0;
+static pitmanArmUpDown last_pitman_arm = pa_ud_Neutral;
+static bool blinking = false;
+static blinkingDirection blinking_direction = blink_left;
 
 void reset(void) {
     reset_user_interface();
@@ -27,6 +35,12 @@ void reset(void) {
     lrs_turned_on_while_key_inserted = false;
 
     ambi_light_timer = 0;
+
+    blink_timer = 0;
+    remaining_blinks = 0;
+    pitman_arm_move_time = 0;
+    last_pitman_arm = pa_ud_Neutral;
+    blinking = false;
 }
 
 static void set_all_lights(percentage p) {
@@ -144,12 +158,59 @@ void light_do_step(void) {
     }
 
     // direction / blinking
-    if(engine_on && get_pitman_vertical() == pa_Downward5) {
+    
+    // blink as soon as arm is moved unless in dark cycle
+    if(engine_on && get_pitman_vertical() == pa_Downward5 && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
         set_blink_left(100);
+        blinking = true;
+        blink_timer = tt;
+        remaining_blinks = -1;
+    }
+    if(engine_on && get_pitman_vertical() == pa_Upward5 && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+        set_blink_right(100);
+        blinking = true;
+        blink_timer = tt;
+        remaining_blinks = -1;
     }
 
+    // ELS-2
+    if(get_pitman_vertical() != last_pitman_arm && tt - pitman_arm_move_time < 500) {
+        remaining_blinks = 3;
+    }
+    // otherwise check if arm was released later on -> stop blinking
+    if(get_pitman_vertical() != last_pitman_arm && get_pitman_vertical() == pa_ud_Neutral && tt - pitman_arm_move_time >= 500) {
+        remaining_blinks = 0;
+        set_blink_left(0);
+        set_blink_right(0);
+        blinking = false;
+    }
+
+    // turn blinker off or on
+    if(tt - blink_timer >= 500 && blinking) {
+        set_blink_left(0);
+        set_blink_right(0);
+        blink_timer = tt;
+        blinking = false;
+    }
+    if(tt - blink_timer >= 500 && remaining_blinks && !blinking) {
+        if(blink_left == blinking_direction) {
+            set_blink_left(100);
+        } else {
+            set_blink_right(100);
+        }
+        blink_timer = tt;
+        remaining_blinks--;
+        blinking = true;
+    }
+
+    // remember last time the pitman arm was moved
+    if(get_pitman_vertical() != last_pitman_arm) {
+        pitman_arm_move_time = tt;
+    }
+    
     last_lrs = get_light_rotary_switch();
     last_engine = engine_on;
     last_key_state = ks;
     last_all_door_closed = all_doors_closed;
+    last_pitman_arm = get_pitman_vertical();
 }
