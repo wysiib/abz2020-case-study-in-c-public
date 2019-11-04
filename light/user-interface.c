@@ -47,12 +47,20 @@ void toggle_daytime_running_light(void) {
     daytime_running_light = !daytime_running_light;
 }
 
+void toggle_hazard_warning(void) {
+    hazard_warning = !hazard_warning;
+}
+
 bool get_ambient_light(void) {
     return ambient_light;
 }
 
 bool get_daytime_running_light(void) {
     return daytime_running_light;
+}
+
+bool get_hazard_warning(void) {
+    return hazard_warning;
 }
 
 
