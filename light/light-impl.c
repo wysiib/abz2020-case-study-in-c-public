@@ -1,3 +1,5 @@
+#include "../system.h"
+
 #include "sensors.h"
 #include "user-interface.h"
 #include "actuators.h"
@@ -22,7 +24,8 @@ static pitmanArmUpDown last_pitman_arm = pa_ud_Neutral;
 static bool blinking = false;
 static blinkingDirection blinking_direction = blink_left;
 
-void reset(void) {
+void reset(void **state) {
+    (void) state;
     reset_user_interface();
     when_light_on = 0;
 
