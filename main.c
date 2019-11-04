@@ -16,9 +16,7 @@ int main(int argc, char *argv[]) {
     // TODO: get parameters from arguments
     (void) argc; (void) argv;
 
-    driverPosition driver_position = leftHand;
-    bool armored_vehicle = false;
-    marketCode market_code = EU;
+    init_system(leftHand, false, EU);
 
 
     return 0;

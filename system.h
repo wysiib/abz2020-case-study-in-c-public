@@ -17,6 +17,13 @@ typedef enum {
     // TODO: more?
 } marketCode;
 
+
 void init_system(driverPosition pos, bool armored_vehicle, marketCode code);
+
+driverPosition get_driver_position(void);
+
+bool is_armoured_vehicle(void);
+
+marketCode get_market_code(void);
 
 #endif

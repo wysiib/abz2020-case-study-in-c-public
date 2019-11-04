@@ -1,6 +1,8 @@
 #ifndef __LIGHT_USER_INTERFACE_INCLUDED
 #define __LIGHT_USER_INTERFACE_INCLUDED
 
+#include <stdbool.h>
+
 typedef enum {lrs_off, lrs_auto, lrs_on} lightRotarySwitch;
 
 typedef enum {pa_ud_Neutral, pa_Downward5, pa_Downward7, pa_Upward5, pa_Upward7} pitmanArmUpDown;
@@ -37,9 +39,11 @@ void toggle_darkness_mode(void);
 
 // change boolean value
 void toggle_daytime_running_light(void);
+bool get_daytime_running_light(void);
 
 // change boolean value
 void toggle_ambient_light(void);
+bool get_ambient_light(void);
 
 pitmanArmUpDown get_pitman_vertical(void);
 

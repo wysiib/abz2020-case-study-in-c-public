@@ -139,6 +139,7 @@ void mock_and_execute(sensors_and_time data) {
 #define assert_light_state(x) ls = get_light_state(); ref = (light_state) x; assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
 
 void sequence1(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -260,6 +261,7 @@ void sequence1(void **state) {
 }
 
 void sequence2(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -343,6 +345,7 @@ void sequence2(void **state) {
 
 
 void sequence3(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -398,6 +401,7 @@ void sequence3(void **state) {
 }
 
 void sequence4(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -439,6 +443,7 @@ void sequence4(void **state) {
 }
 
 void sequence5(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -485,6 +490,7 @@ void sequence5(void **state) {
 }
 
 void sequence6(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
