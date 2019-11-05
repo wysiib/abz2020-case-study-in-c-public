@@ -86,12 +86,24 @@ static void set_blinkers_off(size_t time) {
     set_blink_right(0);
 
     if(get_market_code() == USA || get_market_code() == Canada) {
-        if(blink_left == blinking_direction) {
-            set_low_beam_left(50);
-            set_tail_lamp_left(0);
-        } else {
-            set_low_beam_right(50);
-            set_tail_lamp_right(0);
+        switch (blinking_direction) {
+            case blink_left:
+                set_low_beam_left(50);
+                set_tail_lamp_left(0);
+                break;
+            case blink_right:
+                set_low_beam_right(50);
+                set_tail_lamp_right(0);
+                break;
+            case hazard:
+                set_low_beam_left(50);
+                set_tail_lamp_left(0);
+                set_low_beam_right(50);
+                set_tail_lamp_right(0);
+            case none:
+                break;
+            default:
+                assert(0);
         }
     }
 
@@ -115,6 +127,8 @@ static void set_blinkers_on(size_t time) {
             set_blink_left(100);
             set_blink_right(100);
             break;
+        case none:
+            break;
         default:
             assert(0);
     }
@@ -134,6 +148,8 @@ static void set_blinkers_on(size_t time) {
                 set_tail_lamp_left(100);
                 set_low_beam_right(50);
                 set_tail_lamp_right(100);
+                break;
+            case none:
                 break;
             default:
                 assert(0);
@@ -236,28 +252,20 @@ void light_do_step(void) {
     // blink as soon as arm is moved unless in dark cycle
     if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
         if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
-            set_blink_left(100);
-            if(get_market_code() == USA || get_market_code() == Canada) {
-                set_low_beam_left(50);
-                set_tail_lamp_left(100);
-            }
             blinking = true;
             blinking_direction = blink_left;
             blink_timer = tt;
             remaining_blinks = -1;
+            set_blinkers_on(tt);
         }
     }
     if(get_pitman_vertical() == pa_Upward5 || get_pitman_vertical() == pa_Upward7) {
         if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
-            set_blink_right(100);
-            if(get_market_code() == USA || get_market_code() == Canada) {
-                set_low_beam_right(50);
-                set_tail_lamp_right(100);
-            }
             blinking = true;
             blinking_direction = blink_right;
             blink_timer = tt;
             remaining_blinks = -1;
+            set_blinkers_on(tt);
         }
     }
 
@@ -281,11 +289,24 @@ void light_do_step(void) {
     // blinker still on -> keep usa specific stuff
     // another setting (i.e. daytime light) might have tried to turn them up again
     if(remaining_blinks && (get_market_code() == USA || get_market_code() == Canada)) {
-        if(blink_left == blinking_direction) {
-                set_low_beam_left(50);
-            } else {
-                set_low_beam_right(50);
+        if(get_market_code() == USA  || get_market_code() == Canada) {
+            switch(blinking_direction) {
+                case blink_left:
+                    set_low_beam_left(50);
+                    break;
+                case blink_right:
+                    set_low_beam_right(50);
+                    break;
+                case hazard:
+                    set_low_beam_left(50);
+                    set_low_beam_right(50);
+                    break;
+                case none:
+                    break;
+                default:
+                    assert(0);
             }
+        }
     }
 
     // turn blinker off or on

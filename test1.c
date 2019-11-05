@@ -574,7 +574,7 @@ void sequence7(void **state) {
 
     assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
 
-    progress_time(10801, 10801, ((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(10801, 10998, ((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10999);
     mock_and_execute(sensor_states);
@@ -585,6 +585,8 @@ void sequence7(void **state) {
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    progress_time(11001, 11499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 13300);
     pitman_vertical(pa_Upward5);
