@@ -85,7 +85,7 @@ static void set_blinkers_off(size_t time) {
     set_blink_left(0);
     set_blink_right(0);
 
-    if(get_market_code() == USA) {
+    if(get_market_code() == USA || get_market_code() == Canada) {
         if(blink_left == blinking_direction) {
             set_low_beam_left(50);
             set_tail_lamp_left(0);
@@ -115,7 +115,7 @@ static void set_blinkers_on(size_t time) {
             assert(0);
     }
        
-    if(get_market_code() == USA) {
+    if(get_market_code() == USA  || get_market_code() == Canada) {
         switch(blinking_direction) {
             case blink_left:
                 set_low_beam_left(50);
