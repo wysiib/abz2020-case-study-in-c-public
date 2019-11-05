@@ -623,5 +623,6 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(sequence6, reset, reset),
         unit_test_setup_teardown(sequence7, reset, reset),
     };
-    return run_tests(tests);
+    run_tests(tests);
+    return 0;
 }

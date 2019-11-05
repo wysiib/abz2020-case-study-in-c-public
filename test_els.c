@@ -298,5 +298,6 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els4_left_a, reset, reset),
         unit_test_setup_teardown(els4_left_b, reset, reset),
     };
-    return run_tests(tests);
+    run_tests(tests);
+    return 0;
 }
