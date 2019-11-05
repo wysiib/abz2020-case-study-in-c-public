@@ -368,7 +368,7 @@ void els7_a_left(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     mock_and_execute(sensor_states);
 
-    progress_time(2001, 2400, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(2001, 2400, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 2401); // less than .5 seconds
     pitman_vertical(pa_Downward5);
@@ -380,7 +380,7 @@ void els7_a_left(void **state) {
     int i;
 
     for (i = 3; i <= 7; i++) { // queued command: tip blinking
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
         progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     }
@@ -411,7 +411,7 @@ void els7_b_left(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 2001);
     mock_and_execute(sensor_states);
 
-    progress_time(2001, 2499, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(2001, 2499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     pitman_vertical(pa_Downward5);
     progress_time(2500, 2999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     pitman_vertical(pa_ud_Neutral);
@@ -419,7 +419,7 @@ void els7_b_left(void **state) {
     int i;
 
     for (i = 3; i <= 11; i++) { // queued command: direction blinking
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
         progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     }
