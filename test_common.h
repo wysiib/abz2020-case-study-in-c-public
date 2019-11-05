@@ -1,6 +1,9 @@
 #ifndef TEST_COMMON_H_INCLUDED
 #define TEST_COMMON_H_INCLUDED
 
+#include <stdlib.h>
+
+#include "light/light-state.h"
 
 brightness get_brightness(void);
 

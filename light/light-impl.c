@@ -5,6 +5,7 @@
 #include "sensors.h"
 #include "user-interface.h"
 #include "actuators.h"
+#include "light-state.h"
 #include "light-impl.h"
 
 static size_t when_light_on = 0;
@@ -29,6 +30,7 @@ static blinkingDirection blinking_direction = none;
 void reset(void **state) {
     (void) state;
     reset_user_interface();
+    reset_lights();
     when_light_on = 0;
 
     last_engine = 0;

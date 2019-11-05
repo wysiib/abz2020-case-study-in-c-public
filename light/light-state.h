@@ -26,4 +26,6 @@ typedef struct light_state {
 
 light_state get_light_state(void);
 
+void reset_lights(void);
+
 #endif

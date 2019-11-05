@@ -12,6 +12,8 @@
 
 #include "cruise-control/user-interface.h"
 
+#include "test_common.h"
+
 brightness get_brightness(void) {
     return (brightness) mock();
 }
@@ -48,30 +50,6 @@ size_t get_time(void) {
     return (size_t) mock();
 }
 
-
-typedef enum sensors_and_time_key {
-    sensorKeyState,
-    sensorEngineOn,
-    sensorAllDoorsClosed,
-    sensorBrightnessSensor,
-    sensorReverseGear,
-    sensorVoltageBattery,
-    sensorSteeringAngle,
-    sensorOncommingTraffic,
-    sensorTime
-} sensors_and_time_key;
-
-typedef struct sensors_and_time {
-    keyState key_state;
-    bool engine_on;
-    bool all_doors_closed;
-    brightness brightness_sensor;
-    bool reverse_gear;
-    voltage voltage_battery;
-    steeringAngle steering_angle;
-    bool oncomming_trafic;
-    size_t time;
-} sensors_and_time;
 
 sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key, int value) {
     switch (key) {
@@ -133,4 +111,5 @@ void mock_and_execute(sensors_and_time data) {
     light_do_step();
 }
 
-#define assert_light_state(x) ls = get_light_state(); ref = (light_state) x; assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
+
+

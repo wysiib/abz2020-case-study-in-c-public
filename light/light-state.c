@@ -30,3 +30,18 @@ void set_blink_left(percentage p) {
 void set_blink_right(percentage p) {
     state.blinkRight = p;
 }
+
+void reset_lights(void) {
+    state.brakeLight = 0;
+    state.blinkLeft = 0;
+    state.blinkRight = 0;
+    state.lowBeamLeft = 0;
+    state.lowBeamRight = 0;
+    state.tailLampLeft = 0;
+    state.tailLampRight = 0;
+    state.highBeamOn = 0;
+    state.highBeamMotor = 0;
+    state.corneringLightLeft = 0;
+    state.corneringLightRight = 0;
+    state.reverseLight = 0;
+}
