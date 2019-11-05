@@ -18,7 +18,7 @@
 
 void els1_left(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -47,7 +47,7 @@ void els1_left(void **state) {
 
 void els1_right(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -76,7 +76,7 @@ void els1_right(void **state) {
 
 void els2_left(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -108,7 +108,7 @@ void els2_left(void **state) {
 
 void els3_a_left(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -127,7 +127,7 @@ void els3_a_left(void **state) {
 
     assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     pitman_vertical(pa_ud_Neutral);
-    sensor_states = update_sensors(sensor_states, sensorTime, 2001);
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     mock_and_execute(sensor_states);
 
     pitman_vertical(pa_Upward7);
@@ -143,7 +143,7 @@ void els3_a_left(void **state) {
 
 void els3_b_left(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -177,7 +177,7 @@ void els3_b_left(void **state) {
 
 void els4_left_a(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -212,7 +212,7 @@ void els4_left_a(void **state) {
 
 void els4_left_b(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -246,7 +246,7 @@ void els4_left_b(void **state) {
 
 void els6_left_canada(void **state) {
     init_system(leftHand, false, Canada);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -279,7 +279,7 @@ void els6_left_canada(void **state) {
 
 void els6_left_usa(void **state) {
     init_system(leftHand, false, USA);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -312,7 +312,7 @@ void els6_left_usa(void **state) {
 
 void els7_a_left(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -355,7 +355,7 @@ void els7_a_left(void **state) {
 
 void els7_b_left(void **state) {
     init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -391,6 +391,251 @@ void els7_b_left(void **state) {
     }
 }
 
+void els8_a(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+
+    mock_and_execute(sensor_states);
+
+    toggle_hazard_warning();
+
+    int i;
+    for (i = 2; i < 100; i++) {
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+}
+
+void els8_b(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key NOT inserted
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+
+    mock_and_execute(sensor_states);
+
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    int i;
+    for (i = 3; i < 100; i++) {
+        progress_time(i * 1000,       i * 1000 + 333, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 334, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+}
+
+void els9(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+
+    mock_and_execute(sensor_states);
+
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    int i;
+    for (i = 2; i < 10; i++) {
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10200);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    sensor_states = update_sensors(sensor_states, sensorTime, 10800);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    sensor_states = update_sensors(sensor_states, sensorTime, 11200);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    sensor_states = update_sensors(sensor_states, sensorTime, 11800);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+
+    for (i = 12; i < 20; i++) {
+        progress_time(i * 1000,       i * 1000 + 333, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 334, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 20200);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    sensor_states = update_sensors(sensor_states, sensorTime, 20800);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    sensor_states = update_sensors(sensor_states, sensorTime, 21200);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    sensor_states = update_sensors(sensor_states, sensorTime, 21800);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    for (i = 22; i < 10; i++) {
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+}
+
+void els12_a(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+
+    mock_and_execute(sensor_states);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    pitman_vertical(pa_Downward7);
+    mock_and_execute(sensor_states);
+
+    int i;
+    for (i = 1; i < 10; i++) {
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+
+    toggle_hazard_warning();
+
+    for (i = 10; i < 20; i++) {
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+}
+
+void els12_b(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+
+    mock_and_execute(sensor_states);
+
+    // different ordering
+    pitman_vertical(pa_Downward7);
+    mock_and_execute(sensor_states);
+
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    int i;
+    for (i = 1; i < 10; i++) {
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+
+    toggle_hazard_warning();
+
+    for (i = 10; i < 20; i++) {
+        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    }
+}
+
+void els13_a(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+
+    mock_and_execute(sensor_states);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    pitman_vertical(pa_Downward5);
+    mock_and_execute(sensor_states);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    progress_time(1000, 1499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(1500, 1999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    toggle_hazard_warning();
+    progress_time(2000, 5000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+}
+
+void els13_b(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    pitman_vertical(pa_Downward5);
+    mock_and_execute(sensor_states);
+
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    progress_time(1000, 1499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(1500, 1999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    toggle_hazard_warning();
+    progress_time(2000, 5000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+}
+
+
 int main(int argc, char* argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -406,6 +651,16 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els6_left_usa, reset, reset),
         unit_test_setup_teardown(els7_a_left, reset, reset),
         unit_test_setup_teardown(els7_b_left, reset, reset),
+        unit_test_setup_teardown(els8_a, reset, reset),
+        unit_test_setup_teardown(els8_b, reset, reset),
+        unit_test_setup_teardown(els9, reset, reset),
+        // TODO: most tests for American cars
+        // NOTE: ELS-10 implicitly in previous tests
+        // NOTE: ELS-11 implicitly in previous tests
+        unit_test_setup_teardown(els12_a, reset, reset),
+        unit_test_setup_teardown(els12_b, reset, reset),
+        unit_test_setup_teardown(els13_a, reset, reset),
+        unit_test_setup_teardown(els13_b, reset, reset),
     };
     run_tests(tests);
     return 0;

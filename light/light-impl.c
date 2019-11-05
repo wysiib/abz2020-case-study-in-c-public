@@ -48,6 +48,7 @@ void reset(void **state) {
     pitman_arm_move_time = 0;
     last_pitman_arm = pa_ud_Neutral;
     blinking = false;
+    blinking_direction = none;
 }
 
 static void set_all_lights(percentage p) {
@@ -133,7 +134,7 @@ static void set_blinkers_on(size_t time) {
             assert(0);
     }
        
-    if(get_market_code() == USA  || get_market_code() == Canada) {
+    if(get_market_code() == USA) {
         switch(blinking_direction) {
             case blink_left:
                 set_low_beam_left(50);
@@ -224,7 +225,7 @@ void light_do_step(void) {
     }
     // stay on as long as key is inserted
     if(daytime_light_was_on && ks != NoKeyInserted) {
-        if(get_market_code() == USA || get_market_code() == Canada) {
+        if(get_market_code() == USA) {
             // from szenario 7 but not from specification?
             set_low_beam_left(100);
             set_low_beam_right(100);
@@ -271,7 +272,7 @@ void light_do_step(void) {
 
     // ELS-2
     if(get_pitman_vertical() != last_pitman_arm && tt - pitman_arm_move_time < 500) {
-        remaining_blinks = 2;
+        remaining_blinks = 3;
     }
     // otherwise check if arm was released later on -> stop blinking
     if(get_pitman_vertical() != last_pitman_arm && get_pitman_vertical() == pa_ud_Neutral && tt - pitman_arm_move_time >= 500) {
@@ -280,7 +281,7 @@ void light_do_step(void) {
         set_blink_right(0);
         blinking = false;
 
-        if(get_market_code() == USA || get_market_code() == Canada) {
+        if(get_market_code() == USA) {
             set_tail_lamp_right(0);
             set_tail_lamp_left(0);
         }
