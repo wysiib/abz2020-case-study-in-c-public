@@ -3,7 +3,6 @@
 #include <setjmp.h>
 #include <google/cmockery.h>
 
-#include <assert.h>
 #include <string.h>
 
 #include "light/user-interface.h"
@@ -15,130 +14,11 @@
 
 #include "system.h"
 
-brightness get_brightness(void) {
-    return (brightness) mock();
-}
+#include "test_common.h"
 
-keyState get_key_status(void) {
-    return (keyState) mock();
-}
-
-bool get_engine_status(void) {
-    return (bool) mock();
-}
-
-bool get_all_doors_closed(void) {
-    return (bool) mock();
-}
-
-bool get_reverse_gear(void) {
-    return (bool) mock();
-}
-
-voltage get_voltage_battery(void) {
-    return (voltage) mock();
-}
-
-steeringAngle get_steering_angle(void) {
-    return (steeringAngle) mock();
-}
-
-bool get_oncoming_traffic(void) {
-    return (bool) mock();
-}
-
-size_t get_time(void) {
-    return (size_t) mock();
-}
-
-
-typedef enum sensors_and_time_key {
-    sensorKeyState,
-    sensorEngineOn,
-    sensorAllDoorsClosed,
-    sensorBrightnessSensor,
-    sensorReverseGear,
-    sensorVoltageBattery,
-    sensorSteeringAngle,
-    sensorOncommingTraffic,
-    sensorTime
-} sensors_and_time_key;
-
-typedef struct sensors_and_time {
-    keyState key_state;
-    bool engine_on;
-    bool all_doors_closed;
-    brightness brightness_sensor;
-    bool reverse_gear;
-    voltage voltage_battery;
-    steeringAngle steering_angle;
-    bool oncomming_trafic;
-    size_t time;
-} sensors_and_time;
-
-sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key, int value) {
-    switch (key) {
-        case sensorKeyState:
-            assert(value >= 0 && value <= 2);
-            data.key_state = (keyState) value;
-            break;
-        case sensorEngineOn:
-            assert(value >= 0 && value <= 1);
-            data.engine_on = (bool) value;
-            break;
-        case sensorAllDoorsClosed:
-            assert(value >= 0 && value <= 1);
-            data.all_doors_closed = (bool) value;
-            break;
-        case sensorBrightnessSensor:
-            assert(value >= brightness_min && value <= brightness_max);
-            data.brightness_sensor = (brightness) value;
-            break;
-        case sensorReverseGear:
-            assert(value >= 0 && value <= 1);
-            data.reverse_gear = (bool) value;
-            break;
-        case sensorVoltageBattery:
-            assert(value >= voltage_min && value <= voltage_max);
-            data.voltage_battery = (voltage) value;
-            break;
-        case sensorSteeringAngle:
-            assert(value >= st_calibrating && value <= st_hard_right_max);
-            data.steering_angle = (steeringAngle) value;
-            break;
-        case sensorOncommingTraffic:
-            assert(value >= 0 && value <= 1);
-            data.oncomming_trafic = (bool) value;
-            break;
-        case sensorTime:
-            assert(value >= 0);
-            data.time = (size_t) value;
-            break;
-        default: assert(0);
-    }
-    return data;
-}
-
-void mock_all_sensors(sensors_and_time data) {
-    will_return(get_brightness, data.brightness_sensor);
-    will_return(get_time, data.time);
-    will_return(get_key_status, data.key_state);
-    will_return(get_engine_status, data.engine_on);
-    will_return(get_all_doors_closed, data.all_doors_closed);
-    will_return(get_reverse_gear, data.reverse_gear);
-    will_return(get_voltage_battery, data.voltage_battery);
-    will_return(get_steering_angle, data.steering_angle);
-    will_return(get_oncoming_traffic, data.oncomming_trafic);
-}
-
-void mock_and_execute(sensors_and_time data) {
-    mock_all_sensors(data);
-    light_do_step();
-}
-
-#define assert_light_state(x) ls = get_light_state(); ref = (light_state) x; assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
 
 void sequence1(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -260,6 +140,7 @@ void sequence1(void **state) {
 }
 
 void sequence2(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -343,6 +224,7 @@ void sequence2(void **state) {
 
 
 void sequence3(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -398,6 +280,7 @@ void sequence3(void **state) {
 }
 
 void sequence4(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -439,6 +322,7 @@ void sequence4(void **state) {
 }
 
 void sequence5(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -485,6 +369,7 @@ void sequence5(void **state) {
 }
 
 void sequence6(void **state) {
+    init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
     light_state ls, ref;
 
@@ -527,6 +412,211 @@ void sequence6(void **state) {
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 5999);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 6499);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 6500);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 6999);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7499);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7500);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7700);
+    pitman_vertical(pa_Downward5);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7800);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8500);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8700);
+    pitman_vertical(pa_Upward5);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 9000);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 9499);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 9500);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 9999);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10499);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10800);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+}
+
+void sequence7(void **state) {
+    init_system(leftHand, false, USA);
+
+    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+    light_state ls, ref;
+
+    toggle_daytime_running_light();
+
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    pitman_vertical(pa_Upward7);
+    mock_and_execute(sensor_states);
+
+    // from given test cases:
+    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    // but I think the tail light should be used for blicking whether its up5 or up7
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0}));
+
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4500);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 5000);
+    mock_and_execute(sensor_states);
+
+    // see above: added tail light
+    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 5300);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10000);
+    pitman_vertical(pa_Downward5);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10200);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10800);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10999);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 11000);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 13300);
+    pitman_vertical(pa_Upward5);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 13400);
+    pitman_vertical(pa_ud_Neutral);
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 14300);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 14500);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1500);
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 int main(int argc, char* argv[]) {
@@ -538,6 +628,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(sequence4, reset, reset),
         unit_test_setup_teardown(sequence5, reset, reset),
         unit_test_setup_teardown(sequence6, reset, reset),
+        unit_test_setup_teardown(sequence7, reset, reset),
     };
     return run_tests(tests);
 }

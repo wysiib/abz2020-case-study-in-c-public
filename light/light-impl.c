@@ -1,6 +1,11 @@
+#include <assert.h>
+
+#include "../system.h"
+
 #include "sensors.h"
 #include "user-interface.h"
 #include "actuators.h"
+#include "light-impl.h"
 
 static size_t when_light_on = 0;
 
@@ -14,7 +19,15 @@ static bool lrs_turned_on_while_key_inserted = false;
 
 static size_t ambi_light_timer = 0;
 
-void reset(void) {
+static size_t blink_timer = 0;
+static size_t remaining_blinks = 0;
+static size_t pitman_arm_move_time = 0;
+static pitmanArmUpDown last_pitman_arm = pa_ud_Neutral;
+static bool blinking = false;
+static blinkingDirection blinking_direction = none;
+
+void reset(void **state) {
+    (void) state;
     reset_user_interface();
     when_light_on = 0;
 
@@ -27,6 +40,12 @@ void reset(void) {
     lrs_turned_on_while_key_inserted = false;
 
     ambi_light_timer = 0;
+
+    blink_timer = 0;
+    remaining_blinks = 0;
+    pitman_arm_move_time = 0;
+    last_pitman_arm = pa_ud_Neutral;
+    blinking = false;
 }
 
 static void set_all_lights(percentage p) {
@@ -60,6 +79,65 @@ static void update_ambient_light_status(keyState old, keyState new,
     }
 }
 
+static void set_blinkers_off(size_t time) {
+    set_blink_left(0);
+    set_blink_right(0);
+
+    if(get_market_code() == USA) {
+        if(blink_left == blinking_direction) {
+            set_low_beam_left(50);
+            set_tail_lamp_left(0);
+        } else {
+            set_low_beam_right(50);
+            set_tail_lamp_right(0);
+        }
+    }
+
+    blinking = false;
+    blink_timer = time;
+}
+
+static void set_blinkers_on(size_t time) {
+    switch(blinking_direction) {
+        case blink_left:
+            set_blink_left(100);
+            break;
+        case blink_right:
+            set_blink_right(100);
+            break;
+        case hazard:
+            set_blink_left(100);
+            set_blink_right(100);
+            break;
+        default:
+            assert(0);
+    }
+       
+    if(get_market_code() == USA) {
+        switch(blinking_direction) {
+            case blink_left:
+                set_low_beam_left(50);
+                set_tail_lamp_left(100);
+                break;
+            case blink_right:
+                set_low_beam_right(50);
+                set_tail_lamp_right(100);
+                break;
+            case hazard:
+                set_low_beam_left(50);
+                set_tail_lamp_left(100);
+                set_low_beam_right(50);
+                set_tail_lamp_right(100);
+                break;
+            default:
+                assert(0);
+        }
+    }
+
+    blink_timer = time;
+    remaining_blinks--;
+    blinking = true;
+}
 
 void light_do_step(void) {
     keyState ks = get_key_status();
@@ -120,12 +198,17 @@ void light_do_step(void) {
     // ELS-17
     // activated after starting the engine
     if(get_daytime_running_light() && engine_on) {
-        set_all_lights(100);
         daytime_light_was_on = true;
     }
     // stay on as long as key is inserted
     if(daytime_light_was_on && ks != NoKeyInserted) {
-        set_all_lights(100);
+        if(get_market_code() == USA) {
+            // from szenario 7 but not from specification?
+            set_low_beam_left(100);
+            set_low_beam_right(100);
+        } else {
+            set_all_lights(100);
+        }
     }
 
     // ELS-16 (has priority over ELS-17)
@@ -144,12 +227,83 @@ void light_do_step(void) {
     }
 
     // direction / blinking
-    if(engine_on && get_pitman_vertical() == pa_Downward5) {
-        set_blink_left(100);
+    // blink as soon as arm is moved unless in dark cycle
+    if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
+        if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+            set_blink_left(100);
+            if(get_market_code() == USA) {
+                set_low_beam_left(50);
+                set_tail_lamp_left(100);
+            }
+            blinking = true;
+            blinking_direction = blink_left;
+            blink_timer = tt;
+            remaining_blinks = -1;
+        }
+    }
+    if(get_pitman_vertical() == pa_Upward5 || get_pitman_vertical() == pa_Upward7) {
+        if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+            set_blink_right(100);
+            if(get_market_code() == USA) {
+                set_low_beam_right(50);
+                set_tail_lamp_right(100);
+            }
+            blinking = true;
+            blinking_direction = blink_right;
+            blink_timer = tt;
+            remaining_blinks = -1;
+        }
     }
 
+    // ELS-2
+    if(get_pitman_vertical() != last_pitman_arm && tt - pitman_arm_move_time < 500) {
+        remaining_blinks = 3;
+    }
+    // otherwise check if arm was released later on -> stop blinking
+    if(get_pitman_vertical() != last_pitman_arm && get_pitman_vertical() == pa_ud_Neutral && tt - pitman_arm_move_time >= 500) {
+        remaining_blinks = 0;
+        set_blink_left(0);
+        set_blink_right(0);
+        blinking = false;
+
+        if(get_market_code() == USA) {
+            set_tail_lamp_right(0);
+            set_tail_lamp_left(0);
+        }
+    }
+
+    // blinker still on -> keep usa specific stuff
+    // another setting (i.e. daytime light) might have tried to turn them up again
+    if(remaining_blinks && get_market_code() == USA) {
+        if(blink_left == blinking_direction) {
+                set_low_beam_left(50);
+            } else {
+                set_low_beam_right(50);
+            }
+    }
+
+    if(!blinking && get_hazard_warning()) {
+        blinking_direction = hazard;
+        remaining_blinks = -1; // does not reset timings but keeps cycle
+    }
+
+    // turn blinker off or on
+    if(tt - blink_timer >= 500 && blinking) {
+
+        set_blinkers_off(tt);
+    }
+    if(tt - blink_timer >= 500 && remaining_blinks && !blinking) {
+        set_blinkers_on(tt);
+    }
+
+    // remember last time the pitman arm was moved
+    if(get_pitman_vertical() != last_pitman_arm) {
+        pitman_arm_move_time = tt;
+    }
+    
     last_lrs = get_light_rotary_switch();
     last_engine = engine_on;
     last_key_state = ks;
     last_all_door_closed = all_doors_closed;
+    last_pitman_arm = get_pitman_vertical();
 }
