@@ -35,13 +35,12 @@ void els1_left(void **state) {
     pitman_vertical(pa_Downward7);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
 
     int i;
     for (i = 2; i < 100; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -64,13 +63,12 @@ void els1_right(void **state) {
     pitman_vertical(pa_Upward7);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 0, blinkRight, 100);
 
     int i;
     for (i = 2; i < 100; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 0, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -93,17 +91,16 @@ void els2_left(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
     pitman_vertical(pa_ud_Neutral);
 
     int i;
     for (i = 2; i < 5; i++) { // three cycles
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 
-    progress_time(5000, 10000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(5000, 10000, blinkLeft, 0, blinkRight, 0);
 }
 
 void els3_a_left(void **state) {
@@ -125,7 +122,7 @@ void els3_a_left(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
     pitman_vertical(pa_ud_Neutral);
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     mock_and_execute(sensor_states);
@@ -135,9 +132,8 @@ void els3_a_left(void **state) {
     int i;
 
     for (i = 2; i < 5; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 0, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -160,7 +156,7 @@ void els3_b_left(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
     pitman_vertical(pa_ud_Neutral);
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     mock_and_execute(sensor_states);
@@ -169,9 +165,8 @@ void els3_b_left(void **state) {
 
     int i;
     for (i = 2; i < 100; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -194,19 +189,18 @@ void els4_left_a(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
 
     int i;
     for (i = 2; i < 10; i++) {
-        progress_time(i * 1000, i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    progress_time(10000, 20000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(10000, 20000, blinkLeft, 0, blinkRight, 0);
 }
 
 
@@ -229,19 +223,18 @@ void els4_left_b(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
 
     int i;
     for (i = 2; i < 3; i++) {
-        progress_time(i*1000, i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    progress_time(3000, 10000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(3000, 10000, blinkLeft, 0, blinkRight, 0);
 }
 
 void els6_left_canada(void **state) {
@@ -329,28 +322,27 @@ void els7_a_left(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
     pitman_vertical(pa_ud_Neutral);
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     mock_and_execute(sensor_states);
 
-    progress_time(2001, 2400, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(2001, 2400, blinkLeft, 100, blinkRight, 0);
 
     sensor_states = update_sensors(sensor_states, sensorTime, 2401); // less than .5 seconds
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    progress_time(2500, 2999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(2500, 2999, blinkLeft, 0, blinkRight, 0);
     pitman_vertical(pa_ud_Neutral);
 
     int i;
 
     for (i = 3; i <= 7; i++) { // queued command: tip blinking
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
-    progress_time(8000, 11000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(8000, 11000, blinkLeft, 0, blinkRight, 0);
 }
 
 void els7_b_left(void **state) {
@@ -372,22 +364,21 @@ void els7_b_left(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 0);
     pitman_vertical(pa_Downward7);
     sensor_states = update_sensors(sensor_states, sensorTime, 2001);
     mock_and_execute(sensor_states);
 
-    progress_time(2001, 2499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(2001, 2400, blinkLeft, 100, blinkRight, 0);
     pitman_vertical(pa_Downward5);
-    progress_time(2500, 2999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(2500, 2999, blinkLeft, 0, blinkRight, 0);
     pitman_vertical(pa_ud_Neutral);
 
     int i;
 
     for (i = 3; i <= 11; i++) { // queued command: direction blinking
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -409,9 +400,8 @@ void els8_a(void **state) {
 
     int i;
     for (i = 2; i < 100; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -433,9 +423,8 @@ void els8_b(void **state) {
 
     int i;
     for (i = 3; i < 100; i++) {
-        progress_time(i * 1000,       i * 1000 + 333, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 334, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 333, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 334, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -456,31 +445,29 @@ void els9(void **state) {
 
     int i;
     for (i = 2; i < 10; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
     mock_and_execute(sensor_states);
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10200);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 10800);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 0, blinkRight, 0);
     sensor_states = update_sensors(sensor_states, sensorTime, 11200);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 11800);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 0, blinkRight, 0);
 
 
     for (i = 12; i < 20; i++) {
-        progress_time(i * 1000,       i * 1000 + 333, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 334, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 333, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 334, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
@@ -488,21 +475,20 @@ void els9(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorTime, 20200);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 20800);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 0, blinkRight, 0);
     sensor_states = update_sensors(sensor_states, sensorTime, 21200);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 100, blinkRight, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 21800);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_partial_state2(blinkLeft, 0, blinkRight, 0);
 
-    for (i = 22; i < 10; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    for (i = 22; i < 30; i++) {
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -527,17 +513,15 @@ void els12_a(void **state) {
 
     int i;
     for (i = 1; i < 10; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 
     toggle_hazard_warning();
 
     for (i = 10; i < 20; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -564,17 +548,15 @@ void els12_b(void **state) {
 
     int i;
     for (i = 1; i < 10; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 
     toggle_hazard_warning();
 
     for (i = 10; i < 20; i++) {
-        progress_time(i * 1000,       i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
-        progress_time(i * 1000 + 500, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 
@@ -599,11 +581,10 @@ void els13_a(void **state) {
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    progress_time(1000, 1499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-    progress_time(1500, 1999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
+    progress_time_partial2(1000, 1499, blinkLeft, 100, blinkRight, 100);
+    progress_time_partial2(1500, 1999, blinkLeft, 0, blinkRight, 0);
     toggle_hazard_warning();
-    progress_time(2000, 5000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(2000, 5000, blinkLeft, 0, blinkRight, 0);
 }
 
 void els13_b(void **state) {
@@ -628,11 +609,31 @@ void els13_b(void **state) {
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    progress_time(1000, 1499, ((light_state) {0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-    progress_time(1500, 1999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
+    progress_time_partial2(1000, 1499, blinkLeft, 100, blinkRight, 100);
+    progress_time_partial2(1500, 1999, blinkLeft, 0, blinkRight, 0);
     toggle_hazard_warning();
-    progress_time(2000, 5000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time_partial2(2000, 5000, blinkLeft, 0, blinkRight, 0);
+}
+
+void els14(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+    light_state ls = get_light_state();
+
+    progress_time_partial2(1000, 3000, lowBeamLeft, 100, lowBeamRight, 100);
 }
 
 
@@ -661,6 +662,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els12_b, reset, reset),
         unit_test_setup_teardown(els13_a, reset, reset),
         unit_test_setup_teardown(els13_b, reset, reset),
+        unit_test_setup_teardown(els14, reset, reset),
     };
     run_tests(tests);
     return 0;
