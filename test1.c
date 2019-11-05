@@ -565,11 +565,16 @@ void sequence7(void **state) {
 
     assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
 
+    progress_time(10201, 10499, ((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
+    progress_time(10500, 10799, ((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+
     sensor_states = update_sensors(sensor_states, sensorTime, 10800);
     toggle_hazard_warning();
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+
+    progress_time(10801, 10998, ((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10999);
     mock_and_execute(sensor_states);
