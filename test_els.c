@@ -149,8 +149,6 @@ void els3_a(void **state) {
     mock_and_execute(sensor_states);
 
     pitman_vertical(pa_Upward7);
-    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
-    mock_and_execute(sensor_states);
 
     int i;
 
