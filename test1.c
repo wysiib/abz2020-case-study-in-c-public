@@ -587,6 +587,10 @@ void sequence7(void **state) {
     assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
 
     progress_time(11001, 11499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    progress_time(11500, 11999, ((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(12000, 12499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    progress_time(12500, 12999, ((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(13000, 13299, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 13300);
     pitman_vertical(pa_Upward5);
@@ -600,11 +604,17 @@ void sequence7(void **state) {
 
     assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
 
+    progress_time(13401, 13499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    progress_time(13500, 13999, ((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
+    progress_time(14000, 14299, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+
     sensor_states = update_sensors(sensor_states, sensorTime, 14300);
     toggle_hazard_warning();
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    
+    progress_time(14301, 14499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 14500);
     toggle_hazard_warning();
@@ -612,7 +622,7 @@ void sequence7(void **state) {
 
     assert_light_state(((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
 
-    sensor_states = update_sensors(sensor_states, sensorTime, 1500);
+    sensor_states = update_sensors(sensor_states, sensorTime, 15000);
     toggle_hazard_warning();
     mock_and_execute(sensor_states);
 

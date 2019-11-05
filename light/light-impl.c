@@ -113,10 +113,12 @@ static void set_blinkers_off(size_t time) {
 }
 
 static void set_blinkers_on(size_t time) {
+    // activate hazard warning blinks
     if(get_hazard_warning()) {
         blinking_direction = hazard;
         remaining_blinks = -1; // does not reset timings but keeps cycle
     }
+
     switch(blinking_direction) {
         case blink_left:
             set_blink_left(100);
