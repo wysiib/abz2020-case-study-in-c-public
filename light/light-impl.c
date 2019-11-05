@@ -259,7 +259,7 @@ void light_do_step(void) {
 
     // ELS-2
     if(get_pitman_vertical() != last_pitman_arm && tt - pitman_arm_move_time < 500) {
-        remaining_blinks = 3;
+        remaining_blinks = 2;
     }
     // otherwise check if arm was released later on -> stop blinking
     if(get_pitman_vertical() != last_pitman_arm && get_pitman_vertical() == pa_ud_Neutral && tt - pitman_arm_move_time >= 500) {
