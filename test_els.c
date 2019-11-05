@@ -127,7 +127,7 @@ void els3_a_left(void **state) {
 
     assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     pitman_vertical(pa_ud_Neutral);
-    sensor_states = update_sensors(sensor_states, sensorTime, 2001);
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     mock_and_execute(sensor_states);
 
     pitman_vertical(pa_Upward7);
