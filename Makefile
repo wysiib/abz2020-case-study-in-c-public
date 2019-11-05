@@ -1,3 +1,5 @@
+.PHONY: test_sequences test_els
+
 test: test_sequences test_els
 
 test_sequences: test1.c test_common.c light/light-state.c light/user-interface.c light/light-impl.c system.c
