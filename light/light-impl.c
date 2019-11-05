@@ -204,7 +204,7 @@ void light_do_step(void) {
     }
     // stay on as long as key is inserted
     if(daytime_light_was_on && ks != NoKeyInserted) {
-        if(get_market_code() == USA) {
+        if(get_market_code() == USA || get_market_code() == Canada) {
             // from szenario 7 but not from specification?
             set_low_beam_left(100);
             set_low_beam_right(100);
@@ -233,7 +233,7 @@ void light_do_step(void) {
     if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
         if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             set_blink_left(100);
-            if(get_market_code() == USA) {
+            if(get_market_code() == USA || get_market_code() == Canada) {
                 set_low_beam_left(50);
                 set_tail_lamp_left(100);
             }
@@ -246,7 +246,7 @@ void light_do_step(void) {
     if(get_pitman_vertical() == pa_Upward5 || get_pitman_vertical() == pa_Upward7) {
         if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             set_blink_right(100);
-            if(get_market_code() == USA) {
+            if(get_market_code() == USA || get_market_code() == Canada) {
                 set_low_beam_right(50);
                 set_tail_lamp_right(100);
             }
@@ -268,7 +268,7 @@ void light_do_step(void) {
         set_blink_right(0);
         blinking = false;
 
-        if(get_market_code() == USA) {
+        if(get_market_code() == USA || get_market_code() == Canada) {
             set_tail_lamp_right(0);
             set_tail_lamp_left(0);
         }
@@ -276,7 +276,7 @@ void light_do_step(void) {
 
     // blinker still on -> keep usa specific stuff
     // another setting (i.e. daytime light) might have tried to turn them up again
-    if(remaining_blinks && get_market_code() == USA) {
+    if(remaining_blinks && (get_market_code() == USA || get_market_code() == Canada)) {
         if(blink_left == blinking_direction) {
                 set_low_beam_left(50);
             } else {
