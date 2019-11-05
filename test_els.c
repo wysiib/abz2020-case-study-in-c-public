@@ -152,11 +152,11 @@ void els3_a_left(void **state) {
 
     int i;
 
-    for (i = 2; i < 100; i++) {
+    for (i = 2; i < 5; i++) {
         sensor_states = update_sensors(sensor_states, sensorTime, i * 1000);
         mock_and_execute(sensor_states);
-        assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-        progress_time(i*1000 + 1, i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time(i*1000 + 1, i * 1000 + 499, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
         sensor_states = update_sensors(sensor_states, sensorTime, i * 1000 + 500);
         mock_and_execute(sensor_states);
