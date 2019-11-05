@@ -51,5 +51,6 @@ void mock_all_sensors(sensors_and_time data);
 void mock_and_execute(sensors_and_time data);
 
 #define assert_light_state(x) ls = get_light_state(); ref = (light_state) x; assert_true(0 == memcmp(&ls, &ref, sizeof(light_state)));
+#define progress_time(start, end, state) {for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_light_state(((light_state) state)); }}
 
 #endif
