@@ -631,9 +631,73 @@ void els14(void **state) {
     set_light_rotary_switch(lrs_auto);
     set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
-    light_state ls = get_light_state();
 
     progress_time_partial2(1000, 3000, lowBeamLeft, 100, lowBeamRight, 100);
+}
+
+void els15(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(1000, 3000, lowBeamLeft, 50, lowBeamRight, 50);
+}
+
+
+void els30(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    mock_and_execute(sensor_states);
+
+    pitman_horizontal(pa_Forward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial1(1000, 3000, highBeamOn, true);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
+}
+
+void els31(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    // TODO: highBeamRange is new...?
+    //progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+
+    //pitman_horizontal(pa_fb_Neutral);
+    //progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
 
@@ -663,6 +727,15 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els13_a, reset, reset),
         unit_test_setup_teardown(els13_b, reset, reset),
         unit_test_setup_teardown(els14, reset, reset),
+        unit_test_setup_teardown(els15, reset, reset),
+        // TODO: ELS-16
+        // TODO: ELS-17
+        // TODO: ELS-18
+        // TODO: ELS-19
+        // NOTE: ELS-20 is deleted
+        // TODO: ELS-21 to ESL-29
+        unit_test_setup_teardown(els30, reset, reset),
+        // TODO: ELS-31 is unfinished (new variable)
     };
     run_tests(tests);
     return 0;

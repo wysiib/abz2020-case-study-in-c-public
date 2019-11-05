@@ -14,22 +14,10 @@ void reset_user_interface(void);
 void set_light_rotary_switch(lightRotarySwitch val);
 lightRotarySwitch get_light_rotary_switch(void);
 
-// permanent activation of the adaptive high beam, engages pitman arm
-void pitman_backward(void);
-
-// temporary activation of the high beam (non-engaging)
-void pitman_forward(void);
-
-void pitman_disengage_horizontal(void);
-
 // trigger direction indicator (which one: unspecified so far)
 // temporary activation: 5-7 degree
 // permanent activation: 7 degree
 void pitman_vertical(pitmanArmUpDown deflection);
-
-// disengange automatically if steering wheel
-// turned more than 10 degrees
-void pitman_disengage_vertical(void);
 
 // change boolean value
 void toggle_hazard_warning(void);
@@ -46,5 +34,10 @@ void toggle_ambient_light(void);
 bool get_ambient_light(void);
 
 pitmanArmUpDown get_pitman_vertical(void);
+
+void pitman_horizontal(pitmanArmForthBack deflection);
+
+pitmanArmForthBack get_pitman_horizontal(void);
+
 
 #endif

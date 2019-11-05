@@ -63,4 +63,10 @@ bool get_hazard_warning(void) {
     return hazard_warning;
 }
 
+void pitman_horizontal(pitmanArmForthBack deflection) {
+    pacman_horizontal = deflection;
+}
 
+pitmanArmForthBack get_pitman_horizontal(void) {
+    return pacman_horizontal;
+}
