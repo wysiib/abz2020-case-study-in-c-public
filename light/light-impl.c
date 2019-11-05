@@ -100,6 +100,10 @@ static void set_blinkers_off(size_t time) {
 }
 
 static void set_blinkers_on(size_t time) {
+    if(get_hazard_warning()) {
+        blinking_direction = hazard;
+        remaining_blinks = -1; // does not reset timings but keeps cycle
+    }
     switch(blinking_direction) {
         case blink_left:
             set_blink_left(100);
@@ -284,14 +288,8 @@ void light_do_step(void) {
             }
     }
 
-    if(!blinking && get_hazard_warning()) {
-        blinking_direction = hazard;
-        remaining_blinks = -1; // does not reset timings but keeps cycle
-    }
-
     // turn blinker off or on
     if(tt - blink_timer >= 500 && blinking) {
-
         set_blinkers_off(tt);
     }
     if(tt - blink_timer >= 500 && remaining_blinks && !blinking) {
