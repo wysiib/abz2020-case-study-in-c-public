@@ -622,6 +622,8 @@ void sequence7(void **state) {
 
     assert_light_state(((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
 
+    progress_time(14500, 14999, ((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
+
     sensor_states = update_sensors(sensor_states, sensorTime, 15000);
     toggle_hazard_warning();
     mock_and_execute(sensor_states);
