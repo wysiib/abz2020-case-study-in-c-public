@@ -19,8 +19,6 @@
 void els1_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
-    size_t time;
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -39,7 +37,6 @@ void els1_left(void **state) {
 
     assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
-    time = 2001;
     int i;
     for (i = 2; i < 100; i++) {
         sensor_states = update_sensors(sensor_states, sensorTime, i * 1000);
@@ -57,8 +54,6 @@ void els1_left(void **state) {
 void els1_right(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
-    size_t time;
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -77,7 +72,6 @@ void els1_right(void **state) {
 
     assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
-    time = 2001;
     int i;
     for (i = 2; i < 100; i++) {
         sensor_states = update_sensors(sensor_states, sensorTime, i * 1000);
@@ -95,8 +89,6 @@ void els1_right(void **state) {
 void els2_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
-    size_t time;
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -116,7 +108,6 @@ void els2_left(void **state) {
     assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     pitman_vertical(pa_ud_Neutral);
 
-    time = 2001;
     int i;
     for (i = 2; i < 5; i++) { // three cycles
         sensor_states = update_sensors(sensor_states, sensorTime, i * 1000);
@@ -136,8 +127,6 @@ void els2_left(void **state) {
 void els3_a(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
-    size_t time;
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -150,28 +139,32 @@ void els3_a(void **state) {
     mock_and_execute(sensor_states);
 
 
-    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
-    pitman_vertical(pa_Downward7);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1998);
+    pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     pitman_vertical(pa_ud_Neutral);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1999);
+    mock_and_execute(sensor_states);
 
-    time = 2001;
+    pitman_vertical(pa_Upward7);
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    mock_and_execute(sensor_states);
+
     int i;
-    for (i = 2; i < 5; i++) { // three cycles
+
+    for (i = 2; i < 100; i++) {
         sensor_states = update_sensors(sensor_states, sensorTime, i * 1000);
         mock_and_execute(sensor_states);
-        assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-        progress_time(i*1000 + 1, i * 1000 + 499, ((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        progress_time(i*1000 + 1, i * 1000 + 499, ((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
         sensor_states = update_sensors(sensor_states, sensorTime, i * 1000 + 500);
         mock_and_execute(sensor_states);
         assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
         progress_time(i * 1000 + 501, i * 1000 + 999, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
     }
-
-    progress_time(5000, 10000, ((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 int main(int argc, char* argv[]) {

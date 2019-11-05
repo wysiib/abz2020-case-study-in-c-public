@@ -20,7 +20,6 @@
 void sequence1(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -142,7 +141,6 @@ void sequence1(void **state) {
 void sequence2(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
 
     toggle_ambient_light();
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
@@ -226,7 +224,6 @@ void sequence2(void **state) {
 void sequence3(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
 
     toggle_daytime_running_light();
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -282,7 +279,6 @@ void sequence3(void **state) {
 void sequence4(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
 
     toggle_daytime_running_light();
     toggle_ambient_light();
@@ -324,7 +320,6 @@ void sequence4(void **state) {
 void sequence5(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
 
     toggle_ambient_light();
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -371,7 +366,6 @@ void sequence5(void **state) {
 void sequence6(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
 
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
@@ -517,7 +511,6 @@ void sequence7(void **state) {
     init_system(leftHand, false, USA);
 
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-    light_state ls, ref;
 
     toggle_daytime_running_light();
 
