@@ -345,11 +345,11 @@ void els7_a_left(void **state) {
 
     int i;
 
-    for (i = 3; i <= 5; i++) { // queued command: tip blinking
+    for (i = 3; i < 5; i++) { // queued command: tip blinking
         progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 0);
         progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
-    progress_time_partial2(6000, 11000, blinkLeft, 0, blinkRight, 0);
+    progress_time_partial2(5000, 11000, blinkLeft, 0, blinkRight, 0);
 }
 
 void els7_b_left(void **state) {
