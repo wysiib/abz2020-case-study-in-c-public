@@ -21,6 +21,7 @@ void pitman_vertical(pitmanArmUpDown deflection);
 
 // change boolean value
 void toggle_hazard_warning(void);
+bool get_hazard_warning(void);
 
 // change boolean value, armoured vehicle only
 void toggle_darkness_mode(void);
