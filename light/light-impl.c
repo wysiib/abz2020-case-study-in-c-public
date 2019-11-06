@@ -270,6 +270,11 @@ void light_do_step(void) {
         set_blinkers_off(tt);
     }
 
+    // turn on hazard warning if not yet in mode
+    if(blinking_direction == none && get_hazard_warning()) {
+        set_blinkers_on(tt);
+    }
+
     // direction / blinking
     // blink as soon as arm is moved unless in dark cycle
     if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
