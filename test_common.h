@@ -55,80 +55,19 @@ void mock_all_sensors(sensors_and_time data);
 
 void mock_and_execute(sensors_and_time data);
 
-#define assert_light_state(x)                                                  \
-    {                                                                          \
-        light_state ref = (light_state)x;                                      \
-        light_state ls = get_light_state();                                    \
-        assert_true(ls.brakeLight == ref.brakeLight);                          \
-        assert_true(ls.blinkLeft == ref.blinkLeft);                            \
-        assert_true(ls.blinkRight == ref.blinkRight);                          \
-        assert_true(ls.lowBeamLeft == ref.lowBeamLeft);                        \
-        assert_true(ls.lowBeamRight == ref.lowBeamRight);                      \
-        assert_true(ls.tailLampLeft == ref.tailLampLeft);                      \
-        assert_true(ls.tailLampRight == ref.tailLampRight);                    \
-        assert_true(ls.highBeamOn == ref.highBeamOn);                          \
-        assert_true(ls.highBeamMotor == ref.highBeamMotor);                    \
-        assert_true(ls.highBeamRange == ref.highBeamRange);                    \
-        assert_true(ls.corneringLightLeft == ref.corneringLightLeft);          \
-        assert_true(ls.corneringLightRight == ref.corneringLightRight);        \
-        assert_true(ls.reverseLight == ref.reverseLight);                      \
-    }
-#define progress_time(start, end, state)                                       \
-    {                                                                          \
-        size_t time;                                                           \
-        for (time = start; time <= end; time++) {                              \
-            sensor_states = update_sensors(sensor_states, sensorTime, time);   \
-            mock_and_execute(sensor_states);                                   \
-            assert_light_state(((light_state)state));                          \
-        }                                                                      \
-    }
 
-#define assert_partial_state3(field1, value1, field2, value2, field3, value3)  \
-    {                                                                          \
-        light_state ls = get_light_state();                                    \
-        assert_true(ls.field1 == value1);                                      \
-        assert_true(ls.field2 == value2);                                      \
-        assert_true(ls.field3 == value3);                                      \
-    }
-#define assert_partial_state2(field1, value1, field2, value2)                  \
-    {                                                                          \
-        light_state ls = get_light_state();                                    \
-        assert_true(ls.field1 == value1);                                      \
-        assert_true(ls.field2 == value2);                                      \
-    }
-#define assert_partial_state1(field, value)                                    \
-    {                                                                          \
-        light_state ls = get_light_state();                                    \
-        assert_true(ls.field == value);                                        \
-    }
-#define progress_time_partial1(start, end, field, value)                       \
-    {                                                                          \
-        size_t time;                                                           \
-        for (time = start; time <= end; time++) {                              \
-            sensor_states = update_sensors(sensor_states, sensorTime, time);   \
-            mock_and_execute(sensor_states);                                   \
-            assert_partial_state1(field, value);                               \
-        }                                                                      \
-    }
-#define progress_time_partial2(start, end, field1, value1, field2, value2)     \
-    {                                                                          \
-        size_t time;                                                           \
-        for (time = start; time <= end; time++) {                              \
-            sensor_states = update_sensors(sensor_states, sensorTime, time);   \
-            mock_and_execute(sensor_states);                                   \
-            assert_partial_state2(field1, value1, field2, value2);             \
-        }                                                                      \
-    }
-#define progress_time_partial3(start, end, field1, value1, field2, value2,     \
-                               field3, value3)                                 \
-    {                                                                          \
-        size_t time;                                                           \
-        for (time = start; time <= end; time++) {                              \
-            sensor_states = update_sensors(sensor_states, sensorTime, time);   \
-            mock_and_execute(sensor_states);                                   \
-            assert_partial_state2(field1, value1, field2, value2, field3,      \
-                                  value3);                                     \
-        }                                                                      \
-    }
+// NOTE: macros on same line because of assertion line numbers
+
+#define assert_light_state(x) { light_state ref = (light_state)x; light_state ls = get_light_state(); assert_true(ls.brakeLight == ref.brakeLight); assert_true(ls.blinkLeft == ref.blinkLeft); assert_true(ls.blinkRight == ref.blinkRight); assert_true(ls.lowBeamLeft == ref.lowBeamLeft); assert_true(ls.lowBeamRight == ref.lowBeamRight); assert_true(ls.tailLampLeft == ref.tailLampLeft); assert_true(ls.tailLampRight == ref.tailLampRight); assert_true(ls.highBeamOn == ref.highBeamOn); assert_true(ls.highBeamMotor == ref.highBeamMotor); assert_true(ls.highBeamRange == ref.highBeamRange); assert_true(ls.corneringLightLeft == ref.corneringLightLeft); assert_true(ls.corneringLightRight == ref.corneringLightRight); assert_true(ls.reverseLight == ref.reverseLight); }
+
+#define progress_time(start, end, state) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_light_state(((light_state)state)); } }
+
+#define assert_partial_state3(field1, value1, field2, value2, field3, value3) { light_state ls = get_light_state(); assert_true(ls.field1 == value1); assert_true(ls.field2 == value2); assert_true(ls.field3 == value3); }
+#define assert_partial_state2(field1, value1, field2, value2) { light_state ls = get_light_state(); assert_true(ls.field1 == value1); assert_true(ls.field2 == value2); }
+#define assert_partial_state1(field, value) { light_state ls = get_light_state(); assert_true(ls.field == value); }
+
+#define progress_time_partial1(start, end, field, value) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state1(field, value); } }
+#define progress_time_partial2(start, end, field1, value1, field2, value2) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state2(field1, value1, field2, value2); } }
+#define progress_time_partial3(start, end, field1, value1, field2, value2, field3, value3) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state2(field1, value1, field2, value2, field3, value3); } }
 
 #endif
