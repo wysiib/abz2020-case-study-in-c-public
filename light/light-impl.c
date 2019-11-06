@@ -136,7 +136,7 @@ static void set_blinkers_on(size_t time) {
             assert(0);
     }
        
-    if(get_market_code() == USA) {
+    if(get_market_code() == USA || get_market_code() == Canada) {
         switch(blinking_direction) {
             case blink_left:
                 set_low_beam_left(50);
@@ -227,7 +227,7 @@ void light_do_step(void) {
     }
     // stay on as long as key is inserted
     if(daytime_light_was_on && ks != NoKeyInserted) {
-        if(get_market_code() == USA) {
+        if(get_market_code() == USA || get_market_code() == Canada) {
             // from szenario 7 but not from specification?
             set_low_beam_left(100);
             set_low_beam_right(100);
@@ -283,7 +283,7 @@ void light_do_step(void) {
         set_blink_right(0);
         blinking = false;
 
-        if(get_market_code() == USA) {
+        if(get_market_code() == USA || get_market_code() == Canada) {
             set_tail_lamp_right(0);
             set_tail_lamp_left(0);
         }
@@ -292,23 +292,21 @@ void light_do_step(void) {
     // blinker still on -> keep usa specific stuff
     // another setting (i.e. daytime light) might have tried to turn them up again
     if(remaining_blinks && (get_market_code() == USA || get_market_code() == Canada)) {
-        if(get_market_code() == USA  || get_market_code() == Canada) {
-            switch(blinking_direction) {
-                case blink_left:
-                    set_low_beam_left(50);
-                    break;
-                case blink_right:
-                    set_low_beam_right(50);
-                    break;
-                case hazard:
-                    set_low_beam_left(50);
-                    set_low_beam_right(50);
-                    break;
-                case none:
-                    break;
-                default:
-                    assert(0);
-            }
+        switch(blinking_direction) {
+            case blink_left:
+                set_low_beam_left(50);
+                break;
+            case blink_right:
+                set_low_beam_right(50);
+                break;
+            case hazard:
+                set_low_beam_left(50);
+                set_low_beam_right(50);
+                break;
+            case none:
+                break;
+            default:
+               assert(0);
         }
     }
 
