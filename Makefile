@@ -14,4 +14,4 @@ clean:
 	rm -f test1
 
 cbmc_light:
-	cbmc light/*.c --function light_do_step
+	cbmc light/*.c --function light_loop

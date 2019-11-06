@@ -164,6 +164,13 @@ static void set_blinkers_on(size_t time) {
     blinking = true;
 }
 
+void light_loop(void) {
+    // used as the verification target for CBMC
+    while(true) {
+        light_do_step();
+    }
+}
+
 void light_do_step(void) {
     keyState ks = get_key_status();
     bool engine_on = get_engine_status();
@@ -337,7 +344,7 @@ void light_do_step(void) {
     last_all_door_closed = all_doors_closed;
     last_pitman_arm = get_pitman_vertical();
 
-    // assertions for cbmc to follow
+    // assertions for cbmc to verify
     // ELS-6: USA => light dimmed
-    assert(get_light_state().blinkLeft == 0);
+    // assert(get_light_state().blinkLeft == 0);
 }
