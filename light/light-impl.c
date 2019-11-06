@@ -122,9 +122,11 @@ static void set_blinkers_on(size_t time) {
     switch(blinking_direction) {
         case blink_left:
             set_blink_left(100);
+            set_blink_right(0); // in case of fast switches
             break;
         case blink_right:
             set_blink_right(100);
+            set_blink_left(0); // in case of fast switches
             break;
         case hazard:
             set_blink_left(100);
@@ -168,6 +170,10 @@ void light_loop(void) {
     // used as the verification target for CBMC
     while(true) {
         light_do_step();
+
+        // assertions for cbmc to verify, i.e. invariants!
+        // ELS-6: USA => light dimmed
+        // assert(get_light_state().blinkLeft == 0);
     }
 }
 
@@ -343,8 +349,4 @@ void light_do_step(void) {
     last_key_state = ks;
     last_all_door_closed = all_doors_closed;
     last_pitman_arm = get_pitman_vertical();
-
-    // assertions for cbmc to verify
-    // ELS-6: USA => light dimmed
-    // assert(get_light_state().blinkLeft == 0);
 }
