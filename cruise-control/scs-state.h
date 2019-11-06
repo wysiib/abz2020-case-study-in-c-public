@@ -1,0 +1,6 @@
+#ifndef CRUISE_CONTROL_STATE
+#define CRUISE_CONTROL_STATE
+
+// TODO
+
+#endif
