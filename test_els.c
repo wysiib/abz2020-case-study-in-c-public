@@ -698,11 +698,10 @@ void els31(void **state) {
     pitman_horizontal(pa_Backward);
     mock_and_execute(sensor_states);
 
-    // TODO: highBeamRange is new...?
-    //progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+    progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
 
-    //pitman_horizontal(pa_fb_Neutral);
-    //progress_time_partial1(3000, 6000, highBeamOn, false);
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
 
@@ -740,7 +739,7 @@ int main(int argc, char* argv[]) {
         // NOTE: ELS-20 is deleted
         // TODO: ELS-21 to ESL-29
         unit_test_setup_teardown(els30, reset, reset),
-        // TODO: ELS-31 is unfinished (new variable)
+        unit_test_setup_teardown(els31, reset, reset),
     };
     run_tests(tests);
     return 0;

@@ -68,6 +68,6 @@ void mock_and_execute(sensors_and_time data);
 
 #define progress_time_partial1(start, end, field, value) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state1(field, value); } }
 #define progress_time_partial2(start, end, field1, value1, field2, value2) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state2(field1, value1, field2, value2); } }
-#define progress_time_partial3(start, end, field1, value1, field2, value2, field3, value3) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state2(field1, value1, field2, value2, field3, value3); } }
+#define progress_time_partial3(start, end, field1, value1, field2, value2, field3, value3) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state3(field1, value1, field2, value2, field3, value3); } }
 
 #endif
