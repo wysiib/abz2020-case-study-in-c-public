@@ -12,3 +12,6 @@ test_els: test_els.c test_common.c light/light-state.c light/user-interface.c li
 
 clean:
 	rm -f test1
+
+cbmc_light:
+	cbmc light/*.c --function light_do_step

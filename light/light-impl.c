@@ -336,4 +336,8 @@ void light_do_step(void) {
     last_key_state = ks;
     last_all_door_closed = all_doors_closed;
     last_pitman_arm = get_pitman_vertical();
+
+    // assertions for cbmc to follow
+    // ELS-6: USA => light dimmed
+    assert(get_light_state().blinkLeft == 0);
 }
