@@ -9,4 +9,5 @@ C first scenarios + test suite: 12h
 C further scenarios: 3h
 C ELS tests: 4h
 C test refactoring: 2h
-CBMC try-outs: 1h
+CBMC try-outs: 1h + 1h
+C further implementation ELS + fix tests: 5h
