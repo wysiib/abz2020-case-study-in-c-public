@@ -4,12 +4,48 @@
 #include <google/cmockery.h>
 
 #include "cruise-control/scs-impl.h"
+#include "cruise-control/scs-state.h"
 
 #include "test_common.h"
+#include "system.h"
 
-/** "After [engine] start, there is no previous desired speed." */
+void light_do_step(void) {
+    // FIXME: The light step function is a dependency for mock_and_execute in
+    // test_common.c, but linking to light-impl.c adds a big bunch of further
+    // light-dependencies to the SCS, which currently should not be in here.
+}
+
+/* SCS-1: "After [engine] start, there is no previous desired speed." */
 void scs1(void **state) {
-    fail();
+    init_system(leftHand, false, EU); // TODO: Other settings?
+    sensors_and_time sensor_states = {0};
+
+    assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
+
+    // Start engine.
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+
+    mock_all_sensors(sensor_states);
+
+    assert_true(!get_scs_state().has_previous_desired_speed);
+}
+
+void scs1_engine_restart(void **state) {
+    init_system(leftHand, false, EU); // TODO: Other settings?
+    sensors_and_time sensor_states = {0};
+
+    assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
+
+    // Start engine.
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+
+    mock_and_execute(sensor_states);
+
+    fail(); // TODO: restart engine, ensure that has_prev... is set to false
 }
 
 int main(int argc, char *argv[]) {
