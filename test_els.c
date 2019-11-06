@@ -163,8 +163,11 @@ void els3_b_left(void **state) {
 
     toggle_hazard_warning();
 
+    progress_time_partial2(2000, 2499, blinkLeft, 100, blinkRight, 0);
+    progress_time_partial2(2500, 2999, blinkLeft, 0, blinkRight, 0);
+
     int i;
-    for (i = 2; i < 100; i++) {
+    for (i = 3; i < 100; i++) {
         progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
         progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
