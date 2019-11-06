@@ -10,6 +10,9 @@ test_els: test_els.c test_common.c light/light-state.c light/user-interface.c li
 	gcc test_els.c test_common.c light/light-state.c light/user-interface.c light/light-impl.c system.c -lcmockery -o test_els -g -Wall
 	./test_els
 
+main: main.c light/light-state.c light/user-interface.c light/light-impl.c system.c
+	gcc light/light-state.c light/user-interface.c light/light-impl.c system.c -lcmockery -o main -g -Wall
+
 clean:
 	rm -f test1
 

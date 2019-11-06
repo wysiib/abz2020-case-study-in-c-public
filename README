@@ -7,5 +7,6 @@ Time spend:
 C base code: 2h
 C first scenarios + test suite: 12h
 C further scenarios: 3h
-C ELS tests: 1h
+C ELS tests: 4h
 C test refactoring: 2h
+CBMC try-outs: 1h
