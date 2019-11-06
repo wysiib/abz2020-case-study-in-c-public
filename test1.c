@@ -21,7 +21,7 @@ void sequence1(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -42,56 +42,56 @@ void sequence1(void **state) {
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // tunnel: value at border
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 200);
     mock_and_execute(sensor_states);
     
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // brightness value below threshold
     sensor_states = update_sensors(sensor_states, sensorTime, 5000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     // brightness exceeds value but no three seconds time
     sensor_states = update_sensors(sensor_states, sensorTime, 6000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 251);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     // below threshold
     sensor_states = update_sensors(sensor_states, sensorTime, 7000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     // exceeds hystheresis value
     sensor_states = update_sensors(sensor_states, sensorTime, 8000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 251);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // tunnel ride terminated
     sensor_states = update_sensors(sensor_states, sensorTime, 12000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // light switch to on
     sensor_states = update_sensors(sensor_states, sensorTime, 13000);
     set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     
     // turning engine off
@@ -100,42 +100,42 @@ void sequence1(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // light switch auto
     sensor_states = update_sensors(sensor_states, sensorTime, 20000);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // switch on light on
     sensor_states = update_sensors(sensor_states, sensorTime, 21000);
     set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0}));
 
     // key removal: light off
     sensor_states = update_sensors(sensor_states, sensorTime, 22000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // pitman arm to downward7
     sensor_states = update_sensors(sensor_states, sensorTime, 23000);
     pitman_vertical(pa_Downward7);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0}));
 
     // switch to auto
     sensor_states = update_sensors(sensor_states, sensorTime, 24000);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 void sequence2(void **state) {
@@ -144,7 +144,7 @@ void sequence2(void **state) {
 
     toggle_ambient_light();
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // light switch to auto
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -152,21 +152,21 @@ void sequence2(void **state) {
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // light switch to on
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // insert key
     sensor_states = update_sensors(sensor_states, sensorTime, 3000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // engine start
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
@@ -174,14 +174,14 @@ void sequence2(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     // light switch: auto
     sensor_states = update_sensors(sensor_states, sensorTime, 5000);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     // engine off
     sensor_states = update_sensors(sensor_states, sensorTime, 10000);
@@ -189,35 +189,35 @@ void sequence2(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 25000);
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 0);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 50000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 75000);
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 104000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 105000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 
@@ -226,7 +226,7 @@ void sequence3(void **state) {
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     toggle_daytime_running_light();
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // key inserted
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -234,7 +234,7 @@ void sequence3(void **state) {
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // engine start
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
@@ -242,38 +242,38 @@ void sequence3(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 3000);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
     set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 6000);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 7000);
     set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0}));
 }
 
 void sequence4(void **state) {
@@ -282,7 +282,7 @@ void sequence4(void **state) {
 
     toggle_daytime_running_light();
     toggle_ambient_light();
-    // why doesnt this work? assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    // why doesnt this work? assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
@@ -290,31 +290,31 @@ void sequence4(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 3000);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorTime, 24000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 34000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 void sequence5(void **state) {
@@ -322,45 +322,45 @@ void sequence5(void **state) {
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     toggle_ambient_light();
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 3000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
     set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 33000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 34000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 void sequence6(void **state) {
@@ -369,13 +369,13 @@ void sequence6(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     pitman_vertical(pa_Downward5);
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
@@ -383,128 +383,128 @@ void sequence6(void **state) {
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5000);
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5200);
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5499);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5999);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 6000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 6499);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 6500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 6999);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 7000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 7499);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 7500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 7700);
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 7800);
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 8000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 8500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 8700);
     pitman_vertical(pa_Upward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 9000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 9499);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 9500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 9999);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10499);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10800);
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 void sequence7(void **state) {
@@ -516,54 +516,54 @@ void sequence7(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
     pitman_vertical(pa_Upward7);
     mock_and_execute(sensor_states);
 
     // from given test cases:
-    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0, 0}));
     // but I think the tail light should be used for blicking whether its up5 or up7
-    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0, 0}));
 
 
     sensor_states = update_sensors(sensor_states, sensorTime, 4500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 50, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5000);
     mock_and_execute(sensor_states);
 
     // see above: added tail light
-    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0}));
-    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0}));
+    // assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 100, 100, 50, 0, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5300);
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10000);
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10200);
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
 
     progress_time(10201, 10499, ((light_state) {0, 100, 0, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
     progress_time(10500, 10799, ((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
@@ -572,19 +572,19 @@ void sequence7(void **state) {
     toggle_hazard_warning();
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     progress_time(10801, 10998, ((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 10999);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 11000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     progress_time(11001, 11499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
     progress_time(11500, 11999, ((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
@@ -596,13 +596,13 @@ void sequence7(void **state) {
     pitman_vertical(pa_Upward5);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 13400);
     pitman_vertical(pa_ud_Neutral);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
 
     progress_time(13401, 13499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
     progress_time(13500, 13999, ((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
@@ -612,21 +612,21 @@ void sequence7(void **state) {
     toggle_hazard_warning();
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
     
     progress_time(14301, 14499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 14500);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     progress_time(14500, 14999, ((light_state) {0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 15000);
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
 int main(int argc, char* argv[]) {

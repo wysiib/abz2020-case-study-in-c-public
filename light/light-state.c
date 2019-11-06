@@ -45,6 +45,7 @@ void reset_lights(void) {
     state.tailLampRight = 0;
     state.highBeamOn = 0;
     state.highBeamMotor = 0;
+    state.highBeamRange = 0;
     state.corneringLightLeft = 0;
     state.corneringLightRight = 0;
     state.reverseLight = 0;

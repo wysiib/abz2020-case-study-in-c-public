@@ -9,6 +9,11 @@ typedef enum {
     hbm_max = 14
 } high_beam_motor;
 
+typedef enum {
+    hbr_min = 0,
+    hmb_max = 300
+} high_beam_range;
+
 typedef struct light_state {
     percentage brakeLight;
     percentage blinkLeft;
@@ -19,6 +24,7 @@ typedef struct light_state {
     percentage tailLampRight;
     bool highBeamOn;
     high_beam_motor highBeamMotor;
+    high_beam_range highBeamRange;
     percentage corneringLightLeft;
     percentage corneringLightRight;
     percentage reverseLight;

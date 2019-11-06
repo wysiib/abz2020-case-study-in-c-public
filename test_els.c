@@ -20,7 +20,7 @@ void els1_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -48,7 +48,7 @@ void els1_right(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -76,7 +76,7 @@ void els2_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -107,7 +107,7 @@ void els3_a_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -144,7 +144,7 @@ void els3_b_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -180,7 +180,7 @@ void els4_left_a(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -214,7 +214,7 @@ void els4_left_b(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -247,7 +247,7 @@ void els6_left_canada(void **state) {
     init_system(leftHand, false, Canada);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -258,7 +258,7 @@ void els6_left_canada(void **state) {
 
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     pitman_vertical(pa_Downward7);
@@ -280,7 +280,7 @@ void els6_left_usa(void **state) {
     init_system(leftHand, false, USA);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -291,7 +291,7 @@ void els6_left_usa(void **state) {
 
     mock_and_execute(sensor_states);
 
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
     pitman_vertical(pa_Downward7);
@@ -313,7 +313,7 @@ void els7_a_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -356,7 +356,7 @@ void els7_b_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -391,7 +391,7 @@ void els8_a(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -414,7 +414,7 @@ void els8_b(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key NOT inserted
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -437,7 +437,7 @@ void els9(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
@@ -501,7 +501,7 @@ void els12_a(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -534,7 +534,7 @@ void els12_b(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -569,7 +569,7 @@ void els13_a(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -596,7 +596,7 @@ void els13_b(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -624,7 +624,7 @@ void els14(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -644,7 +644,7 @@ void els15(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -664,7 +664,7 @@ void els30(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -685,7 +685,7 @@ void els31(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
 
-    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);

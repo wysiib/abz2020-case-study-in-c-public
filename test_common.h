@@ -68,6 +68,7 @@ void mock_and_execute(sensors_and_time data);
         assert_true(ls.tailLampRight == ref.tailLampRight);                    \
         assert_true(ls.highBeamOn == ref.highBeamOn);                          \
         assert_true(ls.highBeamMotor == ref.highBeamMotor);                    \
+        assert_true(ls.highBeamRange == ref.highBeamRange);                    \
         assert_true(ls.corneringLightLeft == ref.corneringLightLeft);          \
         assert_true(ls.corneringLightRight == ref.corneringLightRight);        \
         assert_true(ls.reverseLight == ref.reverseLight);                      \
