@@ -264,6 +264,12 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
+    // turn off hazard warning before new setting
+    if(blinking_direction == hazard && !get_hazard_warning() && !blinking && tt - blink_timer >= 500) { // wait for dark cycle to complete
+        blinking_direction=none;
+        set_blinkers_off(tt);
+    }
+
     // direction / blinking
     // blink as soon as arm is moved unless in dark cycle
     if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
