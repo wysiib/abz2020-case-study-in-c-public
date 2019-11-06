@@ -339,8 +339,9 @@ void els7_a_left(void **state) {
     pitman_vertical(pa_Downward5);
     mock_and_execute(sensor_states);
 
-    progress_time_partial2(2500, 2999, blinkLeft, 0, blinkRight, 0);
+    progress_time_partial2(2500, 2599, blinkLeft, 0, blinkRight, 0);
     pitman_vertical(pa_ud_Neutral);
+    progress_time_partial2(2600, 2999, blinkLeft, 0, blinkRight, 0);
 
     int i;
 
@@ -375,10 +376,8 @@ void els7_b_left(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 2001);
     mock_and_execute(sensor_states);
 
-    progress_time_partial2(2001, 2400, blinkLeft, 100, blinkRight, 0);
-    pitman_vertical(pa_Downward5);
+    progress_time_partial2(2001, 2499, blinkLeft, 100, blinkRight, 0);
     progress_time_partial2(2500, 2999, blinkLeft, 0, blinkRight, 0);
-    pitman_vertical(pa_ud_Neutral);
 
     int i;
 
