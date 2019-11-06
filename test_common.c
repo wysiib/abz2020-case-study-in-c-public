@@ -50,6 +50,13 @@ size_t get_time(void) {
     return (size_t) mock();
 }
 
+sensorState get_camera_state(void) {
+    return (sensorState) mock();
+}
+
+vehicleSpeed get_current_speed(void) {
+    return (vehicleSpeed) mock();
+}
 
 sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key, int value) {
     switch (key) {
@@ -89,6 +96,14 @@ sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
             assert(value >= 0);
             data.time = (size_t) value;
             break;
+        case sensorCameraState:
+            assert(value == Dirty || value == Ready || value == NotReady);
+            data.camera_state = (sensorState) value;
+            break;
+        case sensorCurrentSpeed:
+            assert(value >= speed_min && value <= speed_max);
+            data.current_speed = (vehicleSpeed) value;
+            break;
         default: assert(0);
     }
     return data;
@@ -104,6 +119,8 @@ void mock_all_sensors(sensors_and_time data) {
     will_return(get_voltage_battery, data.voltage_battery);
     will_return(get_steering_angle, data.steering_angle);
     will_return(get_oncoming_traffic, data.oncomming_trafic);
+    will_return(get_camera_state, data.camera_state);
+    will_return(get_current_speed, data.current_speed);
 }
 
 void mock_and_execute(sensors_and_time data) {

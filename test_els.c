@@ -704,6 +704,32 @@ void els31(void **state) {
     progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
+void els33(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, true);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, Ready);
+    sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, false);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1800);
+
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+
+    progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11 /* ? */);
+}
+
 
 int main(int argc, char* argv[]) {
     // please please remember to reset state
@@ -740,6 +766,8 @@ int main(int argc, char* argv[]) {
         // TODO: ELS-21 to ESL-29
         unit_test_setup_teardown(els30, reset, reset),
         unit_test_setup_teardown(els31, reset, reset),
+        // NOTE: ELS-32: no test
+        unit_test_setup_teardown(els33, reset, reset),
     };
     run_tests(tests);
     return 0;

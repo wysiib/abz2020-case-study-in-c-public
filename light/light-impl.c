@@ -189,6 +189,11 @@ void light_do_step(void) {
     brightness bb = get_brightness();
     size_t tt = get_time();
 
+    sensorState camera = get_camera_state();
+    (void) camera;
+    vehicleSpeed speedo = get_current_speed();
+    (void) speedo;
+
     update_ambient_light_status(last_key_state, ks,
                                last_all_door_closed, all_doors_closed,
                                tt, engine_on);
