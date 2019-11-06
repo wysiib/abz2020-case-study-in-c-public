@@ -322,6 +322,14 @@ void light_do_step(void) {
     if(get_pitman_vertical() != last_pitman_arm) {
         pitman_arm_move_time = tt;
     }
+
+    // ELS-30
+    if(get_pitman_horizontal() == pa_Forward) {
+        set_high_beam(1);
+    }
+    if(get_pitman_horizontal() == pa_fb_Neutral) {
+        set_high_beam(0);
+    }
     
     last_lrs = get_light_rotary_switch();
     last_engine = engine_on;

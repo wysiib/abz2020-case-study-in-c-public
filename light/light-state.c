@@ -31,6 +31,10 @@ void set_blink_right(percentage p) {
     state.blinkRight = p;
 }
 
+void set_high_beam(bool b) {
+    state.highBeamOn = b;
+}
+
 void reset_lights(void) {
     state.brakeLight = 0;
     state.blinkLeft = 0;
