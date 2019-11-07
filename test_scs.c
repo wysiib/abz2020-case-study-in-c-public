@@ -4,10 +4,10 @@
 // Must come after setjmp.h, stdarg.h, stddef.h
 #include <google/cmockery.h>
 
+#include "cruise-control/actuators.h"
 #include "cruise-control/scs-impl.h"
 #include "cruise-control/scs-state.h"
 #include "cruise-control/user-interface.h"
-#include "cruise-control/actuators.h"
 
 #include "system.h"
 #include "test_common.h"
@@ -219,6 +219,53 @@ void scs3_below_20kmh_with_prev_desired_speed(void **state) {
     assert_int_equal(get_scs_state().previous_desired_speed, pre);
 }
 
+/**
+    SCS-4: If the driver pushes the cruise control lever to 2 up to the first
+    resistance level (5°) and the (adaptive) cruise control is activated,
+    the desired speed is increased by 1 km/h.
+ */
+
+void scs4_active_cc(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    vehicleSpeed desired = 300;
+    set_vehicle_speed(desired);
+    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+
+    lever_up5();
+
+    assert_int_equal(get_scs_state().previous_desired_speed, desired + 1);
+}
+
+void scs4_active_cc_max_speed(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    vehicleSpeed desired = speed_max;
+    set_vehicle_speed(desired);
+    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+
+    lever_up5();
+
+    assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
+}
+
+void scs4_inactive_cc(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    vehicleSpeed desired = 300;
+    set_vehicle_speed(400);
+    set_prev_desired_speed(desired);
+    set_cruise_control(false); // Cruise control is inactive.
+
+    lever_up5();
+
+    assert_true(!get_scs_state().cruise_control_active);
+    assert_int_equal(get_scs_state().previous_desired_speed, desired);
+}
+
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -235,6 +282,9 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs3_below_20kmh_with_prev_desired_speed,
                                  reset, reset),
         // SCS-4
+        unit_test_setup_teardown(scs4_active_cc, reset, reset),
+        unit_test_setup_teardown(scs4_active_cc_max_speed, reset, reset),
+        unit_test_setup_teardown(scs4_inactive_cc, reset, reset),
         // TODO: SCS-5
         // TODO: SCS-6
         // TODO: SCS-7

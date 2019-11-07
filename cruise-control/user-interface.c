@@ -16,3 +16,14 @@ void lever_forward(void) {
         set_cruise_control(true);
     }
 }
+
+void lever_up5(void) {
+    scs_state scs = get_scs_state();
+
+    if (scs.cruise_control_active) {
+        vehicleSpeed curr = scs.current_speed;
+        if (curr < speed_max) {
+            set_prev_desired_speed(curr + 1);
+        }
+    }
+}
