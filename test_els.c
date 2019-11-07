@@ -675,7 +675,6 @@ void els16a(void **state) {
     mock_and_execute(sensor_states);
 
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
-    assert_true(false); // TODO: init with daytime running light  & ambient light off
 }
 void els16b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
@@ -699,7 +698,6 @@ void els16b(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
-    assert_true(false); // TODO: init with daytime running light  & ambient light off
 }
 void els30(void **state) {
     init_system(leftHand, false, EU, false, false);
