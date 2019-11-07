@@ -1,3 +1,11 @@
 test1
 test_els
 *.out
+
+*.cflags
+*.cxxflags
+*.config
+*.creator*
+*.files
+*.includes
+

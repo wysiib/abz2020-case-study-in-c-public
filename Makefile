@@ -1,3 +1,6 @@
+.Phony: all
+all: clean test main cbmc_light
+
 .PHONY: test_sequences test_els
 
 test: test_sequences test_els
