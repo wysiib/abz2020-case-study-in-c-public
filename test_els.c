@@ -659,7 +659,46 @@ void els15(void **state) {
     progress_time_partial2(1000, 3000, lowBeamLeft, 50, lowBeamRight, 50);
 }
 
+void els16a(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
 
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    set_light_rotary_switch(lrs_auto);
+
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+    assert_true(false); // TODO: init with daytime running light  & ambient light off
+}
+void els16b(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    set_light_rotary_switch(lrs_auto);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+    assert_true(false); // TODO: init with daytime running light  & ambient light off
+}
 void els30(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
@@ -758,7 +797,8 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els13_b, reset, reset),
         unit_test_setup_teardown(els14, reset, reset),
         unit_test_setup_teardown(els15, reset, reset),
-        // TODO: ELS-16
+        unit_test_setup_teardown(els16a, reset, reset),
+        unit_test_setup_teardown(els16b, reset, reset),
         // TODO: ELS-17
         // TODO: ELS-18
         // TODO: ELS-19
