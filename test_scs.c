@@ -7,6 +7,7 @@
 #include "cruise-control/scs-impl.h"
 #include "cruise-control/scs-state.h"
 #include "cruise-control/user-interface.h"
+#include "cruise-control/actuators.h"
 
 #include "system.h"
 #include "test_common.h"
@@ -86,7 +87,7 @@ void scs1_engine_shutdown(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
     set_prev_desired_speed(1234); // NOTE: Ensure a change in pds.
-    set_cruise_control(true); // Activate
+    set_cruise_control(true);     // Activate
     assert_true(get_scs_state().has_previous_desired_speed);
     assert_true(get_scs_state().cruise_control_active);
 
@@ -117,7 +118,7 @@ void scs2_no_prev_speed(void **state) {
 
     const vehicleSpeed spe = 800;
     sensor_states = update_sensors(sensor_states, sensorTime, 1001);
-    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+    set_vehicle_speed(spe);
     mock_and_execute(sensor_states);
     lever_forward();
 
@@ -145,7 +146,7 @@ void scs2_with_prev_speed(void **state) {
 
     const vehicleSpeed spe = 800;
     sensor_states = update_sensors(sensor_states, sensorTime, 1001);
-    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+    set_vehicle_speed(spe);
     mock_and_execute(sensor_states);
     lever_forward();
 
@@ -169,7 +170,7 @@ void scs3_at_20kmh(void **state) {
     sensor_states =
         update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
-    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+    set_vehicle_speed(spe);
 
     mock_and_execute(sensor_states);
     lever_forward();
@@ -188,7 +189,7 @@ void scs3_below_20kmh(void **state) {
     sensor_states =
         update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
-    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+    set_vehicle_speed(spe);
 
     mock_and_execute(sensor_states);
     lever_forward();
@@ -206,7 +207,7 @@ void scs3_below_20kmh_with_prev_desired_speed(void **state) {
     sensor_states =
         update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
-    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+    set_vehicle_speed(spe);
 
     const vehicleSpeed pre = 300;
     set_prev_desired_speed(pre);
@@ -233,7 +234,7 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs3_below_20kmh, reset, reset),
         unit_test_setup_teardown(scs3_below_20kmh_with_prev_desired_speed,
                                  reset, reset),
-        // TODO: SCS-4
+        // SCS-4
         // TODO: SCS-5
         // TODO: SCS-6
         // TODO: SCS-7

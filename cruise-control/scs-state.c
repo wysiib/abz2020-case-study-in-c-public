@@ -1,4 +1,5 @@
 #include "scs-state.h"
+#include "actuators.h"
 #include <assert.h>
 
 static scs_state scs;
@@ -28,4 +29,11 @@ void reset_prev_desired_speed() {
 
 void observe_current_speed(vehicleSpeed speed) {
     scs.current_speed = speed;
+}
+
+// Actuators ---------------------------------------------------------------- //
+
+void set_vehicle_speed(vehicleSpeed current) {
+    assert(current >= speed_min && current <= speed_max);
+    scs.current_speed = current;
 }

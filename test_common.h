@@ -33,8 +33,7 @@ typedef enum sensors_and_time_key {
     sensorVoltageBattery,
     sensorSteeringAngle,
     sensorOncommingTraffic,
-    sensorTime,
-    sensorSpeed
+    sensorTime
 } sensors_and_time_key;
 
 typedef struct sensors_and_time {
@@ -47,7 +46,6 @@ typedef struct sensors_and_time {
     steeringAngle steering_angle;
     bool oncomming_trafic;
     size_t time;
-    vehicleSpeed current_speed;
 } sensors_and_time;
 
 sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
