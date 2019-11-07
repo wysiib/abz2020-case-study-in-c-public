@@ -940,6 +940,40 @@ void els18b(void **state) {
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 }
+void els18c(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,.ambient_light=false,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    set_light_rotary_switch(lrs_auto);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 249);
+    mock_and_execute(sensor_states);
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, INT_MAX); //time could actually be higher, but update-sensors only accepts ints
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 249);
+    mock_and_execute(sensor_states);
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+}
 void els30(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1115,6 +1149,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els17, reset, reset),
         unit_test_setup_teardown(els18a, reset, reset),
         unit_test_setup_teardown(els18b, reset, reset),
+        unit_test_setup_teardown(els18c, reset, reset),
         // TODO: ELS-19
         // NOTE: ELS-20 is deleted
         // TODO: ELS-21 to ESL-29
