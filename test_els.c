@@ -998,9 +998,36 @@ void els34_35(void **state) {
 
 
     progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11 /* ? */);
+}
+
+void els38(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, true);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, Ready);
+    sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, false);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1800);
+
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
 
 
+    progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11 /* ? */);
 
+    pitman_horizontal(pa_fb_Neutral);
+    mock_and_execute(sensor_states);
+    progress_time_partial3(6000, 10000, highBeamOn, false, lowBeamLeft, 100, lowBeamRight, 100);
 }
 
 
@@ -1045,6 +1072,8 @@ int main(int argc, char* argv[]) {
         // NOTE: ELS-32: no test
         unit_test_setup_teardown(els33_34_35, reset, reset),
         // TODO: ELS-36: define characteristic curves
+        // TODO: ELS-37: make sense of that mess
+        unit_test_setup_teardown(els38, reset, reset),
 
     };
     run_tests(tests);
