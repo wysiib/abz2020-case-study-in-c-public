@@ -1,5 +1,3 @@
-.Phony: all
-all: clean test main cbmc_light
 
 .PHONY: test_sequences test_els
 
@@ -21,3 +19,6 @@ clean:
 
 cbmc_light:
 	cbmc light/*.c --function light_loop
+
+.Phony: all
+all: clean test
