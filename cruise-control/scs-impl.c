@@ -19,5 +19,6 @@ void scs_do_step(void) {
     if (!engine_on) {
         // Engine was turned off, SCS-1 requires the prev. desired speed to reset
         reset_prev_desired_speed();
+        set_cruise_control(false);
     }
 }

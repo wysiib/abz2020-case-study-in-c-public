@@ -4,6 +4,7 @@
 #include "../common/common.h"
 
 typedef struct {
+    bool cruise_control_active;
     bool has_previous_desired_speed;
     vehicleSpeed previous_desired_speed;
     // TODO: Do we want to save the current speed in here?
@@ -16,6 +17,8 @@ scs_state get_scs_state(void);
 
 /** Zeroes the SCS state. */
 void reset(void **state);
+
+void set_cruise_control(bool active);
 
 void set_prev_desired_speed(vehicleSpeed prev);
 

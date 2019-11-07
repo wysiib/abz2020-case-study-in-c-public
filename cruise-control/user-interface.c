@@ -10,7 +10,9 @@ void lever_forward(void) {
 
     if (scs.has_previous_desired_speed) { // SCS-2
         set_prev_desired_speed(scs.previous_desired_speed);
+        set_cruise_control(true);
     } else if (scs.current_speed >= MIN_CRUISE_CONTROL_SPEED) {
         set_prev_desired_speed(scs.current_speed);
+        set_cruise_control(true);
     }
 }

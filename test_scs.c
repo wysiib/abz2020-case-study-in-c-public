@@ -72,6 +72,33 @@ void scs1_engine_restart(void **state) {
         !get_scs_state().has_previous_desired_speed); // No pds after init.
 }
 
+void scs1_engine_shutdown(void **state) {
+    init_system(leftHand, false, EU); // TODO: Other settings?
+    sensors_and_time sensor_states = {0};
+
+    assert_true(
+        !get_scs_state().has_previous_desired_speed); // No pds after init.
+
+    // Start engine.
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+    set_prev_desired_speed(1234); // NOTE: Ensure a change in pds.
+    set_cruise_control(true); // Activate
+    assert_true(get_scs_state().has_previous_desired_speed);
+    assert_true(get_scs_state().cruise_control_active);
+
+    // Stop engine.
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    assert_true(!get_scs_state().cruise_control_active); // No pds after init.
+}
+
 /*
     SCS-2:
     When pulling the cruise control lever to 1, the desired speed is either
@@ -95,6 +122,7 @@ void scs2_no_prev_speed(void **state) {
     lever_forward();
 
     scs_state scs = get_scs_state();
+    assert_true(get_scs_state().cruise_control_active);
     assert_true(scs.has_previous_desired_speed);
     assert_int_equal(scs.previous_desired_speed, spe);
 }
@@ -121,6 +149,7 @@ void scs2_with_prev_speed(void **state) {
     mock_and_execute(sensor_states);
     lever_forward();
 
+    assert_true(get_scs_state().cruise_control_active);
     assert_true(get_scs_state().has_previous_desired_speed);
     assert_int_equal(get_scs_state().previous_desired_speed, pre);
 }
@@ -145,6 +174,7 @@ void scs3_at_20kmh(void **state) {
     mock_and_execute(sensor_states);
     lever_forward();
 
+    assert_true(get_scs_state().cruise_control_active);
     assert_true(get_scs_state().has_previous_desired_speed);
     assert_int_equal(get_scs_state().previous_desired_speed, spe);
 }
@@ -163,6 +193,7 @@ void scs3_below_20kmh(void **state) {
     mock_and_execute(sensor_states);
     lever_forward();
 
+    assert_true(!get_scs_state().cruise_control_active);
     assert_true(!get_scs_state().has_previous_desired_speed);
 }
 
@@ -183,6 +214,7 @@ void scs3_below_20kmh_with_prev_desired_speed(void **state) {
     lever_forward();
 
     assert_true(get_scs_state().has_previous_desired_speed);
+    assert_true(get_scs_state().cruise_control_active);
     assert_int_equal(get_scs_state().previous_desired_speed, pre);
 }
 
@@ -192,6 +224,7 @@ int main(int argc, char *argv[]) {
         // SCS-1
         unit_test_setup_teardown(scs1, reset, reset),
         unit_test_setup_teardown(scs1_engine_restart, reset, reset),
+        unit_test_setup_teardown(scs1_engine_shutdown, reset, reset),
         // SCS-2
         unit_test_setup_teardown(scs2_no_prev_speed, reset, reset),
         unit_test_setup_teardown(scs2_with_prev_speed, reset, reset),

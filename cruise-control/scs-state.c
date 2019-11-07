@@ -11,6 +11,10 @@ void reset(void **state) {
     scs = (scs_state) {0};
 }
 
+void set_cruise_control(bool active) {
+    scs.cruise_control_active = active;
+}
+
 void set_prev_desired_speed(vehicleSpeed prev) {
     assert(prev >= speed_min && prev <= speed_max);
     scs.has_previous_desired_speed = true;
