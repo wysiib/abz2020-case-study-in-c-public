@@ -17,13 +17,17 @@ typedef enum { two_secs, two_point_five_secs, three_secs } safetyDistance;
 
 void lever_forward(void);
 
-/** Pushes the lever up to the forst resistance level (5°). */
+/** Pushes the lever up to the first resistance level (5°). */
 void lever_up5(void);
 
-/** Pushes the lever up to the forst resistance level (7°). */
+/** Pushes the lever above the first resistance level (7°). */
 void lever_up7(void);
 
-void lever_down(void);
+/** Pushes the lever down to the first resistance level (5°). */
+void lever_down5(void);
+
+/** Pushes the lever below the first resistance level (7°). */
+void lever_down7(void);
 
 void lever_backward(void);
 

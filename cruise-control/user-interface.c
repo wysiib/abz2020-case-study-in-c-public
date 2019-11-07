@@ -44,3 +44,29 @@ void lever_up7(void) {
         }
     }
 }
+
+void lever_down5(void) {
+    scs_state scs = get_scs_state();
+
+    if (scs.cruise_control_active) {
+        vehicleSpeed curr = scs.previous_desired_speed;
+        if (curr > speed_min) {
+            set_prev_desired_speed(curr - 1);
+        }
+    }
+}
+
+void lever_down7(void) {
+    scs_state scs = get_scs_state();
+
+    if (scs.cruise_control_active) {
+        vehicleSpeed curr = scs.previous_desired_speed;
+        if (curr > speed_min) {
+            vehicleSpeed next = getTensPlace(curr);
+            if (curr == next) {
+                next -= 100;
+            }
+            set_prev_desired_speed(next);
+        }
+    }
+}
