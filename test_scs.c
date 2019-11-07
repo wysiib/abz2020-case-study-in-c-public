@@ -487,6 +487,8 @@ void scs12_speed_to_zero(void ** state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
+    set_vehicle_speed(0);
+
     assert_true(!get_scs_state().cruise_control_active);
 }
 
