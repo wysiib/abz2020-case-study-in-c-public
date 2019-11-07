@@ -7,8 +7,6 @@
 static lightRotarySwitch lrs_state = 0;
 static pitmanArmUpDown pacman_vertical = pa_ud_Neutral;
 static pitmanArmForthBack pacman_horizontal = pa_fb_Neutral;
-static bool ambient_light = 0;
-static bool daytime_running_light = 0;
 static bool darkness_mode = 0;
 static bool hazard_warning = 0;
 
@@ -16,8 +14,6 @@ void reset_user_interface(void) {
     lrs_state = 0;
     pacman_vertical = pa_ud_Neutral;
     pacman_horizontal = pa_fb_Neutral;
-    ambient_light = 0;
-    daytime_running_light = 0;
     darkness_mode = 0;
     hazard_warning = 0;
 }
@@ -39,24 +35,8 @@ pitmanArmUpDown get_pitman_vertical(void) {
     return pacman_vertical;
 }
 
-void toggle_ambient_light(void) {
-    ambient_light = !ambient_light;
-}
-
-void toggle_daytime_running_light(void) {
-    daytime_running_light = !daytime_running_light;
-}
-
 void toggle_hazard_warning(void) {
     hazard_warning = !hazard_warning;
-}
-
-bool get_ambient_light(void) {
-    return ambient_light;
-}
-
-bool get_daytime_running_light(void) {
-    return daytime_running_light;
 }
 
 bool get_hazard_warning(void) {

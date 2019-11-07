@@ -18,7 +18,7 @@
 
 
 void sequence1(void **state) {
-    init_system(leftHand, false, EU);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -139,10 +139,9 @@ void sequence1(void **state) {
 }
 
 void sequence2(void **state) {
-    init_system(leftHand, false, EU);
+    init_system(leftHand, false, EU, true, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
-    toggle_ambient_light();
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -222,10 +221,9 @@ void sequence2(void **state) {
 
 
 void sequence3(void **state) {
-    init_system(leftHand, false, EU);
+    init_system(leftHand, false, EU, false, true);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
-    toggle_daytime_running_light();
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // key inserted
@@ -277,12 +275,9 @@ void sequence3(void **state) {
 }
 
 void sequence4(void **state) {
-    init_system(leftHand, false, EU);
+    init_system(leftHand, false, EU, true, true);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
-    toggle_daytime_running_light();
-    toggle_ambient_light();
-    // why doesnt this work? assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
@@ -318,10 +313,9 @@ void sequence4(void **state) {
 }
 
 void sequence5(void **state) {
-    init_system(leftHand, false, EU);
+    init_system(leftHand, false, EU, true, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
-    toggle_ambient_light();
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
@@ -364,7 +358,7 @@ void sequence5(void **state) {
 }
 
 void sequence6(void **state) {
-    init_system(leftHand, false, EU);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
@@ -508,11 +502,9 @@ void sequence6(void **state) {
 }
 
 void sequence7(void **state) {
-    init_system(leftHand, false, USA);
+    init_system(leftHand, false, USA, false, true);
 
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
-
-    toggle_daytime_running_light();
 
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);

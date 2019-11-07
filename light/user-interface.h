@@ -26,14 +26,6 @@ bool get_hazard_warning(void);
 // change boolean value, armoured vehicle only
 void toggle_darkness_mode(void);
 
-// change boolean value
-void toggle_daytime_running_light(void);
-bool get_daytime_running_light(void);
-
-// change boolean value
-void toggle_ambient_light(void);
-bool get_ambient_light(void);
-
 pitmanArmUpDown get_pitman_vertical(void);
 
 void pitman_horizontal(pitmanArmForthBack deflection);
