@@ -13,6 +13,7 @@
 #include "cruise-control/scs-impl.h"
 
 #include "cruise-control/user-interface.h"
+#include "cruise-control/sensors.h"
 
 #include "test_common.h"
 
@@ -50,6 +51,10 @@ bool get_oncoming_traffic(void) {
 
 size_t get_time(void) {
     return (size_t) mock();
+}
+
+vehicleSpeed get_current_speed(void) {
+    return (vehicleSpeed) mock();
 }
 
 
@@ -91,6 +96,10 @@ sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
             assert(value >= 0);
             data.time = (size_t) value;
             break;
+        case sensorSpeed:
+            assert(value >= speed_min && value <= speed_max);
+            data.current_speed = (size_t) value;
+            break;
         default: assert(0);
     }
     return data;
@@ -106,6 +115,7 @@ void mock_all_sensors(sensors_and_time data) {
     will_return(get_voltage_battery, data.voltage_battery);
     will_return(get_steering_angle, data.steering_angle);
     will_return(get_oncoming_traffic, data.oncomming_trafic);
+    will_return(get_current_speed, data.current_speed);
 }
 
 void mock_and_execute(sensors_and_time data) {

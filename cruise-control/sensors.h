@@ -21,4 +21,6 @@ sensorState get_range_radar_state(void);
 
 rangeRadar read_range_radar_sensor(void);
 
+vehicleSpeed get_current_speed(void);
+
 #endif

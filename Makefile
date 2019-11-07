@@ -12,8 +12,8 @@ test_els: test_els.c test_common.c light/light-state.c light/user-interface.c li
 	./test_els
 
 .PHONY: build_test_scs
-build_test_scs: test_scs.c test_common.c system.c light/light-state.c cruise-control/scs-impl.c cruise-control/scs-state.c
-	gcc test_scs.c test_common.c system.c light/light-state.c cruise-control/scs-impl.c cruise-control/scs-state.c -lcmockery -o test_scs -g -Wall
+build_test_scs: test_scs.c test_common.c system.c light/light-state.c cruise-control/scs-impl.c cruise-control/scs-state.c cruise-control/user-interface.c
+	gcc test_scs.c test_common.c system.c light/light-state.c cruise-control/scs-impl.c cruise-control/scs-state.c cruise-control/user-interface.c -lcmockery -o test_scs -g -Wall
 
 test_scs: build_test_scs
 	@echo "Running speed control tests"

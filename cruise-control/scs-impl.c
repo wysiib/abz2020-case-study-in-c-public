@@ -1,7 +1,6 @@
 #include "scs-impl.h"
 #include "scs-state.h"
-
-void reset(void **state) {}
+#include "user-interface.h"
 
 void scs_do_step(void) {
     // Mock calls are required.
@@ -13,6 +12,8 @@ void scs_do_step(void) {
     (void) get_voltage_battery();
     (void) get_steering_angle();
     (void) get_oncoming_traffic();
+
+    observe_current_speed(get_current_speed());
 
     int engine_on = get_engine_status();
     if (!engine_on) {

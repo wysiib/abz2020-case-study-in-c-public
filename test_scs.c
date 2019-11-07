@@ -1,13 +1,15 @@
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
+// Must come after setjmp.h, stdarg.h, stddef.h
 #include <google/cmockery.h>
 
 #include "cruise-control/scs-impl.h"
 #include "cruise-control/scs-state.h"
+#include "cruise-control/user-interface.h"
 
-#include "test_common.h"
 #include "system.h"
+#include "test_common.h"
 
 void light_do_step(void) {
     // FIXME: The light step function is a dependency for mock_and_execute in
@@ -20,11 +22,13 @@ void scs1(void **state) {
     init_system(leftHand, false, EU); // TODO: Other settings?
     sensors_and_time sensor_states = {0};
 
-    assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
+    assert_true(
+        !get_scs_state().has_previous_desired_speed); // No pds after init.
 
     // Start engine.
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
-    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
 
     mock_and_execute(sensor_states);
@@ -36,18 +40,21 @@ void scs1_engine_restart(void **state) {
     init_system(leftHand, false, EU); // TODO: Other settings?
     sensors_and_time sensor_states = {0};
 
-    assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
+    assert_true(
+        !get_scs_state().has_previous_desired_speed); // No pds after init.
 
     // Start engine.
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
-    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
     // TODO: This is a very artifical tests by direct state change.
-    // Once more functionality is implemented regarding the speed control system,
-    // a more complex test should be set up as well.
+    // Once more functionality is implemented regarding the speed control
+    // system, a more complex test should be set up as well.
     set_prev_desired_speed(1234); // NOTE: Ensure a change in pds.
-    assert_true(get_scs_state().has_previous_desired_speed); // No pds after init.
+    assert_true(
+        get_scs_state().has_previous_desired_speed); // No pds after init.
 
     // Stop engine.
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
@@ -57,19 +64,75 @@ void scs1_engine_restart(void **state) {
 
     // Start engine again.
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+    assert_true(
+        !get_scs_state().has_previous_desired_speed); // No pds after init.
+}
+
+/*
+    SCS-2:
+    When pulling the cruise control lever to 1, the desired speed is either
+    the current vehicle speed (if there is no previous desired speed) or
+    the previous desired speed (if already set).
+*/
+
+void scs2_no_prev_speed(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_true(!get_scs_state().has_previous_desired_speed);
+
+    const vehicleSpeed spe = 800;
+    sensor_states = update_sensors(sensor_states, sensorTime, 1001);
+    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+    mock_and_execute(sensor_states);
+    lever_forward();
+
+    scs_state scs = get_scs_state();
+    assert_true(scs.has_previous_desired_speed);
+    assert_int_equal(scs.previous_desired_speed, spe);
+}
+
+void scs2_with_prev_speed(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    const vehicleSpeed pre = 500;
+    set_prev_desired_speed(pre);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1001);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
-    assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
+
+    assert_true(get_scs_state().has_previous_desired_speed);
+    assert_int_equal(get_scs_state().previous_desired_speed, pre);
+
+    const vehicleSpeed spe = 800;
+    sensor_states = update_sensors(sensor_states, sensorTime, 1001);
+    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+    mock_and_execute(sensor_states);
+    lever_forward();
+
+    assert_true(get_scs_state().has_previous_desired_speed);
+    assert_int_equal(get_scs_state().previous_desired_speed, pre);
 }
 
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
-        // TODO: SCS-1
+        // SCS-1
         unit_test_setup_teardown(scs1, reset, reset),
         unit_test_setup_teardown(scs1_engine_restart, reset, reset),
         // TODO: SCS-2
+        unit_test_setup_teardown(scs2_no_prev_speed, reset, reset),
+        unit_test_setup_teardown(scs2_with_prev_speed, reset, reset),
         // TODO: SCS-3
         // TODO: SCS-4
         // TODO: SCS-5
