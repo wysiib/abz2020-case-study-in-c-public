@@ -659,8 +659,8 @@ void els15(void **state) {
 
 void els16a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=0,
-                          .daytime_running_light=0});
+                          .marketCode=EU,.ambient_light=false,
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -668,8 +668,10 @@ void els16a(void **state) {
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
-    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
     set_light_rotary_switch(lrs_auto);
 
     mock_and_execute(sensor_states);
@@ -678,18 +680,21 @@ void els16a(void **state) {
 }
 void els16b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=0,
-                          .daytime_running_light=0});
+                          .marketCode=EU,.ambient_light=false,
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // ignition: key inserted + ignition on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
-    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
-    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
     set_light_rotary_switch(lrs_auto);
+
     mock_and_execute(sensor_states);
 
     assert_true(get_light_state().lowBeamLeft>0);
@@ -697,6 +702,103 @@ void els16b(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+void els16conflict17a(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,.ambient_light=false,
+                          .daytime_running_light=true});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+void els16conflict17b(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,.ambient_light=false,
+                          .daytime_running_light=true});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 100);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+void els17a(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,.ambient_light=0,
+                          .daytime_running_light=true});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 }
 void els30(void **state) {
