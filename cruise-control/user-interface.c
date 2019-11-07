@@ -27,3 +27,20 @@ void lever_up5(void) {
         }
     }
 }
+
+static inline vehicleSpeed getTensPlace(vehicleSpeed s) {
+    // Remove the last two digits (0-9kmh).
+    return (s / 100) * 100;
+}
+
+void lever_up7(void) {
+    scs_state scs = get_scs_state();
+
+    if (scs.cruise_control_active) {
+        vehicleSpeed curr = scs.previous_desired_speed;
+        if (curr < speed_max) {
+            vehicleSpeed next = getTensPlace(curr) + 100;
+            set_prev_desired_speed(next);
+        }
+    }
+}

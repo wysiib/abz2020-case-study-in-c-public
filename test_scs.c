@@ -266,6 +266,81 @@ void scs4_inactive_cc(void **state) {
     assert_int_equal(get_scs_state().previous_desired_speed, desired);
 }
 
+/*
+    SCS-5: If the driver pushes the cruise control lever to 2 above the first
+    resistance level (7°, beyond the pressure point) and the (adaptive)
+    cruise control is activated, the desired speed is increased to the next
+    ten’s place.
+ */
+
+void scs5_active_cc(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    vehicleSpeed desired = 310;
+    vehicleSpeed nextTensValue = 400;
+    set_vehicle_speed(desired);
+    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+
+    lever_up7();
+
+    assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
+}
+
+void scs5_active_cc_already_multiple_of_ten(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    vehicleSpeed desired = 300;
+    vehicleSpeed nextTensValue = 400;
+    set_vehicle_speed(desired);
+    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+
+    lever_up7();
+
+    assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
+}
+
+void scs5_active_cc_almost_max_speed(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    vehicleSpeed desired = speed_max - 2;
+    set_vehicle_speed(speed_max);
+    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+
+    lever_up7();
+
+    assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
+}
+
+void scs5_active_cc_max_speed(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    set_vehicle_speed(speed_max);
+    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+
+    lever_up7();
+
+    assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
+}
+
+void scs5_inactive_cc(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    vehicleSpeed desired = 300;
+    set_vehicle_speed(400);
+    set_prev_desired_speed(desired);
+    set_cruise_control(false); // Cruise control is inactive.
+
+    lever_up7();
+
+    assert_true(!get_scs_state().cruise_control_active);
+    assert_int_equal(get_scs_state().previous_desired_speed, desired);
+}
+
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -285,7 +360,13 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs4_active_cc, reset, reset),
         unit_test_setup_teardown(scs4_active_cc_max_speed, reset, reset),
         unit_test_setup_teardown(scs4_inactive_cc, reset, reset),
-        // TODO: SCS-5
+        // SCS-5
+        unit_test_setup_teardown(scs5_active_cc, reset, reset),
+        unit_test_setup_teardown(scs5_active_cc_already_multiple_of_ten, reset,
+                                 reset),
+        unit_test_setup_teardown(scs5_active_cc_almost_max_speed, reset, reset),
+        unit_test_setup_teardown(scs5_active_cc_max_speed, reset, reset),
+        unit_test_setup_teardown(scs5_inactive_cc, reset, reset),
         // TODO: SCS-6
         // TODO: SCS-7
         // TODO: SCS-8
