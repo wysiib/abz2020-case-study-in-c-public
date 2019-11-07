@@ -268,21 +268,6 @@ void scs4_active_cc_max_speed(void **state) {
     assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
 }
 
-void scs4_inactive_cc(void **state) {
-    init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0};
-
-    vehicleSpeed desired = 300;
-    set_vehicle_speed(400);
-    set_prev_desired_speed(desired);
-    set_cruise_control(false); // Cruise control is inactive.
-
-    lever_up5();
-
-    assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().previous_desired_speed, desired);
-}
-
 /*
     SCS-5: If the driver pushes the cruise control lever to 2 above the first
     resistance level (7°, beyond the pressure point) and the (adaptive)
@@ -363,21 +348,6 @@ void scs5_active_cc_max_speed(void **state) {
     assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
 }
 
-void scs5_inactive_cc(void **state) {
-    init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0};
-
-    vehicleSpeed desired = 300;
-    set_vehicle_speed(400);
-    set_prev_desired_speed(desired);
-    set_cruise_control(false); // Cruise control is inactive.
-
-    lever_up7();
-
-    assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().previous_desired_speed, desired);
-}
-
 /*
     SCS-6: Pushing the cruise control lever to 3 reduces the desired speed
     accordingly to Req. SCS-4 and Req. SCS-5.
@@ -424,21 +394,6 @@ void scs6_down5_active_cc_min_speed(void **state) {
     lever_down5();
 
     assert_int_equal(get_scs_state().previous_desired_speed, speed_min);
-}
-
-void scs6_down5_inactive_cc(void **state) {
-    init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0};
-
-    vehicleSpeed desired = 300;
-    set_vehicle_speed(400);
-    set_prev_desired_speed(desired);
-    set_cruise_control(false); // Cruise control is inactive.
-
-    lever_down5();
-
-    assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().previous_desired_speed, desired);
 }
 
 void scs6_down7_active_cc(void **state) {
@@ -512,21 +467,6 @@ void scs6_down7_active_cc_min_speed(void **state) {
     assert_int_equal(get_scs_state().previous_desired_speed, speed_min);
 }
 
-void scs6_down7_inactive_cc(void **state) {
-    init_system(leftHand, false, EU);
-    sensors_and_time sensor_states = {0};
-
-    vehicleSpeed desired = 300;
-    set_vehicle_speed(400);
-    set_prev_desired_speed(desired);
-    set_cruise_control(false); // Cruise control is inactive.
-
-    lever_down7();
-
-    assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().previous_desired_speed, desired);
-}
-
 /*
     SCS-11: If the (adaptive) cruise control is deactivated and the cruise
     control lever is moved up or down (either to the first or above the first
@@ -542,6 +482,51 @@ void scs11_up5(void ** state) {
     reset_prev_desired_speed();
 
     lever_up5();
+
+    assert_true(!get_scs_state().cruise_control_active);
+    assert_int_equal(get_scs_state().previous_desired_speed,
+                     400);
+}
+
+void scs11_up7(void ** state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    set_vehicle_speed(400); // 40 kmh
+    set_cruise_control(false);
+    reset_prev_desired_speed();
+
+    lever_up7();
+
+    assert_true(!get_scs_state().cruise_control_active);
+    assert_int_equal(get_scs_state().previous_desired_speed,
+                     400);
+}
+
+void scs11_down5(void ** state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    set_vehicle_speed(400); // 40 kmh
+    set_cruise_control(false);
+    reset_prev_desired_speed();
+
+    lever_down5();
+
+    assert_true(!get_scs_state().cruise_control_active);
+    assert_int_equal(get_scs_state().previous_desired_speed,
+                     400);
+}
+
+void scs11_down7(void ** state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    set_vehicle_speed(400); // 40 kmh
+    set_cruise_control(false);
+    reset_prev_desired_speed();
+
+    lever_down7();
 
     assert_true(!get_scs_state().cruise_control_active);
     assert_int_equal(get_scs_state().previous_desired_speed,
@@ -604,7 +589,6 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs4_active_cc, reset, reset),
         unit_test_setup_teardown(scs4_active_cc_twice, reset, reset),
         unit_test_setup_teardown(scs4_active_cc_max_speed, reset, reset),
-        unit_test_setup_teardown(scs4_inactive_cc, reset, reset),
         // SCS-5
         unit_test_setup_teardown(scs5_active_cc, reset, reset),
         unit_test_setup_teardown(scs5_active_cc_twice, reset, reset),
@@ -612,25 +596,25 @@ int main(int argc, char *argv[]) {
                                  reset),
         unit_test_setup_teardown(scs5_active_cc_almost_max_speed, reset, reset),
         unit_test_setup_teardown(scs5_active_cc_max_speed, reset, reset),
-        unit_test_setup_teardown(scs5_inactive_cc, reset, reset),
         // TODO: SCS-6
         unit_test_setup_teardown(scs6_down5_active_cc, reset, reset),
         unit_test_setup_teardown(scs6_down5_active_cc_twice, reset, reset),
         unit_test_setup_teardown(scs6_down5_active_cc_min_speed, reset, reset),
-        unit_test_setup_teardown(scs6_down5_inactive_cc, reset, reset),
         unit_test_setup_teardown(scs6_down7_active_cc, reset, reset),
         unit_test_setup_teardown(scs6_down7_active_cc_twice, reset, reset),
         unit_test_setup_teardown(scs6_down7_active_cc_already_multiple_of_ten, reset,
                                  reset),
         unit_test_setup_teardown(scs6_down7_active_cc_almost_min_speed, reset, reset),
         unit_test_setup_teardown(scs6_down7_active_cc_min_speed, reset, reset),
-        unit_test_setup_teardown(scs6_down7_inactive_cc, reset, reset),
         // TODO: SCS-7
         // TODO: SCS-8
         // TODO: SCS-9
         // TODO: SCS-10
         // TODO: SCS-11
         unit_test_setup_teardown(scs11_up5, reset, reset),
+        unit_test_setup_teardown(scs11_up7, reset, reset),
+        unit_test_setup_teardown(scs11_down5, reset, reset),
+        unit_test_setup_teardown(scs11_down7, reset, reset),
         // SCS-12
         unit_test_setup_teardown(scs12_lever, reset, reset),
         unit_test_setup_teardown(scs12_speed_to_zero, reset, reset),

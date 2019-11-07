@@ -21,10 +21,13 @@ void lever_up5(void) {
     scs_state scs = get_scs_state();
 
     if (scs.cruise_control_active) {
-        vehicleSpeed curr = scs.previous_desired_speed;
-        if (curr < speed_max) {
-            set_prev_desired_speed(curr + 1);
+        vehicleSpeed desired = scs.previous_desired_speed;
+        if (desired < speed_max) {
+            set_prev_desired_speed(desired + 1);
         }
+    } else {
+        vehicleSpeed curr = scs.current_speed;
+        set_prev_desired_speed(curr);
     }
 }
 
@@ -37,11 +40,14 @@ void lever_up7(void) {
     scs_state scs = get_scs_state();
 
     if (scs.cruise_control_active) {
-        vehicleSpeed curr = scs.previous_desired_speed;
-        if (curr < speed_max) {
-            vehicleSpeed next = getTensPlace(curr) + 100;
+        vehicleSpeed desired = scs.previous_desired_speed;
+        if (desired < speed_max) {
+            vehicleSpeed next = getTensPlace(desired) + 100;
             set_prev_desired_speed(next);
         }
+    } else {
+        vehicleSpeed curr = scs.current_speed;
+        set_prev_desired_speed(curr);
     }
 }
 
@@ -49,10 +55,13 @@ void lever_down5(void) {
     scs_state scs = get_scs_state();
 
     if (scs.cruise_control_active) {
-        vehicleSpeed curr = scs.previous_desired_speed;
-        if (curr > speed_min) {
-            set_prev_desired_speed(curr - 1);
+        vehicleSpeed desired = scs.previous_desired_speed;
+        if (desired > speed_min) {
+            set_prev_desired_speed(desired - 1);
         }
+    } else {
+        vehicleSpeed curr = scs.current_speed;
+        set_prev_desired_speed(curr);
     }
 }
 
@@ -60,17 +69,18 @@ void lever_down7(void) {
     scs_state scs = get_scs_state();
 
     if (scs.cruise_control_active) {
-        vehicleSpeed curr = scs.previous_desired_speed;
-        if (curr > speed_min) {
-            vehicleSpeed next = getTensPlace(curr);
-            if (curr == next) {
+        vehicleSpeed desired = scs.previous_desired_speed;
+        if (desired > speed_min) {
+            vehicleSpeed next = getTensPlace(desired);
+            if (desired == next) {
                 next -= 100;
             }
             set_prev_desired_speed(next);
         }
+    } else {
+        vehicleSpeed curr = scs.current_speed;
+        set_prev_desired_speed(curr);
     }
 }
 
-void lever_backward(void) {
-    set_cruise_control(false);
-}
+void lever_backward(void) { set_cruise_control(false); }
