@@ -752,7 +752,7 @@ void els16conflict17b(void **state) {
 
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 }
-void els17a(void **state) {
+void els17(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .marketCode=EU,.ambient_light=0,
                           .daytime_running_light=true});
@@ -901,7 +901,9 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els15, reset, reset),
         unit_test_setup_teardown(els16a, reset, reset),
         unit_test_setup_teardown(els16b, reset, reset),
-        // TODO: ELS-17
+        unit_test_setup_teardown(els16conflict17a, reset, reset),
+        unit_test_setup_teardown(els16conflict17b, reset, reset),
+        unit_test_setup_teardown(els17, reset, reset),
         // TODO: ELS-18
         // TODO: ELS-19
         // NOTE: ELS-20 is deleted
