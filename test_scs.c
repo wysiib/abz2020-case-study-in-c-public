@@ -106,8 +106,9 @@ void scs2_with_prev_speed(void **state) {
     const vehicleSpeed pre = 500;
     set_prev_desired_speed(pre);
 
-    sensor_states = update_sensors(sensor_states, sensorTime, 1001);
-    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     mock_and_execute(sensor_states);
 
@@ -124,16 +125,81 @@ void scs2_with_prev_speed(void **state) {
     assert_int_equal(get_scs_state().previous_desired_speed, pre);
 }
 
+/*
+    SCS-3: If the current vehicle speed is below 20km/h and there is no previous
+    desired speed, then pulling the cruise control lever to 1 does not
+    activate the (adaptive) cruise control.
+*/
+
+void scs3_at_20kmh(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    const vehicleSpeed spe = 200;
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+
+    mock_and_execute(sensor_states);
+    lever_forward();
+
+    assert_true(get_scs_state().has_previous_desired_speed);
+    assert_int_equal(get_scs_state().previous_desired_speed, spe);
+}
+
+void scs3_below_20kmh(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    const vehicleSpeed spe = 190;
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+
+    mock_and_execute(sensor_states);
+    lever_forward();
+
+    assert_true(!get_scs_state().has_previous_desired_speed);
+}
+
+void scs3_below_20kmh_with_prev_desired_speed(void **state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    const vehicleSpeed spe = 190;
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSpeed, spe);
+
+    const vehicleSpeed pre = 300;
+    set_prev_desired_speed(pre);
+    mock_and_execute(sensor_states);
+    lever_forward();
+
+    assert_true(get_scs_state().has_previous_desired_speed);
+    assert_int_equal(get_scs_state().previous_desired_speed, pre);
+}
+
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
         // SCS-1
         unit_test_setup_teardown(scs1, reset, reset),
         unit_test_setup_teardown(scs1_engine_restart, reset, reset),
-        // TODO: SCS-2
+        // SCS-2
         unit_test_setup_teardown(scs2_no_prev_speed, reset, reset),
         unit_test_setup_teardown(scs2_with_prev_speed, reset, reset),
-        // TODO: SCS-3
+        // SCS-3
+        unit_test_setup_teardown(scs3_at_20kmh, reset, reset),
+        unit_test_setup_teardown(scs3_below_20kmh, reset, reset),
+        unit_test_setup_teardown(scs3_below_20kmh_with_prev_desired_speed,
+                                 reset, reset),
         // TODO: SCS-4
         // TODO: SCS-5
         // TODO: SCS-6
