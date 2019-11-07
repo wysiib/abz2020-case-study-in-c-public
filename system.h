@@ -18,12 +18,17 @@ typedef enum {
 } marketCode;
 
 
-void init_system(driverPosition pos, bool armored_vehicle, marketCode code);
+void init_system(driverPosition pos, bool armored_vehicle, marketCode code, bool ambient_light, bool daytime_running_light);
 
 driverPosition get_driver_position(void);
 
 bool is_armoured_vehicle(void);
 
 marketCode get_market_code(void);
+
+bool get_daytime_running_light(void);
+
+bool get_ambient_light(void);
+
 
 #endif
