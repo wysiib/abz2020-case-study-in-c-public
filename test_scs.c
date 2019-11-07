@@ -27,7 +27,7 @@ void scs1(void **state) {
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
 
-    mock_all_sensors(sensor_states);
+    mock_and_execute(sensor_states);
 
     assert_true(!get_scs_state().has_previous_desired_speed);
 }
@@ -42,17 +42,33 @@ void scs1_engine_restart(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+    // TODO: This is a very artifical tests by direct state change.
+    // Once more functionality is implemented regarding the speed control system,
+    // a more complex test should be set up as well.
+    set_prev_desired_speed(1234); // NOTE: Ensure a change in pds.
+    assert_true(get_scs_state().has_previous_desired_speed); // No pds after init.
 
+    // Stop engine.
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
     mock_and_execute(sensor_states);
 
-    fail(); // TODO: restart engine, ensure that has_prev... is set to false
+    // Start engine again.
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+    assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
 }
 
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
-        unit_test_setup_teardown(scs1, reset, reset),
         // TODO: SCS-1
+        unit_test_setup_teardown(scs1, reset, reset),
+        unit_test_setup_teardown(scs1_engine_restart, reset, reset),
         // TODO: SCS-2
         // TODO: SCS-3
         // TODO: SCS-4

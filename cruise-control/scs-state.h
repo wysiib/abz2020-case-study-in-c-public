@@ -10,4 +10,8 @@ typedef struct {
 
 scs_state get_scs_state(void);
 
+void set_prev_desired_speed(vehicleSpeed prev);
+
+void reset_prev_desired_speed();
+
 #endif

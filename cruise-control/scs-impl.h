@@ -3,4 +3,6 @@
 
 void reset(void **state);
 
+void scs_do_step(void);
+
 #endif
