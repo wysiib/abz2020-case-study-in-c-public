@@ -17,6 +17,15 @@ typedef enum {
     // TODO: more?
 } marketCode;
 
+typedef struct init{
+    driverPosition pos;
+    bool armored_vehicle;
+    marketCode marketCode;
+    bool ambient_light;
+    bool daytime_running_light;
+}init;
+
+void init_system_v2(init i);
 
 void init_system(driverPosition pos, bool armored_vehicle, marketCode code, bool ambient_light, bool daytime_running_light);
 

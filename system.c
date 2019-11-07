@@ -9,6 +9,10 @@ static bool ambi_light;
 static bool daytime_light;
 
 static bool initialised = false;
+void init_system_v2(init i) {
+    init_system(i.pos,i.armored_vehicle,i.marketCode,
+                i.ambient_light,i.daytime_running_light);
+}
 
 void init_system(driverPosition apos, bool av, marketCode acode, bool ambient_light, bool daytime_running_light) {
     // I would like this assertion but it will break our test cases

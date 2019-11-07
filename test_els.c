@@ -658,7 +658,9 @@ void els15(void **state) {
 }
 
 void els16a(void **state) {
-    init_system(leftHand, false, EU);
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,.ambient_light=0,
+                          .daytime_running_light=0});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -676,7 +678,9 @@ void els16a(void **state) {
     assert_true(false); // TODO: init with daytime running light  & ambient light off
 }
 void els16b(void **state) {
-    init_system(leftHand, false, EU);
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,.ambient_light=0,
+                          .daytime_running_light=0});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
