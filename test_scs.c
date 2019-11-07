@@ -455,6 +455,41 @@ void scs6_down7_inactive_cc(void **state) {
     assert_int_equal(get_scs_state().previous_desired_speed, desired);
 }
 
+/*
+    SCS-12: Pressing the cruise control lever to 4 deactivates the (adaptive)
+    cruise control. setVehicleSpeed = 0 indicates to the car that there
+    is no speed to maintain.
+ */
+
+void scs12_lever(void ** state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    set_prev_desired_speed(400);
+    set_cruise_control(true);
+
+    lever_backward();
+
+    assert_true(!get_scs_state().cruise_control_active);
+}
+
+void scs12_speed_to_zero(void ** state) {
+    init_system(leftHand, false, EU);
+    sensors_and_time sensor_states = {0};
+
+    set_prev_desired_speed(400);
+    set_cruise_control(true);
+    set_vehicle_speed(1000); // 100 kmh
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+
+    assert_true(!get_scs_state().cruise_control_active);
+}
+
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -497,6 +532,8 @@ int main(int argc, char *argv[]) {
         // TODO: SCS-10
         // TODO: SCS-11
         // TODO: SCS-12
+        unit_test_setup_teardown(scs12_lever, reset, reset),
+        unit_test_setup_teardown(scs12_speed_to_zero, reset, reset),
         // TODO: SCS-13
         // TODO: SCS-14
         // TODO: SCS-15

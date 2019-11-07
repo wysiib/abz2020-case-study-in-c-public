@@ -36,4 +36,10 @@ void observe_current_speed(vehicleSpeed speed) {
 void set_vehicle_speed(vehicleSpeed current) {
     assert(current >= speed_min && current <= speed_max);
     scs.current_speed = current;
+
+    // SCS-12: setVehicleSpeed = 0 => no speed to maintain.
+    if (scs.current_speed == 0) {
+        set_cruise_control(false);
+        // TODO: Is this supposed to reset has_previous_desired_speed as well?
+    }
 }
