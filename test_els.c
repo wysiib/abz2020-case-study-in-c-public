@@ -16,6 +16,16 @@
 
 #include "test_common.h"
 
+void scs_do_step(void) {
+    // FIXME: The SCS step function is a dependency for mock_and_execute in
+    // test_common.c, but linking to scs-impl.c adds a big bunch of further
+    // dependencies to the ELS, which currently should not be in here.
+    // The two systems are not cleanly divided in the first place, as
+    // for instance test_common.c is directly dependend on the light subsystem,
+    // which does not really make sense for a common test suit usable by
+    // any subsystem. 🤷‍
+}
+
 void els1_left(void **state) {
     init_system(leftHand, false, EU);
     sensors_and_time sensor_states = {0};
