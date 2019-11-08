@@ -15,6 +15,8 @@ typedef enum {
 
 typedef enum { two_secs, two_point_five_secs, three_secs } safetyDistance;
 
+void lever_release(void);
+
 void lever_forward(void);
 
 /** Pushes the lever up to the first resistance level (5°). */

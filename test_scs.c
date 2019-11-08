@@ -18,6 +18,25 @@ void light_do_step(void) {
     // light-dependencies to the SCS, which currently should not be in here.
 }
 
+/**
+ * Advances the time the given amount of milliseconds.
+ * The step_size serves as time granularity.
+ * Each time step, the sensors will be mocked and executed.
+ *
+ * TODO: Move to text_common.c
+ */
+void sensors_advance_time_and_exec(sensors_and_time state,
+                                   size_t duration_ms, size_t step_size) {
+    size_t target_time = state.time + duration_ms;
+    assert_true(target_time > state.time); // Guard against overflow.
+
+    for (size_t time = state.time;
+         time < target_time;
+         time += step_size) {
+        mock_and_execute(state);
+    }
+}
+
 /* SCS-1: "After [engine] start, there is no previous desired speed." */
 void scs1(void **state) {
     init_system(leftHand, false, EU, false, false); // TODO: Other settings?
@@ -230,13 +249,21 @@ void scs4_active_cc(void **state) {
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
-    set_vehicle_speed(400);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 400);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
+    mock_and_execute(sensor_states);
 
     lever_up5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().previous_desired_speed, desired + 1);
+    assert_int_equal(get_scs_state().previous_desired_speed, desired + 10);
 }
 
 void scs4_active_cc_twice(void **state) {
@@ -244,14 +271,26 @@ void scs4_active_cc_twice(void **state) {
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
-    set_vehicle_speed(400);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 400);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
+    mock_and_execute(sensor_states);
 
     lever_up5();
-    lever_up5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().previous_desired_speed, desired + 2);
+    lever_up5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+
+    assert_int_equal(get_scs_state().previous_desired_speed, desired + 20);
 }
 
 void scs4_active_cc_max_speed(void **state) {
@@ -264,6 +303,7 @@ void scs4_active_cc_max_speed(void **state) {
     set_cruise_control(true);
 
     lever_up5();
+    lever_release();
 
     assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
 }
@@ -281,11 +321,19 @@ void scs5_active_cc(void **state) {
 
     vehicleSpeed desired = 310;
     vehicleSpeed nextTensValue = 400;
-    set_vehicle_speed(330);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
 }
@@ -296,12 +344,23 @@ void scs5_active_cc_twice(void **state) {
 
     vehicleSpeed desired = 310;
     vehicleSpeed nextTensValue = 500;
-    set_vehicle_speed(330);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+
     lever_up7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
 }
@@ -312,11 +371,18 @@ void scs5_active_cc_already_multiple_of_ten(void **state) {
 
     vehicleSpeed desired = 300;
     vehicleSpeed nextTensValue = 400;
-    set_vehicle_speed(330);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
 }
@@ -326,11 +392,18 @@ void scs5_active_cc_almost_max_speed(void **state) {
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = speed_max - 2;
-    set_vehicle_speed(400);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
 }
@@ -339,11 +412,18 @@ void scs5_active_cc_max_speed(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_vehicle_speed(330);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(speed_max);
     set_cruise_control(true);
 
     lever_up7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, speed_max);
 }
@@ -358,13 +438,20 @@ void scs6_down5_active_cc(void **state) {
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
-    set_vehicle_speed(330);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().previous_desired_speed, desired - 1);
+    assert_int_equal(get_scs_state().previous_desired_speed, desired - 10);
 }
 
 void scs6_down5_active_cc_twice(void **state) {
@@ -372,14 +459,25 @@ void scs6_down5_active_cc_twice(void **state) {
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
-    set_vehicle_speed(330);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down5();
-    lever_down5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().previous_desired_speed, desired - 2);
+    lever_down5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+
+    assert_int_equal(get_scs_state().previous_desired_speed, desired - 20);
 }
 
 void scs6_down5_active_cc_min_speed(void **state) {
@@ -387,11 +485,18 @@ void scs6_down5_active_cc_min_speed(void **state) {
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = speed_min;
-    set_vehicle_speed(300);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, speed_min);
 }
@@ -402,10 +507,18 @@ void scs6_down7_active_cc(void **state) {
 
     vehicleSpeed desired = 310;
     vehicleSpeed nextTensValue = 300;
-    set_vehicle_speed(desired);
-    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
+    set_prev_desired_speed(desired);
+    set_cruise_control(true);
 
     lever_down7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
 }
@@ -416,11 +529,23 @@ void scs6_down7_active_cc_twice(void **state) {
 
     vehicleSpeed desired = 310;
     vehicleSpeed nextTensValue = 200;
-    set_vehicle_speed(desired);
-    lever_forward(); // Activate cruise control (SCS-2 and SCS-3)
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
+    set_prev_desired_speed(desired);
+    set_cruise_control(true);
 
     lever_down7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+
     lever_down7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
 }
@@ -431,11 +556,18 @@ void scs6_down7_active_cc_already_multiple_of_ten(void **state) {
 
     vehicleSpeed desired = 300;
     vehicleSpeed nextTensValue = 200;
-    set_vehicle_speed(330);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, nextTensValue);
 }
@@ -445,11 +577,18 @@ void scs6_down7_active_cc_almost_min_speed(void **state) {
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = speed_min + 2;
-    set_vehicle_speed(400);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, speed_min);
 }
@@ -458,13 +597,82 @@ void scs6_down7_active_cc_min_speed(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_vehicle_speed(330);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 330);
     set_prev_desired_speed(speed_min);
     set_cruise_control(true);
 
     lever_down7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_int_equal(get_scs_state().previous_desired_speed, speed_min);
+}
+
+/*
+    SCS-7: If the driver pushes the cruise control lever to 2 with activated
+    cruise control within the first resistance level (5°, not beyond the
+    pressure point) and holds it there for 2 seconds, the target speed of
+    the cruise control is increased every second by 1 km/h until the lever
+    is in neutral position again.
+    Example: Current speed is 57 km/h -> after holding 2 seconds,
+    desired speed is set to 58 km/h, after holding 3 seconds, desired
+    speed is set to 59 km/h, after holding 4 seconds, desired speed is set
+    to 60 km/h, etc.
+ */
+
+void scs7_example(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_prev_desired_speed(570);
+    set_cruise_control(true);
+    lever_up5();
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 570);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // One second passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // Two seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 580);
+
+    // Three seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 590);
+
+    // Four seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 5000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 600);
+
+    lever_release();
+
+    // Five seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 600);
+
+    // Six seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 600);
 }
 
 /*
@@ -473,60 +681,90 @@ void scs6_down7_active_cc_min_speed(void **state) {
     resistance level, the current vehicle speed is used as desired speed.
  */
 
-void scs11_up5(void ** state) {
+void scs11_up5(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_vehicle_speed(400); // 40 kmh
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 400);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     set_cruise_control(false);
     reset_prev_desired_speed();
+    mock_and_execute(sensor_states);
+    assert_true(!get_scs_state().has_previous_desired_speed);
 
     lever_up5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
     assert_int_equal(get_scs_state().previous_desired_speed,
                      400);
 }
 
-void scs11_up7(void ** state) {
+void scs11_up7(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_vehicle_speed(400); // 40 kmh
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 400);
     set_cruise_control(false);
     reset_prev_desired_speed();
 
     lever_up7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
     assert_int_equal(get_scs_state().previous_desired_speed,
                      400);
 }
 
-void scs11_down5(void ** state) {
+void scs11_down5(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_vehicle_speed(400); // 40 kmh
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 400);
     set_cruise_control(false);
     reset_prev_desired_speed();
 
     lever_down5();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
     assert_int_equal(get_scs_state().previous_desired_speed,
                      400);
 }
 
-void scs11_down7(void ** state) {
+void scs11_down7(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_vehicle_speed(400); // 40 kmh
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 400);
     set_cruise_control(false);
     reset_prev_desired_speed();
 
     lever_down7();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
+    lever_release();
+    sensors_advance_time_and_exec(sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
     assert_int_equal(get_scs_state().previous_desired_speed,
@@ -539,7 +777,7 @@ void scs11_down7(void ** state) {
     is no speed to maintain.
  */
 
-void scs12_lever(void ** state) {
+void scs12_lever(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
@@ -551,7 +789,7 @@ void scs12_lever(void ** state) {
     assert_true(!get_scs_state().cruise_control_active);
 }
 
-void scs12_speed_to_zero(void ** state) {
+void scs12_speed_to_zero(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
@@ -596,7 +834,7 @@ int main(int argc, char *argv[]) {
                                  reset),
         unit_test_setup_teardown(scs5_active_cc_almost_max_speed, reset, reset),
         unit_test_setup_teardown(scs5_active_cc_max_speed, reset, reset),
-        // TODO: SCS-6
+        // SCS-6
         unit_test_setup_teardown(scs6_down5_active_cc, reset, reset),
         unit_test_setup_teardown(scs6_down5_active_cc_twice, reset, reset),
         unit_test_setup_teardown(scs6_down5_active_cc_min_speed, reset, reset),
@@ -606,7 +844,8 @@ int main(int argc, char *argv[]) {
                                  reset),
         unit_test_setup_teardown(scs6_down7_active_cc_almost_min_speed, reset, reset),
         unit_test_setup_teardown(scs6_down7_active_cc_min_speed, reset, reset),
-        // TODO: SCS-7
+        // SCS-7
+        unit_test_setup_teardown(scs7_example, reset, reset),
         // TODO: SCS-8
         // TODO: SCS-9
         // TODO: SCS-10
