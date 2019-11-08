@@ -974,6 +974,348 @@ void els18c(void **state) {
     assert_true(get_light_state().lowBeamLeft>0);
     assert_true(get_light_state().lowBeamRight>0);
 }
+
+void els19a(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+
+    //test ambilight triggers low beams 30 seconds on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 32000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+void els19b(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    //test ambilight activates light when key state change to insert
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    set_light_rotary_switch(lrs_off);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 32001);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+void els19c(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    //test ambilight activates light with reset of 30 seconds
+    //reset via door open & close
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 12000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 41000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, false); //open door
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 71000); //still on?
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 71000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, true); //close door
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 101000); //still on?
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 101001);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);//now off
+}
+void els19d(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    //test ambilight activates light with reset of 30 seconds
+    //reset via key insert / removal
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    //still on?
+    sensor_states = update_sensors(sensor_states, sensorTime, 32000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 32000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);//insert key
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    //still on?
+    sensor_states = update_sensors(sensor_states, sensorTime, 62000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 62001);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+void els19f(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    //test delayed ambilight activates light
+    //(open-door => active light) -> (31s wait => light off) -> (pull out key => active light)
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_light_state().lowBeamLeft>0);
+    assert_true(get_light_state().lowBeamRight>0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, false);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 33000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, false);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 34000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, false);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 35000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 65000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 65001);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+void els19conflict28a(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    //test ambilight activates light for no longer than 30 seconds without parking light
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    //TODO: PITMAN LEFT
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 32000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 32001);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,10,lowBeamRight,10);
+
+    assert_true(false);//TODO: REMOVE IF PITMAN LEFT/RIGHT WAS IMPLEMENTED
+}
+void els19conflict28b(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .marketCode=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    //test ambilight activates light for no longer than 30 seconds without parking light
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    //TODO: PITMAN RIGHT
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 32000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 32001);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(lowBeamLeft,10,lowBeamRight,10);
+
+    assert_true(false);//TODO: REMOVE IF PITMAN LEFT/RIGHT WAS IMPLEMENTED
+}
 void els30(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1150,7 +1492,16 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els18a, reset, reset),
         unit_test_setup_teardown(els18b, reset, reset),
         unit_test_setup_teardown(els18c, reset, reset),
-        // TODO: ELS-19
+        // NOTE: Probably still not enough els19 tests
+        unit_test_setup_teardown(els19a, reset, reset),
+        unit_test_setup_teardown(els19b, reset, reset),
+        unit_test_setup_teardown(els19c, reset, reset),
+        unit_test_setup_teardown(els19d, reset, reset),
+        unit_test_setup_teardown(els19f, reset, reset),
+        // NOTE: IMPLEMENT PITMAN change!
+        unit_test_setup_teardown(els19conflict28a, reset, reset),
+        unit_test_setup_teardown(els19conflict28b, reset, reset),
+
         // NOTE: ELS-20 is deleted
         // TODO: ELS-21 to ESL-29
         unit_test_setup_teardown(els30, reset, reset),
