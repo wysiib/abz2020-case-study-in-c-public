@@ -14,7 +14,6 @@ void scs_do_step(void) {
     (void) get_steering_angle();
     (void) get_oncoming_traffic();
     (void) get_camera_state();
-    (void) get_current_speed();
 
     int engine_on = get_engine_status();
     if (!engine_on) {
@@ -22,4 +21,7 @@ void scs_do_step(void) {
         reset_prev_desired_speed();
         set_cruise_control(false);
     }
+
+    // Note: Speed not actually a sensor in SCS specification.
+    set_vehicle_speed(get_current_speed());
 }

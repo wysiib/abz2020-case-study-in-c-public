@@ -118,7 +118,7 @@ void scs2_no_prev_speed(void **state) {
 
     const vehicleSpeed spe = 800;
     sensor_states = update_sensors(sensor_states, sensorTime, 1001);
-    set_vehicle_speed(spe);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, spe);
     mock_and_execute(sensor_states);
     lever_forward();
 
@@ -170,9 +170,9 @@ void scs3_at_20kmh(void **state) {
     sensor_states =
         update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
-    set_vehicle_speed(spe);
-
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, spe);
     mock_and_execute(sensor_states);
+
     lever_forward();
 
     assert_true(get_scs_state().cruise_control_active);
