@@ -1256,7 +1256,8 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els18c, reset, reset),
         // TODO: ELS-19
         // NOTE: ELS-20 is deleted
-        // TODO: ELS-21 to ESL-29
+        // TODO: ELS-21 to ESL-28
+        // NOTE: ESL-29: no test
         unit_test_setup_teardown(els30, reset, reset),
         unit_test_setup_teardown(els31, reset, reset),
         // NOTE: ELS-32: no test
@@ -1281,4 +1282,4 @@ int main(int argc, char* argv[]) {
     };
     run_tests(tests);
     return 0;
-}
+
