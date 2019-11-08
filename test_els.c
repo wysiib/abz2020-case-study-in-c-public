@@ -1172,6 +1172,52 @@ void els43(void **state) {
     progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
+void els49a(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, Dirty);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
+}
+
+void els49b(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, NotReady);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
+}
+
 
 int main(int argc, char* argv[]) {
     // please please remember to reset state
@@ -1229,7 +1275,8 @@ int main(int argc, char* argv[]) {
         // TODO: ELS-46
         // TODO: ELS-47
         // NOTE: ELS-48: no test
-        // TODO: ELS-49
+        unit_test_setup_teardown(els49a, reset, reset),
+        unit_test_setup_teardown(els49b, reset, reset),
 
     };
     run_tests(tests);
