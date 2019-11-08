@@ -1034,7 +1034,7 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs9_example, reset, reset),
         // SCS-10
         unit_test_setup_teardown(scs10_example, reset, reset),
-        // TODO: SCS-11
+        // SCS-11
         unit_test_setup_teardown(scs11_up5, reset, reset),
         unit_test_setup_teardown(scs11_up7, reset, reset),
         unit_test_setup_teardown(scs11_down5, reset, reset),
