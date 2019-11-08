@@ -905,6 +905,7 @@ void scs12_speed_to_zero(void **state) {
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
+        // Setting and modifying desired speed:
         // SCS-1
         unit_test_setup_teardown(scs1, reset, reset),
         unit_test_setup_teardown(scs1_engine_restart, reset, reset),
@@ -954,11 +955,15 @@ int main(int argc, char *argv[]) {
         // SCS-12
         unit_test_setup_teardown(scs12_lever, reset, reset),
         unit_test_setup_teardown(scs12_speed_to_zero, reset, reset),
+
+        // Simple cruise control:
         // TODO: SCS-13
         // TODO: SCS-14
         // TODO: SCS-15
         // TODO: SCS-16
         // TODO: SCS-17
+
+        // Adaptive cruise control:
         // TODO: SCS-18
         // TODO: SCS-19
         // TODO: SCS-20
@@ -966,10 +971,16 @@ int main(int argc, char *argv[]) {
         // TODO: SCS-22
         // TODO: SCS-23
         // TODO: SCS-24
+
+        // Distance warning:
         // TODO: SCS-25
         // TODO: SCS-26
+
+        // Emergency Brake Assistant:
         // TODO: SCS-27
         // TODO: SCS-28
+
+        // Speed Limit:
         // TODO: SCS-29
         // TODO: SCS-30
         // TODO: SCS-31
@@ -978,9 +989,13 @@ int main(int argc, char *argv[]) {
         // TODO: SCS-34
         // TODO: SCS-35
         // TODO: SCS-36
+
+        // Traffic Sign Detection:
         // TODO: SCS-37
         // TODO: SCS-38
         // TODO: SCS-39
+
+        // Fault handling and general properties:
         // TODO: SCS-40
         // TODO: SCS-41
         // TODO: SCS-42
