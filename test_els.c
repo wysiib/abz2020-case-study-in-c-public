@@ -1124,6 +1124,54 @@ void els38(void **state) {
     progress_time_partial3(6000, 10000, highBeamOn, false, lowBeamLeft, 100, lowBeamRight, 100);
 }
 
+void els41(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, true);
+
+    mock_and_execute(sensor_states);
+
+    progress_time_partial1(1000, 3000, reverseLight, 100);
+
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, false);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial1(3000, 6000, reverseLight, 0);
+}
+
+voltage volt(int num) {
+    return num * 10;
+}
+
+void els43(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
+}
+
 
 int main(int argc, char* argv[]) {
     // please please remember to reset state
@@ -1170,6 +1218,18 @@ int main(int argc, char* argv[]) {
         // TODO: ELS-36: define characteristic curves
         // TODO: ELS-37: make sense of that mess
         unit_test_setup_teardown(els38, reset, reset),
+        // TODO: ELS-39: requires clean-up of common test file;
+        // TODO: ELS 40| brake pedal is sensor in light subsystem,
+        //               yet is part of the UI of the cruise
+        unit_test_setup_teardown(els41, reset, reset),
+        // TODO: ELS-42
+        unit_test_setup_teardown(els43, reset, reset),
+        // TODO: ELS-44
+        // TODO: ELS-45
+        // TODO: ELS-46
+        // TODO: ELS-47
+        // NOTE: ELS-48: no test
+        // TODO: ELS-49
 
     };
     run_tests(tests);
