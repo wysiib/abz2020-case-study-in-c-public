@@ -1211,6 +1211,46 @@ void els43(void **state) {
     progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
+void els46_left(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Downward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 0, lowBeamRight, 0, tailLampLeft, 0, tailLampRight, 0);
+}
+
+void els46_right(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Upward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 0, lowBeamRight, 0, tailLampLeft, 0, tailLampRight, 0);
+}
+
 void els49a(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1314,7 +1354,8 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els43, reset, reset),
         // TODO: ELS-44
         // TODO: ELS-45
-        // TODO: ELS-46
+        unit_test_setup_teardown(els46_left, reset, reset),
+        unit_test_setup_teardown(els46_right, reset, reset),
         // TODO: ELS-47
         // NOTE: ELS-48: no test
         unit_test_setup_teardown(els49a, reset, reset),
