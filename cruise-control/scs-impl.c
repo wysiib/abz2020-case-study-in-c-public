@@ -16,16 +16,35 @@ static inline void handle_held_lever(scs_state scs, size_t system_time) {
     size_t time_passed = system_time - scs.lever_last_tic;
 
     if (!scs.lever_continuous) { // Only started to hold lever.
-        if (scs.lever_pos == scs_Upward5) {
-            if (time_passed >= lever5_auto_time) {
-                set_lever_continuous(true);
-                lever_up5_step();
-                set_lever_last_tic(system_time);
-            }
+        if (scs.lever_pos == scs_Upward5 && time_passed >= lever5_auto_time) {
+            set_lever_continuous(true);
+            lever_up5_step();
+            set_lever_last_tic(system_time);
+        } else if (scs.lever_pos == scs_Downward5 && time_passed >= lever5_auto_time) {
+            set_lever_continuous(true);
+            lever_down5_step();
+            set_lever_last_tic(system_time);
+        } else if (scs.lever_pos == scs_Upward7 && time_passed >= lever7_auto_time) {
+            set_lever_continuous(true);
+            lever_up7_step();
+            set_lever_last_tic(system_time);
+        } else if (scs.lever_pos == scs_Downward7 && time_passed >= lever7_auto_time) {
+            set_lever_continuous(true);
+            lever_down7_step();
+            set_lever_last_tic(system_time);
         }
     } else {
         if (scs.lever_pos == scs_Upward5 && time_passed >= lever5_frequency) {
             lever_up5_step();
+            set_lever_last_tic(system_time);
+        } else if (scs.lever_pos == scs_Downward5 && time_passed >= lever5_frequency) {
+            lever_down5_step();
+            set_lever_last_tic(system_time);
+        } else if (scs.lever_pos == scs_Upward7 && time_passed >= lever7_frequency) {
+            lever_up7_step();
+            set_lever_last_tic(system_time);
+        } else if (scs.lever_pos == scs_Downward7 && time_passed >= lever7_frequency) {
+            lever_down7_step();
             set_lever_last_tic(system_time);
         }
     }

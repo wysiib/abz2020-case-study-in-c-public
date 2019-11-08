@@ -676,6 +676,188 @@ void scs7_example(void **state) {
 }
 
 /*
+    SCS-8: If the driver pushes the cruise control lever to 2 with activated cruise
+    control through the first resistance level (7°, beyond the pressure
+    point) and holds it there for 2 seconds, the speed set point of the
+    cruise control is increased every 2 seconds to the next ten’s place
+    until the lever is in neutral position again.
+    Example: Current speed is 57 km/h −→ after holding 2 seconds,
+    desired speed is set to 60 km/h, after holding 4 seconds, desired
+    speed is set to 70 km/h, after holding 6 seconds, desired speed is set
+    to 80 km/h, etc.
+*/
+
+void scs8_example(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_prev_desired_speed(570);
+    set_cruise_control(true);
+    lever_up7();
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 570);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // One second passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // Two seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 600);
+
+    // Three seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 600);
+
+    // Four seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 5000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 700);
+
+    lever_release();
+
+    // Five seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 700);
+
+    // Six seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 700);
+}
+
+/*
+    SCS-9: If the driver pushes the cruise control lever to 3 with activated cruise
+    control within the first resistance level (5°, not beyond the pressure
+    point) and holds it there for 2 seconds, the target speed of the cruise
+    control is reduced every second by 1 km/h until the lever is in neutral
+    position again.
+    Example: Current speed is 57 km/h −→ after holding 2 seconds,
+    desired speed is set to 56 km/h, after holding 3 seconds, desired
+    speed is set to 55 km/h, after holding 4 seconds, desired speed is set
+    to 54 km/h, etc.
+*/
+
+void scs9_example(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_prev_desired_speed(570);
+    set_cruise_control(true);
+    lever_down5();
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 570);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // One second passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // Two seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 560);
+
+    // Three seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 550);
+
+    // Four seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 5000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 540);
+
+    lever_release();
+
+    // Five seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 540);
+
+    // Six seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 540);
+}
+
+/*
+    SCS-10: If the driver pushes the cruise control lever to 3 with activated
+    cruise control through the first resistance level (7°, beyond the pressure
+    point) and holds it there for 2 seconds, the speed set point of the
+    cruise control is increased every 2 seconds to the next ten’s place
+    until the lever is in neutral position again.
+ */
+
+void scs10_example(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_prev_desired_speed(570);
+    set_cruise_control(true);
+    lever_down7();
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states =
+        update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 570);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // One second passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 570);
+
+    // Two seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 500);
+
+    // Three seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 500);
+
+    // Four seconds passed.
+    sensor_states = update_sensors(sensor_states, sensorTime, 5000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 400);
+
+    lever_release();
+
+    // Five seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 400);
+
+    // Six seconds passed, but lever was released already.
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+    assert_true(get_scs_state().previous_desired_speed == 400);
+}
+
+/*
     SCS-11: If the (adaptive) cruise control is deactivated and the cruise
     control lever is moved up or down (either to the first or above the first
     resistance level, the current vehicle speed is used as desired speed.
@@ -846,9 +1028,12 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs6_down7_active_cc_min_speed, reset, reset),
         // SCS-7
         unit_test_setup_teardown(scs7_example, reset, reset),
-        // TODO: SCS-8
-        // TODO: SCS-9
-        // TODO: SCS-10
+        // SCS-8
+        unit_test_setup_teardown(scs8_example, reset, reset),
+        // SCS-9
+        unit_test_setup_teardown(scs9_example, reset, reset),
+        // SCS-10
+        unit_test_setup_teardown(scs10_example, reset, reset),
         // TODO: SCS-11
         unit_test_setup_teardown(scs11_up5, reset, reset),
         unit_test_setup_teardown(scs11_up7, reset, reset),
