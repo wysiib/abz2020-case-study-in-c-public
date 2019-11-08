@@ -66,6 +66,7 @@ void mock_and_execute(sensors_and_time data);
 
 #define progress_time(start, end, state) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_light_state(((light_state)state)); } }
 
+#define assert_partial_state4(field1, value1, field2, value2, field3, value3, field4, value4) { light_state ls = get_light_state(); assert_true(ls.field1 == value1); assert_true(ls.field2 == value2); assert_true(ls.field3 == value3); assert_true(ls.field4 == value4); }
 #define assert_partial_state3(field1, value1, field2, value2, field3, value3) { light_state ls = get_light_state(); assert_true(ls.field1 == value1); assert_true(ls.field2 == value2); assert_true(ls.field3 == value3); }
 #define assert_partial_state2(field1, value1, field2, value2) { light_state ls = get_light_state(); assert_true(ls.field1 == value1); assert_true(ls.field2 == value2); }
 #define assert_partial_state1(field, value) { light_state ls = get_light_state(); assert_true(ls.field == value); }
@@ -73,5 +74,6 @@ void mock_and_execute(sensors_and_time data);
 #define progress_time_partial1(start, end, field, value) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state1(field, value); } }
 #define progress_time_partial2(start, end, field1, value1, field2, value2) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state2(field1, value1, field2, value2); } }
 #define progress_time_partial3(start, end, field1, value1, field2, value2, field3, value3) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state3(field1, value1, field2, value2, field3, value3); } }
+#define progress_time_partial4(start, end, field1, value1, field2, value2, field3, value3, field4, value4) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state4(field1, value1, field2, value2, field3, value3, field4, value4); } }
 
 #endif

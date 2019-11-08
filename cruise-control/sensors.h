@@ -21,4 +21,8 @@ sensorState get_range_radar_state(void);
 
 rangeRadar read_range_radar_sensor(void);
 
+// Note: Below are sensors we assume to exists, which however are not specified
+// in Section 5 of the case study description as of version 1.9.
+vehicleSpeed get_current_speed(void);
+
 #endif

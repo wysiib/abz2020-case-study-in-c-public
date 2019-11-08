@@ -16,6 +16,15 @@
 
 #include "test_common.h"
 
+void scs_do_step(void) {
+    // FIXME: The SCS step function is a dependency for mock_and_execute in
+    // test_common.c, but linking to scs-impl.c adds a big bunch of further
+    // dependencies to the ELS, which currently should not be in here.
+    // The two systems are not cleanly divided in the first place, as
+    // for instance test_common.c is directly dependend on the light subsystem,
+    // which does not really make sense for a common test suit usable by
+    // any subsystem. 🤷‍
+}
 
 void sequence1(void **state) {
     init_system(leftHand, false, EU, false, false);
@@ -48,7 +57,7 @@ void sequence1(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 200);
     mock_and_execute(sensor_states);
-    
+
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     // brightness value below threshold
@@ -93,7 +102,7 @@ void sequence1(void **state) {
 
     assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
-    
+
     // turning engine off
     sensor_states = update_sensors(sensor_states, sensorTime, 19000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
@@ -605,7 +614,7 @@ void sequence7(void **state) {
     mock_and_execute(sensor_states);
 
     assert_light_state(((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0, 0}));
-    
+
     progress_time(14301, 14499, ((light_state) {0, 100, 100, 50, 50, 100, 100, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 14500);

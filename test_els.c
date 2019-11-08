@@ -17,6 +17,16 @@
 
 #include "test_common.h"
 
+void scs_do_step(void) {
+    // FIXME: The SCS step function is a dependency for mock_and_execute in
+    // test_common.c, but linking to scs-impl.c adds a big bunch of further
+    // dependencies to the ELS, which currently should not be in here.
+    // The two systems are not cleanly divided in the first place, as
+    // for instance test_common.c is directly dependend on the light subsystem,
+    // which does not really make sense for a common test suit usable by
+    // any subsystem. 🤷‍
+}
+
 void els1_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -981,9 +991,7 @@ void els19a(void **state) {
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
-
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
-
 
     //test ambilight triggers low beams 30 seconds on
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -1316,6 +1324,38 @@ void els19conflict28b(void **state) {
 
     assert_true(false);//TODO: REMOVE IF PITMAN LEFT/RIGHT WAS IMPLEMENTED
 }
+void els28_left(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Downward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 10, lowBeamRight, 0, tailLampLeft, 10, tailLampRight, 0);
+}
+
+void els28_right(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Upward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 10, lowBeamRight, 0, tailLampLeft, 10, tailLampRight, 0);
+}
+
 void els30(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1456,6 +1496,140 @@ void els38(void **state) {
     progress_time_partial3(6000, 10000, highBeamOn, false, lowBeamLeft, 100, lowBeamRight, 100);
 }
 
+void els41(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, true);
+
+    mock_and_execute(sensor_states);
+
+    progress_time_partial1(1000, 3000, reverseLight, 100);
+
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, false);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial1(3000, 6000, reverseLight, 0);
+}
+
+voltage volt(int num) {
+    return num * 10;
+}
+
+void els43(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
+}
+
+void els46_left(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Downward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 0, lowBeamRight, 0, tailLampLeft, 0, tailLampRight, 0);
+}
+
+void els46_right(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Upward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 0, lowBeamRight, 0, tailLampLeft, 0, tailLampRight, 0);
+}
+
+void els49a(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, Dirty);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
+}
+
+void els49b(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, NotReady);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial3(1000, 3000, highBeamOn, true, highBeamMotor, 7, highBeamRange, 100);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
+}
+
 
 int main(int argc, char* argv[]) {
     // please please remember to reset state
@@ -1503,7 +1677,10 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els19conflict28b, reset, reset),
 
         // NOTE: ELS-20 is deleted
-        // TODO: ELS-21 to ESL-29
+        // TODO: ELS-21 to ESL-27
+        unit_test_setup_teardown(els28_left, reset, reset),
+        unit_test_setup_teardown(els28_right, reset, reset),
+        // NOTE: ESL-29: no test
         unit_test_setup_teardown(els30, reset, reset),
         unit_test_setup_teardown(els31, reset, reset),
         // NOTE: ELS-32: no test
@@ -1511,6 +1688,20 @@ int main(int argc, char* argv[]) {
         // TODO: ELS-36: define characteristic curves
         // TODO: ELS-37: make sense of that mess
         unit_test_setup_teardown(els38, reset, reset),
+        // TODO: ELS-39: requires clean-up of common test file;
+        // TODO: ELS 40| brake pedal is sensor in light subsystem,
+        //               yet is part of the UI of the cruise
+        unit_test_setup_teardown(els41, reset, reset),
+        // TODO: ELS-42
+        unit_test_setup_teardown(els43, reset, reset),
+        // TODO: ELS-44
+        // TODO: ELS-45
+        unit_test_setup_teardown(els46_left, reset, reset),
+        unit_test_setup_teardown(els46_right, reset, reset),
+        // TODO: ELS-47
+        // NOTE: ELS-48: no test
+        unit_test_setup_teardown(els49a, reset, reset),
+        unit_test_setup_teardown(els49b, reset, reset),
 
     };
     run_tests(tests);

@@ -10,7 +10,10 @@
 #include "light/light-impl.h"
 #include "light/sensors.h"
 
+#include "cruise-control/scs-impl.h"
+
 #include "cruise-control/user-interface.h"
+#include "cruise-control/sensors.h"
 
 #include "test_common.h"
 
@@ -126,7 +129,5 @@ void mock_all_sensors(sensors_and_time data) {
 void mock_and_execute(sensors_and_time data) {
     mock_all_sensors(data);
     light_do_step();
+    scs_do_step();
 }
-
-
-
