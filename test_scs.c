@@ -19,6 +19,15 @@ void light_do_step(void) {
 }
 
 /**
+ * Sets the given time as system time to the sensors,
+ * then mocks and executes the sensors.
+ */
+void begin_sensor_time_and_exec(sensors_and_time *sensors, size_t time) {
+    *sensors = update_sensors(*sensors, sensorTime, time);
+    mock_and_execute(*sensors);
+}
+
+/**
  * Advances the time the given amount of milliseconds.
  * The step_size serves as time granularity.
  * Each time step, the sensors will be mocked and executed.
@@ -902,6 +911,193 @@ void scs12_speed_to_zero(void **state) {
     assert_true(!get_scs_state().cruise_control_active);
 }
 
+/*
+    SCS-13: The cruise control is activated using the cruise control lever
+    according to Reqs. SCS-1 to SCS-12.
+*/
+
+void scs13_forward(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_forward(); // TODO: Register in scs_do_step?
+
+    assert_true(get_scs_state().cruise_control_active == true);
+}
+
+void scs13_backward_inactive(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_backward();
+
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_backward_active(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_forward();
+    sensors_advance_time_and_exec(&sensor_states, 3000, 50);
+    lever_backward();
+
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_forward_below20(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 190);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_forward(); // TODO: Register in scs_do_step?
+
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_up5(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_up5();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_up7(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_up7();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_down5(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_down5();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_down7(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_down7();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_long_up5(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_up5();
+    sensors_advance_time_and_exec(&sensor_states, 5000, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_long_up7(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_up7();
+    sensors_advance_time_and_exec(&sensor_states, 5000, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_long_down5(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_down5();
+    sensors_advance_time_and_exec(&sensor_states, 5000, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs13_long_down7(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_down7();
+    sensors_advance_time_and_exec(&sensor_states, 5000, 50);
+    lever_release();
+    sensors_advance_time_and_exec(&sensor_states, 500, 50);
+
+    // This should not activate the cruise control.
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+//
+//
+//
+
 int main(int argc, char *argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -957,7 +1153,18 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs12_speed_to_zero, reset, reset),
 
         // Simple cruise control:
-        // TODO: SCS-13
+        // SCS-13
+        unit_test_setup_teardown(scs13_forward, reset, reset),
+        unit_test_setup_teardown(scs13_backward_inactive, reset, reset),
+        unit_test_setup_teardown(scs13_backward_active, reset, reset),
+        unit_test_setup_teardown(scs13_up5, reset, reset),
+        unit_test_setup_teardown(scs13_up7, reset, reset),
+        unit_test_setup_teardown(scs13_down5, reset, reset),
+        unit_test_setup_teardown(scs13_down7, reset, reset),
+        unit_test_setup_teardown(scs13_long_up5, reset, reset),
+        unit_test_setup_teardown(scs13_long_up7, reset, reset),
+        unit_test_setup_teardown(scs13_long_down5, reset, reset),
+        unit_test_setup_teardown(scs13_long_down7, reset, reset),
         // TODO: SCS-14
         // TODO: SCS-15
         // TODO: SCS-16
