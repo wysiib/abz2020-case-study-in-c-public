@@ -984,6 +984,45 @@ void els18c(void **state) {
     assert_true(get_light_state().lowBeamLeft>0);
     assert_true(get_light_state().lowBeamRight>0);
 }
+
+void els28_left(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Downward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 10, lowBeamRight, 0, tailLampLeft, 10, tailLampRight, 0);
+}
+
+void els28_right(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+
+    pitman_vertical(pa_Upward7);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial4(1000, 5000, lowBeamLeft, 10, lowBeamRight, 0, tailLampLeft, 10, tailLampRight, 0);
+}
+
 void els30(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1256,7 +1295,9 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els18c, reset, reset),
         // TODO: ELS-19
         // NOTE: ELS-20 is deleted
-        // TODO: ELS-21 to ESL-28
+        // TODO: ELS-21 to ESL-27
+        unit_test_setup_teardown(els28_left, reset, reset),
+        unit_test_setup_teardown(els28_right, reset, reset),
         // NOTE: ESL-29: no test
         unit_test_setup_teardown(els30, reset, reset),
         unit_test_setup_teardown(els31, reset, reset),
