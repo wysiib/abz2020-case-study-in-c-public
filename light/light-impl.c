@@ -59,12 +59,13 @@ static void set_all_lights(percentage p) {
 }
 
 static bool ambient_light_prevent_turnoff(size_t tt) {
+    bool return_value = false;
     if(get_ambient_light()) {
         if ((tt - ambi_light_timer) < 30000) { // only prolongs light, check for light rather than engine?
-            return true;
+            return_value = true;
         }
     }
-    return false;
+    return return_value;
 }
 
 static void update_ambient_light_status(keyState old, keyState new,
