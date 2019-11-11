@@ -436,9 +436,9 @@ void els8_b(void **state) {
     mock_and_execute(sensor_states);
 
     int i;
-    for (i = 3; i < 100; i++) {
-        progress_time_partial2(i * 1000,       i * 1000 + 333, blinkLeft, 100, blinkRight, 100);
-        progress_time_partial2(i * 1000 + 334, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
+    for (i = 1; i < 5; i++) {
+        progress_time_partial2(i * 1000,       i * 1000 + 332, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 333, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
 }
 

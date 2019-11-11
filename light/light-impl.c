@@ -340,7 +340,13 @@ void light_do_step(void) {
     }
 
     // turn blinker off or on
-    if(tt - blink_timer >= 500 && blinking) {
+    if(tt - blink_timer >= 500 && blinking && blinking_direction != hazard) {
+        set_blinkers_off(tt);
+    }
+    if(tt - blink_timer >= 500 && blinking && blinking_direction == hazard && ks != NoKeyInserted) {
+        set_blinkers_off(tt);
+    }
+    if(tt - blink_timer >= 333 && blinking && blinking_direction == hazard && ks == NoKeyInserted) {
         set_blinkers_off(tt);
     }
     
@@ -348,12 +354,12 @@ void light_do_step(void) {
     if(tt - blink_timer >= 500 && remaining_blinks && !blinking && blinking_direction != hazard) {
         set_blinkers_on(tt);
     }
-    // hazard: 500ms if key in lock, 1000 else
+    // hazard: 500ms if key in lock, 667 else
     if(remaining_blinks && !blinking && blinking_direction == hazard) {
-        if(tt - blink_timer >= 500 && get_key_status() != NoKeyInserted) {
+        if(tt - blink_timer >= 500 && ks != NoKeyInserted) {
             set_blinkers_on(tt);
         }
-        if(tt - blink_timer >= 1000 && get_key_status() == NoKeyInserted) {
+        if(tt - blink_timer >= 667 && ks == NoKeyInserted) {
             set_blinkers_on(tt);
         }
     }
