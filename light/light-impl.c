@@ -60,7 +60,7 @@ static void set_all_lights(percentage p) {
 
 static bool ambient_light_prevent_turnoff(size_t tt) {
     if(get_ambient_light()) {
-        if (tt - ambi_light_timer < 30000) { // only prolongs light, check for light rather than engine?
+        if ((tt - ambi_light_timer) < 30000) { // only prolongs light, check for light rather than engine?
             return true;
         }
     }
@@ -73,7 +73,7 @@ static void update_ambient_light_status(keyState old, keyState new,
     // ELS-19
     // only extend time if it has not yet passed
     if(ambient_light_prevent_turnoff(time)) {
-        if (old != new || doors_old != doors_new) {
+        if ((old != new) || (doors_old != doors_new)) {
             ambi_light_timer = time;
         }
     }
@@ -83,7 +83,7 @@ static void set_blinkers_off(size_t time) {
     set_blink_left(0);
     set_blink_right(0);
 
-    if(get_market_code() == USA || get_market_code() == Canada) {
+    if((get_market_code() == USA) || (get_market_code() == Canada)) {
         switch (blinking_direction) {
             case blink_left:
                 set_low_beam_left(50);
@@ -138,7 +138,7 @@ static void set_blinkers_on(size_t time) {
             break;
     }
        
-    if(get_market_code() == USA || get_market_code() == Canada) {
+    if((get_market_code() == USA) || (get_market_code() == Canada)) {
         switch(blinking_direction) {
             case blink_left:
                 set_low_beam_left(50);
@@ -200,7 +200,7 @@ void light_do_step(void) {
                                tt, engine_on);
 
     // update flags
-    if(ks == KeyInserted && get_light_rotary_switch() == lrs_on && last_lrs != lrs_on) {
+    if((ks == KeyInserted) && (get_light_rotary_switch() == lrs_on) && (last_lrs != lrs_on)) {
         lrs_turned_on_while_key_inserted = true;
     }
     if(ks != KeyInserted) {
@@ -212,13 +212,13 @@ void light_do_step(void) {
         set_all_lights(0);
     }
 
-    if (!get_daytime_running_light() && get_light_rotary_switch() == lrs_auto) {
-        if (engine_on && bb < 200 && when_light_on == 0) {
+    if (!get_daytime_running_light() && (get_light_rotary_switch() == lrs_auto)) {
+        if (engine_on && (bb < 200) && (when_light_on == 0)) {
             when_light_on = tt;
             set_all_lights(100);
         }
 
-        if (bb >= 250 && tt - when_light_on >= 3000) {
+        if ((bb >= 250) && ((tt - when_light_on) >= 3000)) {
             set_all_lights(0);
             when_light_on = 0;
         }
@@ -229,7 +229,7 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
-    if (ks != KeyInIgnitionOnPosition && get_light_rotary_switch() != lrs_auto && voltage_battery >= 85) {
+    if ((ks != KeyInIgnitionOnPosition) && (get_light_rotary_switch() != lrs_auto) && (voltage_battery >= 85)) {
         if (get_pitman_vertical() == pa_Downward7) {
             set_low_beam_left(10);
             set_tail_lamp_left(10);
@@ -246,8 +246,8 @@ void light_do_step(void) {
         daytime_light_was_on = true;
     }
     // stay on as long as key is inserted
-    if(daytime_light_was_on && ks != NoKeyInserted) {
-        if(get_market_code() == USA || get_market_code() == Canada) {
+    if(daytime_light_was_on && (ks != NoKeyInserted)) {
+        if((get_market_code() == USA) || (get_market_code() == Canada)) {
             // from szenario 7 but not from specification?
             set_low_beam_left(100);
             set_low_beam_right(100);
@@ -257,12 +257,12 @@ void light_do_step(void) {
     }
 
     // ELS-16 (has priority over ELS-17)
-    if(!engine_on && last_lrs != lrs_auto && get_light_rotary_switch() == lrs_auto) {
+    if(!engine_on && (last_lrs != lrs_auto) && (get_light_rotary_switch() == lrs_auto)) {
         set_all_lights(0);
     }
 
     // ELS-15 (appears to have priority over ELS-16 and ELS-17 in test scenario 3)
-    if(ks == KeyInserted && !ambient_light_prevent_turnoff(tt) && lrs_turned_on_while_key_inserted) {
+    if((ks == KeyInserted) && !ambient_light_prevent_turnoff(tt) && lrs_turned_on_while_key_inserted) {
         set_all_lights(50);
     }
 
@@ -272,20 +272,20 @@ void light_do_step(void) {
     }
 
     // turn off hazard warning before new setting
-    if(blinking_direction == hazard && !get_hazard_warning() && !blinking && tt - blink_timer >= 500) { // wait for dark cycle to complete
+    if((blinking_direction == hazard) && !get_hazard_warning() && !blinking && ((tt - blink_timer) >= 500)) { // wait for dark cycle to complete
         blinking_direction=none;
         set_blinkers_off(tt);
     }
 
     // turn on hazard warning if not yet in mode
-    if(blinking_direction == none && get_hazard_warning()) {
+    if((blinking_direction == none) && get_hazard_warning()) {
         set_blinkers_on(tt);
     }
 
     // direction / blinking
     // blink as soon as arm is moved unless in dark cycle
-    if(get_pitman_vertical() == pa_Downward5 || get_pitman_vertical() == pa_Downward7) {
-        if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+    if((get_pitman_vertical() == pa_Downward5) || (get_pitman_vertical() == pa_Downward7)) {
+        if(engine_on && ((tt - blink_timer) >= 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             blinking = true;
             blinking_direction = blink_left;
             blink_timer = tt;
@@ -293,8 +293,8 @@ void light_do_step(void) {
             set_blinkers_on(tt);
         }
     }
-    if(get_pitman_vertical() == pa_Upward5 || get_pitman_vertical() == pa_Upward7) {
-        if(engine_on && tt - blink_timer >= 500 && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+    if((get_pitman_vertical() == pa_Upward5) || (get_pitman_vertical() == pa_Upward7)) {
+        if(engine_on && ((tt - blink_timer) >= 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             blinking = true;
             blinking_direction = blink_right;
             blink_timer = tt;
@@ -304,17 +304,17 @@ void light_do_step(void) {
     }
 
     // ELS-2
-    if(get_pitman_vertical() != last_pitman_arm && tt - pitman_arm_move_time < 500) {
+    if((get_pitman_vertical() != last_pitman_arm) && ((tt - pitman_arm_move_time) < 500)) {
         remaining_blinks = 2;
     }
     // otherwise check if arm was released later on -> stop blinking
-    if(get_pitman_vertical() != last_pitman_arm && get_pitman_vertical() == pa_ud_Neutral && tt - pitman_arm_move_time >= 500) {
+    if((get_pitman_vertical() != last_pitman_arm) && (get_pitman_vertical() == pa_ud_Neutral) && ((tt - pitman_arm_move_time) >= 500)) {
         remaining_blinks = 0;
         set_blink_left(0);
         set_blink_right(0);
         blinking = false;
 
-        if(get_market_code() == USA || get_market_code() == Canada) {
+        if((get_market_code() == USA) || (get_market_code() == Canada)) {
             set_tail_lamp_right(0);
             set_tail_lamp_left(0);
         }
@@ -322,7 +322,7 @@ void light_do_step(void) {
 
     // blinker still on -> keep usa specific stuff
     // another setting (i.e. daytime light) might have tried to turn them up again
-    if(remaining_blinks && (get_market_code() == USA || get_market_code() == Canada)) {
+    if(remaining_blinks && ((get_market_code() == USA) || (get_market_code() == Canada))) {
         switch(blinking_direction) {
             case blink_left:
                 set_low_beam_left(50);
@@ -343,26 +343,26 @@ void light_do_step(void) {
     }
 
     // turn blinker off or on
-    if(tt - blink_timer >= 500 && blinking && blinking_direction != hazard) {
+    if(((tt - blink_timer) >= 500) && blinking && (blinking_direction != hazard)) {
         set_blinkers_off(tt);
     }
-    if(tt - blink_timer >= 500 && blinking && blinking_direction == hazard && ks != NoKeyInserted) {
+    if(((tt - blink_timer) >= 500) && blinking && (blinking_direction == hazard) && (ks != NoKeyInserted)) {
         set_blinkers_off(tt);
     }
-    if(tt - blink_timer >= 333 && blinking && blinking_direction == hazard && ks == NoKeyInserted) {
+    if(((tt - blink_timer) >= 333) && blinking && (blinking_direction == hazard) && (ks == NoKeyInserted)) {
         set_blinkers_off(tt);
     }
     
     // default: 500ms pulse for non-hazard
-    if(tt - blink_timer >= 500 && remaining_blinks && !blinking && blinking_direction != hazard) {
+    if(((tt - blink_timer) >= 500) && remaining_blinks && !blinking && (blinking_direction != hazard)) {
         set_blinkers_on(tt);
     }
     // hazard: 500ms if key in lock, 667 else
-    if(remaining_blinks && !blinking && blinking_direction == hazard) {
-        if(tt - blink_timer >= 500 && ks != NoKeyInserted) {
+    if(remaining_blinks && !blinking && (blinking_direction == hazard)) {
+        if(((tt - blink_timer) >= 500) && (ks != NoKeyInserted)) {
             set_blinkers_on(tt);
         }
-        if(tt - blink_timer >= 667 && ks == NoKeyInserted) {
+        if(((tt - blink_timer) >= 667) && (ks == NoKeyInserted)) {
             set_blinkers_on(tt);
         }
     }
