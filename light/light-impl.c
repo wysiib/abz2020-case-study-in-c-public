@@ -60,14 +60,11 @@ static void set_all_lights(percentage p) {
 
 static bool ambient_light_prevent_turnoff(size_t tt) {
     if(get_ambient_light()) {
-        if (tt - ambi_light_timer >= 30000) { // only prolongs light, check for light rather than engine?
-            return false;
-        } else {
+        if (tt - ambi_light_timer < 30000) { // only prolongs light, check for light rather than engine?
             return true;
         }
-    } else {
-        return false;
     }
+    return false;
 }
 
 static void update_ambient_light_status(keyState old, keyState new,
@@ -101,10 +98,12 @@ static void set_blinkers_off(size_t time) {
                 set_tail_lamp_left(0);
                 set_low_beam_right(50);
                 set_tail_lamp_right(0);
+                break;
             case none:
                 break;
             default:
                 assert(0);
+                break;
         }
     }
 
@@ -136,6 +135,7 @@ static void set_blinkers_on(size_t time) {
             break;
         default:
             assert(0);
+            break;
     }
        
     if(get_market_code() == USA || get_market_code() == Canada) {
@@ -158,6 +158,7 @@ static void set_blinkers_on(size_t time) {
                 break;
             default:
                 assert(0);
+                break;
         }
     }
 
@@ -232,7 +233,8 @@ void light_do_step(void) {
         if (get_pitman_vertical() == pa_Downward7) {
             set_low_beam_left(10);
             set_tail_lamp_left(10);
-        } else if (get_pitman_vertical() == pa_Upward7) {
+        }
+        if (get_pitman_vertical() == pa_Upward7) {
             set_low_beam_right(10);
             set_tail_lamp_right(10);
         }
@@ -335,7 +337,8 @@ void light_do_step(void) {
             case none:
                 break;
             default:
-               assert(0);
+                assert(0);
+                break;
         }
     }
 
