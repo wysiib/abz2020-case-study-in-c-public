@@ -1,5 +1,5 @@
-#ifndef __COMMON_COMMON_H_INCLUDED
-#define __COMMON_COMMON_H_INCLUDED
+#ifndef COMMON_COMMON_H_INCLUDED
+#define COMMON_COMMON_H_INCLUDED
 
 #include <stdlib.h>
 #include <stdbool.h>

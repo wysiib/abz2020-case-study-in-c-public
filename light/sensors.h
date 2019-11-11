@@ -1,5 +1,5 @@
-#ifndef __LIGHT_SENSORS_H_INCLUDED
-#define __LIGHT_SENSORS_H_INCLUDED
+#ifndef LIGHT_SENSORS_H_INCLUDED
+#define LIGHT_SENSORS_H_INCLUDED
 
 #include "../common/common.h"
 
