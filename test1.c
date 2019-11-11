@@ -36,6 +36,7 @@ void sequence1(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 90);
 
     mock_and_execute(sensor_states);
 
