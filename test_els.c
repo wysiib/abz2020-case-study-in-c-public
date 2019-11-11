@@ -934,13 +934,13 @@ void els18b(void **state) {
     assert_true(get_light_state().lowBeamRight>0);
 
     sensor_states = update_sensors(sensor_states, sensorTime, 5000);
-    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 250);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 249);
     mock_and_execute(sensor_states);
     assert_true(get_light_state().lowBeamLeft>0);
     assert_true(get_light_state().lowBeamRight>0);
 
     sensor_states = update_sensors(sensor_states, sensorTime, 8000);
-    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 250);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 249); // 250 already included, see scenarios
     mock_and_execute(sensor_states);
     assert_true(get_light_state().lowBeamLeft>0);
     assert_true(get_light_state().lowBeamRight>0);
