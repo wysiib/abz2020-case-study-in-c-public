@@ -19,7 +19,7 @@ void reset_user_interface(void) {
 }
 
 void set_light_rotary_switch(lightRotarySwitch val) {
-    assert(abs((int) lrs_state - (int) val) == 1);
+    assert(abs((int) lrs_state - (int) val) <= 1);
     lrs_state = val;
 }
 
