@@ -824,7 +824,7 @@ void els18a(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
-    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
@@ -912,7 +912,7 @@ void els18b(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
-    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
@@ -962,7 +962,7 @@ void els18c(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
-    sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     set_light_rotary_switch(lrs_auto);
     mock_and_execute(sensor_states);
 
