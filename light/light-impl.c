@@ -217,7 +217,7 @@ void light_do_step(void) {
             set_all_lights(100);
         }
 
-        if (bb >= 250 && tt - when_light_on > 3000) {
+        if (bb >= 250 && tt - when_light_on >= 3000) {
             set_all_lights(0);
             when_light_on = 0;
         }
