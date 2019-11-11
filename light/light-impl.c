@@ -61,7 +61,7 @@ static void set_all_lights(percentage p) {
 static bool ambient_light_prevent_turnoff(size_t tt) {
     bool return_value = false;
     if(get_ambient_light()) {
-        if ((tt - ambi_light_timer) < 30000) { // only prolongs light, check for light rather than engine?
+        if ((tt - ambi_light_timer) < (size_t) 30000) { // only prolongs light, check for light rather than engine?
             return_value = true;
         }
     }
@@ -214,12 +214,12 @@ void light_do_step(void) {
     }
 
     if (!get_daytime_running_light() && (get_light_rotary_switch() == lrs_auto)) {
-        if (engine_on && (bb < 200) && (when_light_on == 0)) {
+        if (engine_on && (bb < (brightness) 200) && (when_light_on == (size_t) 0)) {
             when_light_on = tt;
             set_all_lights(100);
         }
 
-        if ((bb >= 250) && ((tt - when_light_on) >= 3000)) {
+        if ((bb >= (brightness) 250) && ((tt - when_light_on) >= (size_t) 3000)) {
             set_all_lights(0);
             when_light_on = 0;
         }
@@ -230,7 +230,7 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
-    if ((ks != KeyInIgnitionOnPosition) && (get_light_rotary_switch() != lrs_auto) && (voltage_battery >= 85)) {
+    if ((ks != KeyInIgnitionOnPosition) && (get_light_rotary_switch() != lrs_auto) && (voltage_battery >= (voltage) 85)) {
         if (get_pitman_vertical() == pa_Downward7) {
             set_low_beam_left(10);
             set_tail_lamp_left(10);
@@ -273,7 +273,7 @@ void light_do_step(void) {
     }
 
     // turn off hazard warning before new setting
-    if((blinking_direction == hazard) && !get_hazard_warning() && !blinking && ((tt - blink_timer) >= 500)) { // wait for dark cycle to complete
+    if((blinking_direction == hazard) && !get_hazard_warning() && !blinking && ((tt - blink_timer) >= (size_t) 500)) { // wait for dark cycle to complete
         blinking_direction=none;
         set_blinkers_off(tt);
     }
@@ -286,7 +286,7 @@ void light_do_step(void) {
     // direction / blinking
     // blink as soon as arm is moved unless in dark cycle
     if((get_pitman_vertical() == pa_Downward5) || (get_pitman_vertical() == pa_Downward7)) {
-        if(engine_on && ((tt - blink_timer) >= 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+        if(engine_on && ((tt - blink_timer) >= (size_t) 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             blinking = true;
             blinking_direction = blink_left;
             blink_timer = tt;
@@ -295,7 +295,7 @@ void light_do_step(void) {
         }
     }
     if((get_pitman_vertical() == pa_Upward5) || (get_pitman_vertical() == pa_Upward7)) {
-        if(engine_on && ((tt - blink_timer) >= 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
+        if(engine_on && ((tt - blink_timer) >= (size_t) 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             blinking = true;
             blinking_direction = blink_right;
             blink_timer = tt;
@@ -305,11 +305,11 @@ void light_do_step(void) {
     }
 
     // ELS-2
-    if((get_pitman_vertical() != last_pitman_arm) && ((tt - pitman_arm_move_time) < 500)) {
+    if((get_pitman_vertical() != last_pitman_arm) && ((tt - pitman_arm_move_time) < (size_t) 500)) {
         remaining_blinks = 2;
     }
     // otherwise check if arm was released later on -> stop blinking
-    if((get_pitman_vertical() != last_pitman_arm) && (get_pitman_vertical() == pa_ud_Neutral) && ((tt - pitman_arm_move_time) >= 500)) {
+    if((get_pitman_vertical() != last_pitman_arm) && (get_pitman_vertical() == pa_ud_Neutral) && ((tt - pitman_arm_move_time) >= (size_t) 500)) {
         remaining_blinks = 0;
         set_blink_left(0);
         set_blink_right(0);
@@ -344,26 +344,26 @@ void light_do_step(void) {
     }
 
     // turn blinker off or on
-    if(((tt - blink_timer) >= 500) && blinking && (blinking_direction != hazard)) {
+    if(((tt - blink_timer) >= (size_t) 500) && blinking && (blinking_direction != hazard)) {
         set_blinkers_off(tt);
     }
-    if(((tt - blink_timer) >= 500) && blinking && (blinking_direction == hazard) && (ks != NoKeyInserted)) {
+    if(((tt - blink_timer) >= (size_t) 500) && blinking && (blinking_direction == hazard) && (ks != NoKeyInserted)) {
         set_blinkers_off(tt);
     }
-    if(((tt - blink_timer) >= 333) && blinking && (blinking_direction == hazard) && (ks == NoKeyInserted)) {
+    if(((tt - blink_timer) >= (size_t) 333) && blinking && (blinking_direction == hazard) && (ks == NoKeyInserted)) {
         set_blinkers_off(tt);
     }
     
     // default: 500ms pulse for non-hazard
-    if(((tt - blink_timer) >= 500) && remaining_blinks && !blinking && (blinking_direction != hazard)) {
+    if(((tt - blink_timer) >= (size_t) 500) && remaining_blinks && !blinking && (blinking_direction != hazard)) {
         set_blinkers_on(tt);
     }
     // hazard: 500ms if key in lock, 667 else
     if(remaining_blinks && !blinking && (blinking_direction == hazard)) {
-        if(((tt - blink_timer) >= 500) && (ks != NoKeyInserted)) {
+        if(((tt - blink_timer) >= (size_t) 500) && (ks != NoKeyInserted)) {
             set_blinkers_on(tt);
         }
-        if(((tt - blink_timer) >= 667) && (ks == NoKeyInserted)) {
+        if(((tt - blink_timer) >= (size_t) 667) && (ks == NoKeyInserted)) {
             set_blinkers_on(tt);
         }
     }
