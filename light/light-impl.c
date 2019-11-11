@@ -343,8 +343,19 @@ void light_do_step(void) {
     if(tt - blink_timer >= 500 && blinking) {
         set_blinkers_off(tt);
     }
-    if(tt - blink_timer >= 500 && remaining_blinks && !blinking) {
+    
+    // default: 500ms pulse for non-hazard
+    if(tt - blink_timer >= 500 && remaining_blinks && !blinking && blinking_direction != hazard) {
         set_blinkers_on(tt);
+    }
+    // hazard: 500ms if key in lock, 1000 else
+    if(remaining_blinks && !blinking && blinking_direction == hazard) {
+        if(tt - blink_timer >= 500 && get_key_status() != NoKeyInserted) {
+            set_blinkers_on(tt);
+        }
+        if(tt - blink_timer >= 1000 && get_key_status() == NoKeyInserted) {
+            set_blinkers_on(tt);
+        }
     }
 
     // remember last time the pitman arm was moved
