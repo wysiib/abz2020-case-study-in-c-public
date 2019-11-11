@@ -30,3 +30,7 @@ cbmc_light:
 
 .Phony: all
 all: clean test
+
+misra_check:
+	cppcheck --dump common cruise-control light
+	python3 ../scripts/misra.py --rule-texts=../scripts/MISRAC2012_Rules.txt cruise-control/*.dump light/*.dump

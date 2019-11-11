@@ -10,3 +10,5 @@ test_scs
 *.files
 *.includes
 
+*.dump
+*.pyc
