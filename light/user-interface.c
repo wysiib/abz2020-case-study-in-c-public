@@ -7,15 +7,15 @@
 static lightRotarySwitch lrs_state = 0;
 static pitmanArmUpDown pacman_vertical = pa_ud_Neutral;
 static pitmanArmForthBack pacman_horizontal = pa_fb_Neutral;
-static bool darkness_mode = 0;
-static bool hazard_warning = 0;
+static bool darkness_mode = false;
+static bool hazard_warning = false;
 
 void reset_user_interface(void) {
-    lrs_state = 0;
+    lrs_state = lrs_off;
     pacman_vertical = pa_ud_Neutral;
     pacman_horizontal = pa_fb_Neutral;
-    darkness_mode = 0;
-    hazard_warning = 0;
+    darkness_mode = false;
+    hazard_warning = false;
 }
 
 void set_light_rotary_switch(lightRotarySwitch val) {
