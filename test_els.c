@@ -458,13 +458,14 @@ void els9(void **state) {
     mock_and_execute(sensor_states);
 
     int i;
-    for (i = 2; i < 10; i++) {
+    for (i = 1; i < 10; i++) {
         progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
         progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
     }
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
     mock_and_execute(sensor_states);
 
+    /* reacts immediatelly for now
     sensor_states = update_sensors(sensor_states, sensorTime, 10200);
     mock_and_execute(sensor_states);
     assert_partial_state2(blinkLeft, 100, blinkRight, 100);
@@ -477,16 +478,21 @@ void els9(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 11800);
     mock_and_execute(sensor_states);
     assert_partial_state2(blinkLeft, 0, blinkRight, 0);
+    */
+
+    // dark cycle is prolonged due to key removal
+    progress_time_partial2(9999,10166, blinkLeft, 0, blinkRight, 0);
 
 
-    for (i = 12; i < 20; i++) {
-        progress_time_partial2(i * 1000,       i * 1000 + 333, blinkLeft, 100, blinkRight, 100);
-        progress_time_partial2(i * 1000 + 334, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
+    for (i = 10; i < 20; i++) {
+        progress_time_partial2(i * 1000 + 167,       i * 1000 + 167 + 332, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 167 + 333, i * 1000 + 167 + 999, blinkLeft, 0, blinkRight, 0);
     }
 
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     mock_and_execute(sensor_states);
 
+    /* again, immediatelly for now
     sensor_states = update_sensors(sensor_states, sensorTime, 20200);
     mock_and_execute(sensor_states);
     assert_partial_state2(blinkLeft, 100, blinkRight, 100);
@@ -499,10 +505,11 @@ void els9(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 21800);
     mock_and_execute(sensor_states);
     assert_partial_state2(blinkLeft, 0, blinkRight, 0);
+    */
 
-    for (i = 22; i < 30; i++) {
-        progress_time_partial2(i * 1000,       i * 1000 + 499, blinkLeft, 100, blinkRight, 100);
-        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, blinkLeft, 0, blinkRight, 0);
+    for (i = 20; i < 21; i++) {
+        progress_time_partial2(i * 1000 + 167,       i * 1000 + 167 + 498, blinkLeft, 100, blinkRight, 100);
+        progress_time_partial2(i * 1000 + 167 + 499, i * 1000 + 167 + 998, blinkLeft, 0, blinkRight, 0); // TODO: what happens to 999?
     }
 }
 
