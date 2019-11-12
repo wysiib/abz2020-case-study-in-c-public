@@ -1332,7 +1332,7 @@ void els19conflict28b(void **state) {
     assert_true(false);//TODO: REMOVE IF PITMAN LEFT/RIGHT WAS IMPLEMENTED
 }
 
-void els22(void **state) {
+void els21(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=true,
                           .market_code=EU,
                           .ambient_light=true,
@@ -2311,8 +2311,8 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els19conflict28b, reset, reset),
 
         // NOTE: ELS-20 is deleted
-        // TODO: ELS-21
-        unit_test_setup_teardown(els22, reset, reset),
+        unit_test_setup_teardown(els21, reset, reset),
+        // TODO: ELS-22
         // TODO: ELS-23
         unit_test_setup_teardown(els24_left, reset, reset),
         unit_test_setup_teardown(els24_right, reset, reset),
