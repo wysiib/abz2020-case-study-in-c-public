@@ -2,7 +2,7 @@
 #include "scs-state.h"
 #include "sensors.h"
 
-#define MIN_CRUISE_CONTROL_SPEED ((vehicleSpeed) 200)
+#define MIN_CRUISE_CONTROL_SPEED ((vehicleSpeed)200)
 
 void lever_release(void) {
     set_lever(scs_Neutral);
@@ -15,12 +15,11 @@ void lever_forward(void) {
     if (scs.has_previous_desired_speed) { // SCS-2
         set_prev_desired_speed(scs.previous_desired_speed);
         set_cruise_control(true);
-    } 
-    if (scs.current_speed >= MIN_CRUISE_CONTROL_SPEED) {
-        set_prev_desired_speed(scs.current_speed);
-        set_cruise_control(true);
     } else {
-        // do nothing?
+        if (scs.current_speed >= MIN_CRUISE_CONTROL_SPEED) {
+            set_prev_desired_speed(scs.current_speed);
+            set_cruise_control(true);
+        } // Else do nothing.
     }
 }
 
