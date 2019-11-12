@@ -1473,6 +1473,119 @@ void els34_35(void **state) {
     progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11 /* ? */);
 }
 
+void els36(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, true);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, Ready);
+    sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, false);
+
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 315);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 31, highBeamMotor, 0);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 316);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 31, highBeamMotor, 1);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 657);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 57, highBeamMotor, 1);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 658);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 57, highBeamMotor, 2);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 859);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 73, highBeamMotor, 2);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 860);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 73, highBeamMotor, 3);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1015);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 85, highBeamMotor, 3);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1016);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 85, highBeamMotor, 4);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1147);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 95, highBeamMotor, 4);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1148);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 95, highBeamMotor, 5);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1263);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 5);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1264);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 6);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1367);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 6);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1368);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 7);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1462);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 7);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1463);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 8);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1551);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 8);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1552);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 9);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1634);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 9);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1635);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 10);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1712);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 10);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1713);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 11);
+
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 2800);
+    mock_and_execute(sensor_states);
+    assert_partial_state3(highBeamOn, true, highBeamRange, 100, highBeamMotor, 11);
+}
+
 void els38(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1692,7 +1805,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els31, reset, reset),
         // NOTE: ELS-32: no test
         unit_test_setup_teardown(els33_34_35, reset, reset),
-        // TODO: ELS-36: define characteristic curves
+        unit_test_setup_teardown(els36, reset, reset),
         // TODO: ELS-37: make sense of that mess
         unit_test_setup_teardown(els38, reset, reset),
         // TODO: ELS-39: requires clean-up of common test file;
