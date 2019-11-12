@@ -1687,6 +1687,28 @@ void els43(void **state) {
     progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
+void els44(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
+                          .market_code=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+
 void els46_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1836,9 +1858,8 @@ int main(int argc, char* argv[]) {
         //               yet is part of the UI of the cruise
         unit_test_setup_teardown(els41, reset, reset),
         unit_test_setup_teardown(els42, reset, reset),
-        // TODO: ELS-42
         unit_test_setup_teardown(els43, reset, reset),
-        // TODO: ELS-44
+        unit_test_setup_teardown(els44, reset, reset),
         // TODO: ELS-45
         unit_test_setup_teardown(els46_left, reset, reset),
         unit_test_setup_teardown(els46_right, reset, reset),
