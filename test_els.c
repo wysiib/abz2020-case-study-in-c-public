@@ -1356,6 +1356,400 @@ void els22(void **state) {
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 }
 
+void els24_left(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Downward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 100, corneringLightRight, 0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    pitman_vertical(pa_ud_Neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 100, corneringLightRight, 0);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 49, corneringLightRight, 0); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els24_right(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Upward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 100);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    pitman_vertical(pa_ud_Neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 0, corneringLightRight, 100);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 49); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els25_left(void **state) {
+    init_system(leftHand, true, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    toggle_darkness_mode();
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Downward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els25_right(void **state) {
+    init_system(leftHand, true, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    toggle_darkness_mode();
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Downward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els26_left(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_hard_left_min); // 11 degree deflection
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 100, corneringLightRight, 0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 100, corneringLightRight, 0);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 49, corneringLightRight, 0); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els26_right(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_hard_right_min); // 11 degree deflection
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 100);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 0, corneringLightRight, 100);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 49); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els27_left_a(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Downward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 100);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    pitman_vertical(pa_ud_Neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 0, corneringLightRight, 100);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 49); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els27_right_a(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Upward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 100, corneringLightRight, 0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    pitman_vertical(pa_ud_Neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 100, corneringLightRight, 0);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 49, corneringLightRight, 0); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els27_left_b(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_hard_left_min); // 11 degree deflection
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 100);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 0, corneringLightRight, 100);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 49); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els27_right_b(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_hard_right_min); // 11 degree deflection
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 100, corneringLightRight, 0);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral); // back
+    mock_and_execute(sensor_states);
+
+    progress_time_partial2(2000, 6999, corneringLightLeft, 100, corneringLightRight, 0);
+    sensor_states = update_sensors(sensor_states, sensorTime, 7000);
+    mock_and_execute(sensor_states);
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 49, corneringLightRight, 0); // FIXME: or 50?
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
 void els28_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1734,6 +2128,56 @@ void els44(void **state) {
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 }
 
+void els45_left(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Downward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
+void els45_right(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+
+    pitman_vertical(pa_Downward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(corneringLightLeft, 0, corneringLightRight, 0);
+}
+
 void els46_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1869,7 +2313,17 @@ int main(int argc, char* argv[]) {
         // NOTE: ELS-20 is deleted
         // TODO: ELS-21
         unit_test_setup_teardown(els22, reset, reset),
-        // TODO: ELS-22 to ESL-27
+        // TODO: ELS-23
+        unit_test_setup_teardown(els24_left, reset, reset),
+        unit_test_setup_teardown(els24_right, reset, reset),
+        unit_test_setup_teardown(els25_left, reset, reset),
+        unit_test_setup_teardown(els25_right, reset, reset),
+        unit_test_setup_teardown(els26_left, reset, reset),
+        unit_test_setup_teardown(els26_right, reset, reset),
+        unit_test_setup_teardown(els27_left_a, reset, reset),
+        unit_test_setup_teardown(els27_right_a, reset, reset),
+        unit_test_setup_teardown(els27_left_b, reset, reset),
+        unit_test_setup_teardown(els27_right_b, reset, reset),
         unit_test_setup_teardown(els28_left, reset, reset),
         unit_test_setup_teardown(els28_right, reset, reset),
         // NOTE: ESL-29: no test
@@ -1887,7 +2341,8 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els42, reset, reset),
         unit_test_setup_teardown(els43, reset, reset),
         unit_test_setup_teardown(els44, reset, reset),
-        // TODO: ELS-45
+        unit_test_setup_teardown(els45_left, reset, reset),
+        unit_test_setup_teardown(els45_right, reset, reset),
         unit_test_setup_teardown(els46_left, reset, reset),
         unit_test_setup_teardown(els46_right, reset, reset),
         // TODO: ELS-47
