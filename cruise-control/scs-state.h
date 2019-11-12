@@ -19,9 +19,6 @@ typedef struct {
     size_t lever_last_tic; // Time in ms at which the lever was lastly evaluated. If 0, lever change was not yet registered.
     bool lever_release_processed; // Whether the releasing of the lever was yet processed
     bool lever_continuous; // If true, lever is held continuously -> alter speeds accordingly.
-
-    Pedal gas;
-    Pedal brake;
 } scs_state;
 
 scs_state get_scs_state(void);
@@ -108,13 +105,5 @@ void lever_down5_step(void);
 
 /** Calculates a step of holding the lever below the first resistance level (7°). */
 void lever_down7_step(void);
-
-//
-// Pedals
-//
-
-void set_gas_pedal(Pedal deflection);
-
-void set_gas_pedal(Pedal deflection);
 
 #endif

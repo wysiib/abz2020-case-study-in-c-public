@@ -40,3 +40,7 @@ void lever_down7(void) {
 }
 
 void lever_backward(void) { set_cruise_control(false); }
+
+void brakePedal(Pedal deflection) {
+    set_cruise_control(false);
+}

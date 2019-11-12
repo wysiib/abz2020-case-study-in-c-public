@@ -1066,6 +1066,24 @@ void scs13_long_down7(void **State) {
 }
 
 /*
+    SCS-16: By pushing the brake, the cruise control is deactivated until it is
+    activated again.
+ */
+void scs16_brake(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_target_speed(400);
+    set_cruise_control(true);
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    mock_and_execute(sensor_states);
+
+    brakePedal(40);
+
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+/*
     SCS-17: By pushing the control lever backwards, the cruise control is
     deactivated until it is activated again.
  */
@@ -1167,8 +1185,9 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs13_long_down7, reset, reset),
         // TODO: SCS-14 --- Don't really know how to test for it.
         // TODO: SCS-15
-        // TODO: SCS-16
-        // TODO: SCS-17
+        // SCS-16
+        unit_test_setup_teardown(scs16_brake, reset, reset),
+        // SCS-17
         unit_test_setup_teardown(scs17_backward_inactive, reset, reset),
         unit_test_setup_teardown(scs17_backward_active, reset, reset),
 
