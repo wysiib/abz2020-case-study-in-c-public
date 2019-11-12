@@ -15,7 +15,17 @@ void reset(void **state) {
 }
 
 void set_cruise_control(bool active) {
+    if (!active && scs.cruise_control_active) {
+        // When turning cruise control off, we save the previous speed.
+        // TODO: Check if this is really supposed to happen this way.
+        set_prev_desired_speed(scs.target_speed);
+    }
     scs.cruise_control_active = active;
+}
+
+void set_target_speed(vehicleSpeed target) {
+    assert((target >= speed_min) && (target <= speed_max));
+    scs.target_speed = target;
 }
 
 void set_prev_desired_speed(vehicleSpeed prev) {
@@ -29,9 +39,9 @@ void reset_prev_desired_speed(void) {
     scs.previous_desired_speed = 0;
 }
 
-// TODO: Is this function used anymore?
-void observe_current_speed(vehicleSpeed speed) {
-    scs.current_speed = speed;
+void set_current_speed(vehicleSpeed current) {
+    assert((current >= speed_min) && (current <= speed_max));
+    scs.current_speed = current;
 }
 
 void set_lever(SCSLever pos) {
@@ -58,13 +68,13 @@ void set_lever_release(bool processed) {
 
 void lever_up5_step(void) {
     if (scs.cruise_control_active) {
-        vehicleSpeed desired = scs.previous_desired_speed;
+        vehicleSpeed desired = scs.target_speed;
         if (desired < speed_max) {
-            set_prev_desired_speed(desired + (vehicleSpeed) 10);
+            set_target_speed(desired + (vehicleSpeed) 10);
         }
     } else {
         vehicleSpeed curr = scs.current_speed;
-        set_prev_desired_speed(curr);
+        set_target_speed(curr);
     }
 }
 
@@ -75,54 +85,52 @@ static inline vehicleSpeed getTensPlace(vehicleSpeed s) {
 
 void lever_up7_step(void) {
     if (scs.cruise_control_active) {
-        vehicleSpeed desired = scs.previous_desired_speed;
+        vehicleSpeed desired = scs.target_speed;
         if (desired < speed_max) {
             vehicleSpeed next = getTensPlace(desired) + (vehicleSpeed) 100;
-            set_prev_desired_speed(next);
+            set_target_speed(next);
         }
     } else {
         vehicleSpeed curr = scs.current_speed;
-        set_prev_desired_speed(curr);
+        set_target_speed(curr);
     }
 }
 
 void lever_down5_step(void) {
     if (scs.cruise_control_active) {
-        vehicleSpeed desired = scs.previous_desired_speed;
+        vehicleSpeed desired = scs.target_speed;
         if (desired > speed_min) {
-            set_prev_desired_speed(desired - (vehicleSpeed) 10);
+            set_target_speed(desired - (vehicleSpeed) 10);
         }
     } else {
         vehicleSpeed curr = scs.current_speed;
-        set_prev_desired_speed(curr);
+        set_target_speed(curr);
     }
 }
 
 void lever_down7_step(void) {
     if (scs.cruise_control_active) {
-        vehicleSpeed desired = scs.previous_desired_speed;
+        vehicleSpeed desired = scs.target_speed;
         if (desired > speed_min) {
             vehicleSpeed next = getTensPlace(desired);
             if (desired == next) {
                 next -= (vehicleSpeed) 100;
             }
-            set_prev_desired_speed(next);
+            set_target_speed(next);
         }
     } else {
         vehicleSpeed curr = scs.current_speed;
-        set_prev_desired_speed(curr);
+        set_target_speed(curr);
     }
 }
 
 // Actuators ---------------------------------------------------------------- //
 
-void set_vehicle_speed(vehicleSpeed current) {
-    assert((current >= speed_min) && (current <= speed_max));
-    scs.current_speed = current;
+void set_vehicle_speed(vehicleSpeed target) {
+    assert((target >= speed_min) && (target <= speed_max));
 
     // SCS-12: setVehicleSpeed = 0 => no speed to maintain.
-    if (scs.current_speed == speed_min) {
+    if (target == speed_min) {
         set_cruise_control(false);
-        // TODO: Is this supposed to reset has_previous_desired_speed as well?
     }
 }

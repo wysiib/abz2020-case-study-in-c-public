@@ -11,7 +11,7 @@
  */
 static inline void handle_held_lever(scs_state scs, size_t system_time) {
     assert(scs.lever_pos != scs_Neutral);
-    assert(scs.lever_last_tic != (size_t) 0);
+    assert(scs.lever_last_tic != (size_t)0);
 
     size_t time_passed = system_time - scs.lever_last_tic;
 
@@ -33,7 +33,7 @@ static inline void handle_held_lever(scs_state scs, size_t system_time) {
             lever_down7_step();
             set_lever_last_tic(system_time);
         } else {
-            // do nothing?
+            // do nothing
         }
     } else {
         if ((scs.lever_pos == scs_Upward5) && (time_passed >= lever5_frequency)) {
@@ -49,7 +49,7 @@ static inline void handle_held_lever(scs_state scs, size_t system_time) {
             lever_down7_step();
             set_lever_last_tic(system_time);
         } else {
-            // do nothing?
+            // do nothing
         }
     }
 }
@@ -66,7 +66,7 @@ static inline void handle_lever_release(scs_state scs, size_t system_time) {
             lever_down5_step();
         } else if (scs.lever_prev_pos == scs_Downward7) {
             lever_down7_step();
-        } else { 
+        } else {
             // do nothing?
         }
     } else {
@@ -99,7 +99,7 @@ void scs_do_step(void) {
     }
 
     // Note: Speed not actually a sensor in SCS specification.
-    set_vehicle_speed(get_current_speed());
+    set_current_speed(get_current_speed());
 
     // directional lever logic
     if (last_scs.lever_pos != scs_Neutral) {
@@ -114,6 +114,6 @@ void scs_do_step(void) {
     } else if (!last_scs.lever_release_processed) {
         handle_lever_release(last_scs, time);
     } else {
-        // do nothing?
+        // do nothing
     }
 }

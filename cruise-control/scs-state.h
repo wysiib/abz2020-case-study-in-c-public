@@ -6,8 +6,9 @@
 
 typedef struct {
     bool cruise_control_active;
+    vehicleSpeed target_speed; // Speed the cruise control aims to keep if active.
     bool has_previous_desired_speed;
-    vehicleSpeed previous_desired_speed;
+    vehicleSpeed previous_desired_speed; // Previously desired speed for cruise control.
     // TODO: Do we want to save the current speed in here?
     // It should always be equal to the sensor value, but having it saved here
     // eases test mock handling.
@@ -18,6 +19,9 @@ typedef struct {
     size_t lever_last_tic; // Time in ms at which the lever was lastly evaluated. If 0, lever change was not yet registered.
     bool lever_release_processed; // Whether the releasing of the lever was yet processed
     bool lever_continuous; // If true, lever is held continuously -> alter speeds accordingly.
+
+    Pedal gas;
+    Pedal brake;
 } scs_state;
 
 scs_state get_scs_state(void);
@@ -27,13 +31,17 @@ void reset(void **state);
 
 void set_cruise_control(bool active);
 
+void set_target_speed(vehicleSpeed desired);
+
 void set_prev_desired_speed(vehicleSpeed prev);
 
 void reset_prev_desired_speed(void);
 
-void observe_current_speed(vehicleSpeed speed);
+void set_current_speed(vehicleSpeed speed);
 
+//
 // Lever handling.
+//
 
 /*
     Note: Overview of the lever pulling logic.
@@ -100,5 +108,13 @@ void lever_down5_step(void);
 
 /** Calculates a step of holding the lever below the first resistance level (7°). */
 void lever_down7_step(void);
+
+//
+// Pedals
+//
+
+void set_gas_pedal(Pedal deflection);
+
+void set_gas_pedal(Pedal deflection);
 
 #endif
