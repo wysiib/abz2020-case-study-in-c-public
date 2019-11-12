@@ -35,6 +35,14 @@ void set_high_beam(bool b) {
     state.highBeamOn = b;
 }
 
+void set_high_beam_range(highBeamRange b) {
+    state.highBeamRange = b;
+}
+
+void set_high_beam_motor(highBeamMotor b) {
+    state.highBeamMotor = b;
+}
+
 void reset_lights(void) {
     state.brakeLight = 0;
     state.blinkLeft = 0;

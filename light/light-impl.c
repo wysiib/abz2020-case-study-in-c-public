@@ -380,6 +380,13 @@ void light_do_step(void) {
     if(get_pitman_horizontal() == pa_fb_Neutral) {
         set_high_beam(0);
     }
+
+    // ELS-31
+    if(get_pitman_horizontal() == pa_Backward) {
+        set_high_beam(1);
+        set_high_beam_motor(7);
+        set_high_beam_range(100);
+    }
     
     last_lrs = get_light_rotary_switch();
     last_engine = engine_on;
