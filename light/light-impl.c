@@ -387,6 +387,14 @@ void light_do_step(void) {
         set_high_beam_motor(7);
         set_high_beam_range(100);
     }
+
+    // ELS-41: reverse gear
+    if(reverse_gear) {
+        set_reverse_light(100);
+    }
+    if(!reverse_gear) {
+        set_reverse_light(0);
+    }
     
     last_lrs = get_light_rotary_switch();
     last_engine = engine_on;

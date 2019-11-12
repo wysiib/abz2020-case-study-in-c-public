@@ -31,15 +31,19 @@ void set_blink_right(percentage p) {
     state.blinkRight = p;
 }
 
+void set_reverse_light(percentage p) {
+    state.reverseLight = p;
+}
+
 void set_high_beam(bool b) {
     state.highBeamOn = b;
 }
 
-void set_high_beam_range(highBeamRange b) {
+void set_high_beam_range(high_beam_range b) {
     state.highBeamRange = b;
 }
 
-void set_high_beam_motor(highBeamMotor b) {
+void set_high_beam_motor(high_beam_motor b) {
     state.highBeamMotor = b;
 }
 
