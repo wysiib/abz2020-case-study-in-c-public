@@ -29,7 +29,7 @@ void set_cruise_control(bool active);
 
 void set_prev_desired_speed(vehicleSpeed prev);
 
-void reset_prev_desired_speed();
+void reset_prev_desired_speed(void);
 
 void observe_current_speed(vehicleSpeed speed);
 
@@ -90,15 +90,15 @@ void set_lever_continuous(bool continuous);
 void set_lever_release(bool processed);
 
 /** Calculates a step of holding the lever up to the first resistance level (5°). */
-void lever_up5_step();
+void lever_up5_step(void);
 
 /** Calculates a step of holding the lever beyond the first resistance level (7°). */
-void lever_up7_step();
+void lever_up7_step(void);
 
 /** Calculates a step of holding the lever down to the first resistance level (5°). */
-void lever_down5_step();
+void lever_down5_step(void);
 
 /** Calculates a step of holding the lever below the first resistance level (7°). */
-void lever_down7_step();
+void lever_down7_step(void);
 
 #endif

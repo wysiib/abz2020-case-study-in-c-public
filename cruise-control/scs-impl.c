@@ -11,41 +11,45 @@
  */
 static inline void handle_held_lever(scs_state scs, size_t system_time) {
     assert(scs.lever_pos != scs_Neutral);
-    assert(scs.lever_last_tic != 0);
+    assert(scs.lever_last_tic != (size_t) 0);
 
     size_t time_passed = system_time - scs.lever_last_tic;
 
     if (!scs.lever_continuous) { // Only started to hold lever.
-        if (scs.lever_pos == scs_Upward5 && time_passed >= lever5_auto_time) {
+        if ((scs.lever_pos == scs_Upward5) && (time_passed >= lever5_auto_time)) {
             set_lever_continuous(true);
             lever_up5_step();
             set_lever_last_tic(system_time);
-        } else if (scs.lever_pos == scs_Downward5 && time_passed >= lever5_auto_time) {
+        } else if ((scs.lever_pos == scs_Downward5) && (time_passed >= lever5_auto_time)) {
             set_lever_continuous(true);
             lever_down5_step();
             set_lever_last_tic(system_time);
-        } else if (scs.lever_pos == scs_Upward7 && time_passed >= lever7_auto_time) {
+        } else if ((scs.lever_pos == scs_Upward7) && (time_passed >= lever7_auto_time)) {
             set_lever_continuous(true);
             lever_up7_step();
             set_lever_last_tic(system_time);
-        } else if (scs.lever_pos == scs_Downward7 && time_passed >= lever7_auto_time) {
+        } else if ((scs.lever_pos == scs_Downward7) && (time_passed >= lever7_auto_time)) {
             set_lever_continuous(true);
             lever_down7_step();
             set_lever_last_tic(system_time);
+        } else {
+            // do nothing?
         }
     } else {
-        if (scs.lever_pos == scs_Upward5 && time_passed >= lever5_frequency) {
+        if ((scs.lever_pos == scs_Upward5) && (time_passed >= lever5_frequency)) {
             lever_up5_step();
             set_lever_last_tic(system_time);
-        } else if (scs.lever_pos == scs_Downward5 && time_passed >= lever5_frequency) {
+        } else if ((scs.lever_pos == scs_Downward5) && (time_passed >= lever5_frequency)) {
             lever_down5_step();
             set_lever_last_tic(system_time);
-        } else if (scs.lever_pos == scs_Upward7 && time_passed >= lever7_frequency) {
+        } else if ((scs.lever_pos == scs_Upward7) && (time_passed >= lever7_frequency)) {
             lever_up7_step();
             set_lever_last_tic(system_time);
-        } else if (scs.lever_pos == scs_Downward7 && time_passed >= lever7_frequency) {
+        } else if ((scs.lever_pos == scs_Downward7) && (time_passed >= lever7_frequency)) {
             lever_down7_step();
             set_lever_last_tic(system_time);
+        } else {
+            // do nothing?
         }
     }
 }
@@ -62,6 +66,8 @@ static inline void handle_lever_release(scs_state scs, size_t system_time) {
             lever_down5_step();
         } else if (scs.lever_prev_pos == scs_Downward7) {
             lever_down7_step();
+        } else { 
+            // do nothing?
         }
     } else {
         set_lever_continuous(false);
@@ -107,5 +113,7 @@ void scs_do_step(void) {
         }
     } else if (!last_scs.lever_release_processed) {
         handle_lever_release(last_scs, time);
+    } else {
+        // do nothing?
     }
 }

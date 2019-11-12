@@ -4,15 +4,7 @@
 #include <stdbool.h>
 #include "../common/common.h"
 
-typedef enum {
-    hbm_min = 0,
-    hbm_max = 14
-} high_beam_motor;
-
-typedef enum {
-    hbr_min = 0,
-    hmb_max = 300
-} high_beam_range;
+#include "actuators.h"
 
 typedef struct light_state {
     percentage brakeLight;
