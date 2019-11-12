@@ -928,32 +928,6 @@ void scs13_forward(void **State) {
     assert_true(get_scs_state().cruise_control_active == true);
 }
 
-void scs13_backward_inactive(void **State) {
-    init_system(leftHand, false, EU, false, false);
-    sensors_and_time sensor_states = {0};
-
-    sensor_states = start_engine_and_drive(sensor_states, 400);
-    begin_sensor_time_and_exec(&sensor_states, 1000);
-
-    lever_backward();
-
-    assert_true(get_scs_state().cruise_control_active == false);
-}
-
-void scs13_backward_active(void **State) {
-    init_system(leftHand, false, EU, false, false);
-    sensors_and_time sensor_states = {0};
-
-    sensor_states = start_engine_and_drive(sensor_states, 400);
-    begin_sensor_time_and_exec(&sensor_states, 1000);
-
-    lever_forward();
-    sensors_advance_time_and_exec(&sensor_states, 3000, 50);
-    lever_backward();
-
-    assert_true(get_scs_state().cruise_control_active == false);
-}
-
 void scs13_forward_below20(void **State) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1094,6 +1068,37 @@ void scs13_long_down7(void **State) {
     assert_true(get_scs_state().cruise_control_active == false);
 }
 
+/*
+    SCS-17: By pushing the control lever backwards, the cruise control is
+    deactivated until it is activated again.
+ */
+
+void scs17_backward_inactive(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_backward();
+
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
+void scs17_backward_active(void **State) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    begin_sensor_time_and_exec(&sensor_states, 1000);
+
+    lever_forward();
+    sensors_advance_time_and_exec(&sensor_states, 3000, 50);
+    lever_backward();
+
+    assert_true(get_scs_state().cruise_control_active == false);
+}
+
 //
 //
 //
@@ -1155,8 +1160,6 @@ int main(int argc, char *argv[]) {
         // Simple cruise control:
         // SCS-13
         unit_test_setup_teardown(scs13_forward, reset, reset),
-        unit_test_setup_teardown(scs13_backward_inactive, reset, reset),
-        unit_test_setup_teardown(scs13_backward_active, reset, reset),
         unit_test_setup_teardown(scs13_up5, reset, reset),
         unit_test_setup_teardown(scs13_up7, reset, reset),
         unit_test_setup_teardown(scs13_down5, reset, reset),
@@ -1169,6 +1172,8 @@ int main(int argc, char *argv[]) {
         // TODO: SCS-15
         // TODO: SCS-16
         // TODO: SCS-17
+        unit_test_setup_teardown(scs17_backward_inactive, reset, reset),
+        unit_test_setup_teardown(scs17_backward_active, reset, reset),
 
         // Adaptive cruise control:
         // TODO: SCS-18
