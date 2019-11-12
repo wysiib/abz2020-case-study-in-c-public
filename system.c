@@ -10,7 +10,7 @@ static bool daytime_light;
 
 static bool initialised = false;
 void init_system_v2(init i) {
-    init_system(i.pos,i.armored_vehicle,i.marketCode,
+    init_system(i.pos,i.armored_vehicle,i.market_code,
                 i.ambient_light,i.daytime_running_light);
 }
 

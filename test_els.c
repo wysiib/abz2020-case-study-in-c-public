@@ -670,7 +670,7 @@ void els15(void **state) {
 
 void els16a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=false,
+                          .market_code=EU,.ambient_light=false,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
@@ -691,7 +691,7 @@ void els16a(void **state) {
 }
 void els16b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=false,
+                          .market_code=EU,.ambient_light=false,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
@@ -717,7 +717,7 @@ void els16b(void **state) {
 }
 void els16conflict17a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=false,
+                          .market_code=EU,.ambient_light=false,
                           .daytime_running_light=true});
     sensors_and_time sensor_states = {0};
 
@@ -738,7 +738,7 @@ void els16conflict17a(void **state) {
 }
 void els16conflict17b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=false,
+                          .market_code=EU,.ambient_light=false,
                           .daytime_running_light=true});
     sensors_and_time sensor_states = {0};
 
@@ -765,7 +765,7 @@ void els16conflict17b(void **state) {
 }
 void els17(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=0,
+                          .market_code=EU,.ambient_light=0,
                           .daytime_running_light=true});
     sensors_and_time sensor_states = {0};
 
@@ -814,7 +814,7 @@ void els17(void **state) {
 }
 void els18a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=false,
+                          .market_code=EU,.ambient_light=false,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
@@ -902,7 +902,7 @@ void els18a(void **state) {
 }
 void els18b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=false,
+                          .market_code=EU,.ambient_light=false,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
@@ -952,7 +952,7 @@ void els18b(void **state) {
 }
 void els18c(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,.ambient_light=false,
+                          .market_code=EU,.ambient_light=false,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
@@ -987,7 +987,7 @@ void els18c(void **state) {
 
 void els19a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,
+                          .market_code=EU,
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
@@ -1015,7 +1015,7 @@ void els19a(void **state) {
 }
 void els19b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,
+                          .market_code=EU,
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
@@ -1048,7 +1048,7 @@ void els19b(void **state) {
 }
 void els19c(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,
+                          .market_code=EU,
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
@@ -1119,7 +1119,7 @@ void els19c(void **state) {
 }
 void els19d(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,
+                          .market_code=EU,
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
@@ -1177,7 +1177,7 @@ void els19d(void **state) {
 }
 void els19f(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,
+                          .market_code=EU,
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
@@ -1238,7 +1238,7 @@ void els19f(void **state) {
 }
 void els19conflict28a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,
+                          .market_code=EU,
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
@@ -1282,7 +1282,7 @@ void els19conflict28a(void **state) {
 }
 void els19conflict28b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
-                          .marketCode=EU,
+                          .market_code=EU,
                           .ambient_light=true,
                           .daytime_running_light=false});
     sensors_and_time sensor_states = {0};

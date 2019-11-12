@@ -20,7 +20,7 @@ typedef enum {
 typedef struct init{
     driverPosition pos;
     bool armored_vehicle;
-    marketCode marketCode;
+    marketCode market_code;
     bool ambient_light;
     bool daytime_running_light;
 }init;
