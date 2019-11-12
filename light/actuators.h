@@ -6,16 +6,16 @@
 #include "../common/common.h"
 
 typedef enum {
-    hbr_low = 0,
-    hbr_high = 300
-} highBeamRange;
-
-typedef enum {
-    hbm_low = 0, // 65 m
+    hbm_min = 0, // 65 m
     hbm_one = 1, // 100 m
     // 20 m step size
-    hbm_high = 14
-} highBeamMotor;
+    hbm_max = 14
+} high_beam_motor;
+
+typedef enum {
+    hbr_low = 0,
+    hbr_high = 300
+} high_beam_range;
 
 void set_blink_left(percentage p);
 void set_blink_right(percentage p);
@@ -24,8 +24,8 @@ void set_low_beam_left(percentage p);
 void set_low_beam_right(percentage p);
 
 void set_high_beam(bool on);
-void set_high_beam_range(highBeamRange range);
-void set_high_beam_motor(highBeamMotor motor);
+void set_high_beam_range(high_beam_range range);
+void set_high_beam_motor(high_beam_motor motor);
 
 void set_cornering_light_left(percentage p);
 void set_cornering_light_right(percentage p);
