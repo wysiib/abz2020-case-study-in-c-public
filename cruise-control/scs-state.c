@@ -19,7 +19,7 @@ void set_cruise_control(bool active) {
 }
 
 void set_prev_desired_speed(vehicleSpeed prev) {
-    assert(prev >= speed_min && prev <= speed_max);
+    assert((prev >= speed_min) && (prev <= speed_max));
     scs.has_previous_desired_speed = true;
     scs.previous_desired_speed = prev;
 }
@@ -117,7 +117,7 @@ void lever_down7_step() {
 // Actuators ---------------------------------------------------------------- //
 
 void set_vehicle_speed(vehicleSpeed current) {
-    assert(current >= speed_min && current <= speed_max);
+    assert((current >= speed_min) && (current <= speed_max));
     scs.current_speed = current;
 
     // SCS-12: setVehicleSpeed = 0 => no speed to maintain.
