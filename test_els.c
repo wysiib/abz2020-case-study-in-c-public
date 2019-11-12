@@ -1637,8 +1637,31 @@ void els41(void **state) {
     progress_time_partial1(3000, 6000, reverseLight, 0);
 }
 
-voltage volt(int num) {
+static voltage volt(int num) {
     return num * 10;
+}
+
+void els42(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(8));
+    mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    pitman_horizontal(pa_Forward);
+    mock_and_execute(sensor_states);
+
+    progress_time_partial1(1000, 3000, highBeamOn, false);
+
+    pitman_horizontal(pa_fb_Neutral);
+    progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
 void els43(void **state) {
@@ -1812,6 +1835,7 @@ int main(int argc, char* argv[]) {
         // TODO: ELS 40| brake pedal is sensor in light subsystem,
         //               yet is part of the UI of the cruise
         unit_test_setup_teardown(els41, reset, reset),
+        unit_test_setup_teardown(els42, reset, reset),
         // TODO: ELS-42
         unit_test_setup_teardown(els43, reset, reset),
         // TODO: ELS-44
