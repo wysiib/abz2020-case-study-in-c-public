@@ -1331,6 +1331,31 @@ void els19conflict28b(void **state) {
 
     assert_true(false);//TODO: REMOVE IF PITMAN LEFT/RIGHT WAS IMPLEMENTED
 }
+
+void els22(void **state) {
+    init_system_v2((init){.pos=leftHand,.armored_vehicle=true,
+                          .market_code=EU,
+                          .ambient_light=true,
+                          .daytime_running_light=false});
+    sensors_and_time sensor_states = {0};
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    // assuming els19a works
+    toggle_darkness_mode();
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
+}
+
 void els28_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1842,7 +1867,9 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(els19conflict28b, reset, reset),
 
         // NOTE: ELS-20 is deleted
-        // TODO: ELS-21 to ESL-27
+        // TODO: ELS-21
+        unit_test_setup_teardown(els22, reset, reset),
+        // TODO: ELS-22 to ESL-27
         unit_test_setup_teardown(els28_left, reset, reset),
         unit_test_setup_teardown(els28_right, reset, reset),
         // NOTE: ESL-29: no test

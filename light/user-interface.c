@@ -50,3 +50,11 @@ void pitman_horizontal(pitmanArmForthBack deflection) {
 pitmanArmForthBack get_pitman_horizontal(void) {
     return pacman_horizontal;
 }
+
+void toggle_darkness_mode(void) {
+    darkness_mode = !darkness_mode;
+}
+
+bool get_darkness_mode(void) {
+    return darkness_mode;
+}
