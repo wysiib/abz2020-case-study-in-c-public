@@ -43,6 +43,8 @@ typedef struct {
 
     size_t safety_dist; // Safety distance to keep in meters.
 
+    bool visual_warning_on;
+
     acousticSignal acoustic_warning;
 } scs_state;
 
@@ -68,6 +70,8 @@ void set_current_speed(vehicleSpeed speed);
 //
 
 void set_acceleration(vehicleAcceleration);
+
+void set_visual_warning(bool on);
 
 void set_acoustic_signal(bool on);
 

@@ -10,6 +10,6 @@ void set_brake_pressure(percentage p);
 
 void acoustic_warning_on(void);
 
-void set_visual_warning(bool on);
+void visual_warning_on(void);
 
 #endif

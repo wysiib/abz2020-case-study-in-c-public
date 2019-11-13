@@ -150,6 +150,10 @@ void set_safety_distance(size_t meters) {
     scs.safety_dist = meters;
 }
 
+void set_visual_warning(bool on) {
+    scs.visual_warning_on = on;
+}
+
 void set_acoustic_signal(bool active) {
     scs.acoustic_warning = (acousticSignal){0};
     scs.acoustic_warning.is_on = active;
@@ -184,6 +188,10 @@ void set_vehicle_speed(vehicleSpeed target) {
     if (target == speed_min) {
         set_cruise_control(false);
     }
+}
+
+void visual_warning_on(void) {
+    set_visual_warning(true);
 }
 
 void acoustic_warning_on(void) {

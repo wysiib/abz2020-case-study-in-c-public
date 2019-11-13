@@ -112,6 +112,10 @@ static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) 
         if (need_acoustic_warning && !(scs.acoustic_warning.is_on)) {
             acoustic_warning_on();
         }
+        bool need_visual_warning = ((float)collision_dist < (mps * 1.5f)); // SCS-25
+        if (need_visual_warning) {
+            visual_warning_on();
+        }
     }
 }
 

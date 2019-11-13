@@ -1241,6 +1241,38 @@ void scs21_sufficient_deceleration(void **state) {
     assert_true(!(scs.acoustic_warning.is_on));
     assert_true(!(scs.acoustic_warning.playing_sound));
 }
+/*
+    SCS-25: A visual warning is activated if the actual distance is less than
+    (current speed/3.6) · 1.5.
+ */
+
+void scs25_distance_is_less(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 41);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().visual_warning_on);
+}
+
+void scs25_distance_is_more(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 42);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_true(!(get_scs_state().visual_warning_on));
+}
 
 /*
     SCS-26: An acoustic alarm is activated if the actual distance is less than
@@ -1369,7 +1401,9 @@ int main(int argc, char *argv[]) {
         // TODO: SCS-24
 
         // Distance warning:
-        // TODO: SCS-25
+        // SCS-25
+        unit_test_setup_teardown(scs25_distance_is_less, reset, reset),
+        unit_test_setup_teardown(scs25_distance_is_more, reset, reset),
         // SCS-26
         unit_test_setup_teardown(scs26_distance_is_less, reset, reset),
         unit_test_setup_teardown(scs26_distance_is_more, reset, reset),
