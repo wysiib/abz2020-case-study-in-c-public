@@ -168,7 +168,7 @@ static void set_blinkers_on(size_t time) {
     blinking = true;
 }
 
-void hb_motor(sensorState camera, vehicleSpeed speed, bool undervoltage) {
+void hb_motor(sensorState camera, vehicleSpeed speed, bool undervoltage, bool traffic) {
     // has to be implemented as staircase function, see testcase / article
     int motor = 0;
     if(speed < 316) {
@@ -197,18 +197,27 @@ void hb_motor(sensorState camera, vehicleSpeed speed, bool undervoltage) {
         motor = 11;
     }
 
+    if(traffic) {
+        motor = 0;
+    }
+
     if(camera != Ready || undervoltage) {
         motor = 7;
     }
     set_high_beam_motor(motor);
 }
 
-void hb_range(sensorState camera, vehicleSpeed speed, bool undervoltage) {
+void hb_range(sensorState camera, vehicleSpeed speed, bool undervoltage, bool traffic) {
     // formula for high beam range as given on case study webpage
     int range = (7*speed/10 + 60)/9;
     if(range > 100) {
         range = 100;
     }
+
+    if(traffic) {
+        range = 30;
+    }
+    
     if(camera != Ready || undervoltage) {
         range = 100;
     }
@@ -422,8 +431,8 @@ void light_do_step(void) {
     // ELS-30
     if(get_pitman_horizontal() == pa_Forward && !undervoltage) {
         set_high_beam(1);
-        hb_motor(camera, speedo, undervoltage);
-        hb_range(camera, speedo, undervoltage);
+        hb_motor(camera, speedo, undervoltage, oncomming_trafic);
+        hb_range(camera, speedo, undervoltage, oncomming_trafic);
     }
     if(get_pitman_horizontal() == pa_fb_Neutral) {
         set_high_beam(0);
@@ -438,8 +447,8 @@ void light_do_step(void) {
     // ELS-32
     if(get_pitman_horizontal() == pa_Backward && get_light_rotary_switch() == lrs_auto) {
         set_high_beam(1);
-        hb_motor(camera, speedo, undervoltage);
-        hb_range(camera, speedo, undervoltage);
+        hb_motor(camera, speedo, undervoltage, oncomming_trafic);
+        hb_range(camera, speedo, undervoltage, oncomming_trafic);
     }
 
     // ELS-41: reverse gear

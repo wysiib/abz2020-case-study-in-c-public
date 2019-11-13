@@ -1857,14 +1857,14 @@ void els33_34_35(void **state) {
     mock_and_execute(sensor_states);
 
     sensor_states = update_sensors(sensor_states, sensorTime, 6500);
-    progress_time_partial3(6500, 10000, highBeamOn, true /* ?? */, highBeamRange, 30, highBeamMotor, 0 /* ? */);
+    progress_time_partial3(6500, 10000, highBeamOn, true, highBeamRange, 30, highBeamMotor, 0);
 
     /* ELS-35 */
     sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, false);
     mock_and_execute(sensor_states);
     sensor_states = update_sensors(sensor_states, sensorTime, 12000);
 
-    progress_time_partial3(12000, 1500, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11 /* ? */);
+    progress_time_partial3(12000, 1500, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11);
 }
 
 void els34_35(void **state) {
