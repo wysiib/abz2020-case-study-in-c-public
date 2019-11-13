@@ -13,7 +13,11 @@ typedef enum {
     scs_Forward
 } SCSLever;
 
-typedef enum { two_secs, two_point_five_secs, three_secs } safetyDistance;
+typedef enum {
+    two_secs,
+    two_point_five_secs,
+    three_secs
+} safetyDistance;
 
 void lever_release(void);
 

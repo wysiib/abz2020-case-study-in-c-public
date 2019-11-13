@@ -2,6 +2,7 @@
 
 #include "actuators.h"
 #include "scs-state.h"
+#include "sensors.h"
 #include "user-interface.h"
 
 #include <assert.h>
@@ -77,6 +78,32 @@ static inline void handle_lever_release(scs_state scs, size_t system_time) {
     set_lever_last_tic(0);
 }
 
+/** Returns the safety distance in milliseconds. */
+static size_t safety_ms(safetyDistance dist) {
+    switch (dist) {
+    case two_secs:
+        return 2000;
+        break;
+    case two_point_five_secs:
+        return 2500;
+        break;
+    case three_secs:
+        return 3000;
+        break;
+    default:
+        assert(0); // Cannot happen, enum is exhausted.
+    }
+}
+static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) {
+    assert(scs.mode == adaptive);
+    assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
+
+    if (scs.safety_dist >= collision_dist) {
+        // Welcome to problem town!
+        set_acceleration(VEHICLE_MAX_DECELERATION); // Could be smoother, but max works.
+    }
+}
+
 void scs_do_step(void) {
     size_t time = get_time();
     scs_state last_scs = get_scs_state();
@@ -90,8 +117,6 @@ void scs_do_step(void) {
     (void)get_steering_angle();
     (void)get_oncoming_traffic();
     (void)get_camera_state();
-    (void)get_range_radar_state();
-    (void)read_range_radar_sensor();
 
     int engine_on = get_engine_status();
     if (!engine_on) {
@@ -117,5 +142,14 @@ void scs_do_step(void) {
         handle_lever_release(last_scs, time);
     } else {
         // do nothing
+    }
+
+    // Check distance
+    (void)get_range_radar_state();
+    rangeRadar collision_dist = read_range_radar_sensor();
+    if (last_scs.mode == adaptive) {
+        if ((collision_dist >= distance_min) && (collision_dist <= distance_max)) {
+            handle_range_radar(last_scs, collision_dist);
+        }
     }
 }

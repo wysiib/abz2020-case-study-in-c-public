@@ -14,6 +14,10 @@ void reset(void **state) {
     scs = (scs_state){0};
 }
 
+void set_scs_mode(cruiseControlMode mode) {
+    scs.mode = mode;
+}
+
 void set_cruise_control(bool active) {
     if (!active && scs.cruise_control_active) {
         // When turning cruise control off, we save the previous speed.
@@ -43,6 +47,19 @@ void set_current_speed(vehicleSpeed current) {
     assert((current >= speed_min) && (current <= speed_max));
     scs.current_speed = current;
 }
+
+//
+// Acceleration
+//
+
+void set_acceleration(vehicleAcceleration acc) {
+    assert((acc >= VEHICLE_MAX_DECELERATION) && (acc <= VEHICLE_MAX_ACCELERATION));
+    scs.acceleration = acc;
+}
+
+//
+// Lever handling.
+//
 
 void set_lever(SCSLever pos) {
     assert(pos != scs.lever_pos); // TODO: Do we want this assertion?
@@ -122,6 +139,15 @@ void lever_down7_step(void) {
         vehicleSpeed curr = scs.current_speed;
         set_desired_speed(curr);
     }
+}
+
+//
+// Safety distance.
+//
+void set_safety_distance(size_t meters) {
+    assert(meters >= (size_t)0);
+
+    scs.safety_dist = meters;
 }
 
 //

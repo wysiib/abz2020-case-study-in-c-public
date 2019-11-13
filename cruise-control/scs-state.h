@@ -3,8 +3,20 @@
 
 #include "../common/common.h"
 #include "user-interface.h"
+#include <sys/types.h>
+
+typedef ssize_t vehicleAcceleration; // Given in m/s².
+#define VEHICLE_MAX_DECELERATION ((vehicleAcceleration) -5)
+#define VEHICLE_MAX_ACCELERATION ((vehicleAcceleration) 2)
+
+typedef enum {
+    simple = 1,
+    adaptive = 2
+} cruiseControlMode;
 
 typedef struct {
+    cruiseControlMode mode;
+
     bool cruise_control_active;
     vehicleSpeed desired_speed; // Speed the cruise control aims to keep if active.
     bool has_previous_desired_speed;
@@ -14,17 +26,23 @@ typedef struct {
     // eases test mock handling.
     vehicleSpeed current_speed; // Last seen value via sensor.
 
+    vehicleAcceleration acceleration; // Desired vehicle acceleration in m/s².
+
     SCSLever lever_pos;
     SCSLever lever_prev_pos; // Previous lever position. Might be equal to lever_pos.
     size_t lever_last_tic; // Time in ms at which the lever was lastly evaluated. If 0, lever change was not yet registered.
     bool lever_release_processed; // Whether the releasing of the lever was yet processed
     bool lever_continuous; // If true, lever is held continuously -> alter speeds accordingly.
+
+    size_t safety_dist; // Safety distance to keep in meters.
 } scs_state;
 
 scs_state get_scs_state(void);
 
 /** Zeroes the SCS state. */
 void reset(void **state);
+
+void set_scs_mode(cruiseControlMode mode);
 
 void set_cruise_control(bool active);
 
@@ -35,6 +53,12 @@ void set_prev_desired_speed(vehicleSpeed prev);
 void reset_prev_desired_speed(void);
 
 void set_current_speed(vehicleSpeed speed);
+
+//
+// Acceleration
+//
+
+void set_acceleration(vehicleAcceleration);
 
 //
 // Lever handling.
@@ -105,5 +129,11 @@ void lever_down5_step(void);
 
 /** Calculates a step of holding the lever below the first resistance level (7°). */
 void lever_down7_step(void);
+
+//
+// Safety distance.
+//
+
+void set_safety_distance(size_t meters);
 
 #endif

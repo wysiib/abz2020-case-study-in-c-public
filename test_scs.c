@@ -1114,6 +1114,63 @@ void scs17_backward_active(void **State) {
     assert_true(get_scs_state().cruise_control_active == false);
 }
 
+/*
+    SCS-20: If the distance to the vehicle ahead falls below the specified
+    speed-dependent safety distance (see Req. SCS-24), the vehicle brakes
+    automatically. The maximum deceleration is 5m/s².
+*/
+
+void scs20_collision_ahead(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    mock_and_execute(sensor_states);
+
+    assert_in_range(get_scs_state().acceleration,
+                    -VEHICLE_MAX_DECELERATION,
+                    -1);
+}
+
+void scs20_collision_ahead_non_adaptive(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(simple);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().acceleration, 0);
+}
+
+void scs20_no_collision_ahead(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 120);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 400);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().acceleration, 0);
+}
+
+/*
+    SCS-21: If the maximum deceleration of 5m/s 2 is insufficient to prevent a
+    collision with the vehicle ahead, the vehicle warns the driver by two
+    acoustical signals (0.1 seconds long with 0.2 seconds pause between)
+    and by this demands to intervene.
+*/
+
 //
 //
 //
@@ -1192,9 +1249,14 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs17_backward_active, reset, reset),
 
         // Adaptive cruise control:
-        // TODO: SCS-18
-        // TODO: SCS-19
-        // TODO: SCS-20
+        // TODO: SCS-18 --- Unsure if we can test for this in a simple way
+        //                  besides LTL model checking on the final vehicle?
+        // TODO: SCS-19 --- Implementation is invariant to cruise control state,
+        //                  I guess we could repeat tests with adaptive mode on
+        // SCS-20
+        unit_test_setup_teardown(scs20_collision_ahead, reset, reset),
+        unit_test_setup_teardown(scs20_collision_ahead_non_adaptive, reset, reset),
+        unit_test_setup_teardown(scs20_no_collision_ahead, reset, reset),
         // TODO: SCS-21
         // TODO: SCS-22
         // TODO: SCS-23
