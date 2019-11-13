@@ -1259,7 +1259,7 @@ void els19conflict28a(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
     set_light_rotary_switch(lrs_auto);
     set_light_rotary_switch(lrs_on);
-    //TODO: PITMAN LEFT
+    pitman_vertical(pa_Downward7);
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 
@@ -1284,8 +1284,6 @@ void els19conflict28a(void **state) {
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,10,lowBeamRight,10);
-
-    assert_true(false);//TODO: REMOVE IF PITMAN LEFT/RIGHT WAS IMPLEMENTED
 }
 void els19conflict28b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
@@ -1303,7 +1301,7 @@ void els19conflict28b(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
     set_light_rotary_switch(lrs_auto);
     set_light_rotary_switch(lrs_on);
-    //TODO: PITMAN RIGHT
+    pitman_vertical(pa_Upward7);
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 
@@ -1328,8 +1326,6 @@ void els19conflict28b(void **state) {
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,10,lowBeamRight,10);
-
-    assert_true(false);//TODO: REMOVE IF PITMAN LEFT/RIGHT WAS IMPLEMENTED
 }
 
 void els21(void **state) {
