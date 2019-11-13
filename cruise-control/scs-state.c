@@ -150,6 +150,10 @@ void set_safety_distance(size_t meters) {
     scs.safety_dist = meters;
 }
 
+void set_safety_distance_time(safetyDistance distance) {
+    scs.safety_dist_time = distance;
+}
+
 void start_acoustic_signal(size_t start_time) {
     scs.acoustic_warning.is_on = true;
     scs.acoustic_warning.started_playing = true;

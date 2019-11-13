@@ -1125,8 +1125,8 @@ void scs20_collision_ahead(void **state) {
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
-    set_safety_distance(100);
-    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 100);
+    set_safety_distance_time(three_secs);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 30);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 400);
     mock_and_execute(sensor_states);
@@ -1141,8 +1141,8 @@ void scs20_collision_ahead_non_adaptive(void **state) {
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(simple);
-    set_safety_distance(100);
-    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 100);
+    set_safety_distance_time(three_secs);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 30);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 400);
     mock_and_execute(sensor_states);
@@ -1241,6 +1241,51 @@ void scs21_sufficient_deceleration(void **state) {
     assert_true(!(scs.acoustic_warning.is_on));
     assert_true(!(scs.acoustic_warning.playing_sound));
 }
+
+/*
+    SCS-24: By turning the cruise control lever head, the distance to be
+    maintained to the vehicle ahead can be selected. Three levels are available:
+    2 seconds, 2.5 seconds and 3 seconds. The desired level only applies
+    within the velocity window > 20 km/h. Below this level, the system
+    autonomously sets the distance according to Req. SCS-23.
+ */
+
+void scs24_two_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_secs);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 54);
+}
+
+void scs24_two_point_five_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_point_five_secs);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 67);
+}
+
+void scs24_three_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(three_secs);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 81);
+}
+
 /*
     SCS-25: A visual warning is activated if the actual distance is less than
     (current speed/3.6) · 1.5.
@@ -1398,7 +1443,10 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs21_sufficient_deceleration, reset, reset),
         // TODO: SCS-22
         // TODO: SCS-23
-        // TODO: SCS-24
+        // SCS-24
+        unit_test_setup_teardown(scs24_two_secs, reset, reset),
+        unit_test_setup_teardown(scs24_two_point_five_secs, reset, reset),
+        unit_test_setup_teardown(scs24_three_secs, reset, reset),
 
         // Distance warning:
         // SCS-25

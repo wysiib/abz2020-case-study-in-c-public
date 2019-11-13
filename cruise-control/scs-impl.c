@@ -188,6 +188,16 @@ void scs_do_step(void) {
         // do nothing
     }
 
+    // Calculate safety distance
+    if (last_scs.mode == adaptive) {
+        size_t mps = (size_t)last_scs.current_speed / (size_t)36;
+        size_t ms = safety_ms(last_scs.safety_dist_time);
+
+        size_t dist = (mps * ms) / (size_t) 1000;
+        set_safety_distance(dist);
+        last_scs.safety_dist = dist; // Update for further calculations.
+    }
+
     // Check distance
     (void)get_range_radar_state();
     rangeRadar collision_dist = read_range_radar_sensor();

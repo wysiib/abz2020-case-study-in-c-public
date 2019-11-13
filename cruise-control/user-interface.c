@@ -41,6 +41,11 @@ void lever_down7(void) {
 
 void lever_backward(void) { set_cruise_control(false); }
 
+
+void turn_lever(safetyDistance distance) {
+    set_safety_distance_time(distance);
+}
+
 void brakePedal(Pedal deflection) {
     set_cruise_control(false);
 }
