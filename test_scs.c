@@ -158,7 +158,7 @@ void scs2_no_prev_speed(void **state) {
 
     scs_state scs = get_scs_state();
     assert_true(get_scs_state().cruise_control_active);
-    assert_int_equal(scs.target_speed, spe);
+    assert_int_equal(scs.desired_speed, spe);
 }
 
 void scs2_with_prev_speed(void **state) {
@@ -183,7 +183,7 @@ void scs2_with_prev_speed(void **state) {
 
     assert_true(get_scs_state().cruise_control_active);
     assert_true(get_scs_state().has_previous_desired_speed);
-    assert_int_equal(get_scs_state().target_speed, pre);
+    assert_int_equal(get_scs_state().desired_speed, pre);
 }
 
 /*
@@ -204,7 +204,7 @@ void scs3_at_20kmh(void **state) { // TODO: Is this test necessary?
     lever_forward();
 
     assert_true(get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().target_speed, spe);
+    assert_int_equal(get_scs_state().desired_speed, spe);
 }
 
 void scs3_below_20kmh(void **state) {
@@ -237,7 +237,7 @@ void scs3_below_20kmh_with_prev_desired_speed(void **state) {
 
     assert_true(get_scs_state().has_previous_desired_speed);
     assert_true(get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().target_speed, pre);
+    assert_int_equal(get_scs_state().desired_speed, pre);
 }
 
 /**
@@ -253,7 +253,7 @@ void scs4_active_cc(void **state) {
     vehicleSpeed desired = 300;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 400);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
     mock_and_execute(sensor_states);
 
@@ -262,7 +262,7 @@ void scs4_active_cc(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, desired + 10);
+    assert_int_equal(get_scs_state().desired_speed, desired + 10);
 }
 
 void scs4_active_cc_twice(void **state) {
@@ -272,7 +272,7 @@ void scs4_active_cc_twice(void **state) {
     vehicleSpeed desired = 300;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 400);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
     mock_and_execute(sensor_states);
 
@@ -286,7 +286,7 @@ void scs4_active_cc_twice(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, desired + 20);
+    assert_int_equal(get_scs_state().desired_speed, desired + 20);
 }
 
 void scs4_active_cc_max_speed(void **state) {
@@ -296,7 +296,7 @@ void scs4_active_cc_max_speed(void **state) {
     vehicleSpeed desired = speed_max;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 400);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
     mock_and_execute(sensor_states);
 
@@ -305,7 +305,7 @@ void scs4_active_cc_max_speed(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, speed_max);
+    assert_int_equal(get_scs_state().desired_speed, speed_max);
 }
 
 /*
@@ -324,7 +324,7 @@ void scs5_active_cc(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
@@ -332,7 +332,7 @@ void scs5_active_cc(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, nextTensValue);
+    assert_int_equal(get_scs_state().desired_speed, nextTensValue);
 }
 
 void scs5_active_cc_twice(void **state) {
@@ -343,7 +343,7 @@ void scs5_active_cc_twice(void **state) {
     vehicleSpeed nextTensValue = 500;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
@@ -356,7 +356,7 @@ void scs5_active_cc_twice(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, nextTensValue);
+    assert_int_equal(get_scs_state().desired_speed, nextTensValue);
 }
 
 void scs5_active_cc_already_multiple_of_ten(void **state) {
@@ -367,7 +367,7 @@ void scs5_active_cc_already_multiple_of_ten(void **state) {
     vehicleSpeed nextTensValue = 400;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
@@ -375,7 +375,7 @@ void scs5_active_cc_already_multiple_of_ten(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, nextTensValue);
+    assert_int_equal(get_scs_state().desired_speed, nextTensValue);
 }
 
 void scs5_active_cc_almost_max_speed(void **state) {
@@ -385,7 +385,7 @@ void scs5_active_cc_almost_max_speed(void **state) {
     vehicleSpeed desired = speed_max - 2;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_up7();
@@ -393,7 +393,7 @@ void scs5_active_cc_almost_max_speed(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, speed_max);
+    assert_int_equal(get_scs_state().desired_speed, speed_max);
 }
 
 void scs5_active_cc_max_speed(void **state) {
@@ -402,7 +402,7 @@ void scs5_active_cc_max_speed(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(speed_max);
+    set_desired_speed(speed_max);
     set_cruise_control(true);
 
     lever_up7();
@@ -410,7 +410,7 @@ void scs5_active_cc_max_speed(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, speed_max);
+    assert_int_equal(get_scs_state().desired_speed, speed_max);
 }
 
 /*
@@ -425,7 +425,7 @@ void scs6_down5_active_cc(void **state) {
     vehicleSpeed desired = 300;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down5();
@@ -433,7 +433,7 @@ void scs6_down5_active_cc(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, desired - 10);
+    assert_int_equal(get_scs_state().desired_speed, desired - 10);
 }
 
 void scs6_down5_active_cc_twice(void **state) {
@@ -443,7 +443,7 @@ void scs6_down5_active_cc_twice(void **state) {
     vehicleSpeed desired = 300;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down5();
@@ -456,7 +456,7 @@ void scs6_down5_active_cc_twice(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, desired - 20);
+    assert_int_equal(get_scs_state().desired_speed, desired - 20);
 }
 
 void scs6_down5_active_cc_min_speed(void **state) {
@@ -466,7 +466,7 @@ void scs6_down5_active_cc_min_speed(void **state) {
     vehicleSpeed desired = speed_min;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down5();
@@ -474,7 +474,7 @@ void scs6_down5_active_cc_min_speed(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, speed_min);
+    assert_int_equal(get_scs_state().desired_speed, speed_min);
 }
 
 void scs6_down7_active_cc(void **state) {
@@ -485,7 +485,7 @@ void scs6_down7_active_cc(void **state) {
     vehicleSpeed nextTensValue = 300;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down7();
@@ -493,7 +493,7 @@ void scs6_down7_active_cc(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, nextTensValue);
+    assert_int_equal(get_scs_state().desired_speed, nextTensValue);
 }
 
 void scs6_down7_active_cc_twice(void **state) {
@@ -504,7 +504,7 @@ void scs6_down7_active_cc_twice(void **state) {
     vehicleSpeed nextTensValue = 200;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down7();
@@ -517,7 +517,7 @@ void scs6_down7_active_cc_twice(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, nextTensValue);
+    assert_int_equal(get_scs_state().desired_speed, nextTensValue);
 }
 
 void scs6_down7_active_cc_already_multiple_of_ten(void **state) {
@@ -528,7 +528,7 @@ void scs6_down7_active_cc_already_multiple_of_ten(void **state) {
     vehicleSpeed nextTensValue = 200;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down7();
@@ -536,7 +536,7 @@ void scs6_down7_active_cc_already_multiple_of_ten(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, nextTensValue);
+    assert_int_equal(get_scs_state().desired_speed, nextTensValue);
 }
 
 void scs6_down7_active_cc_almost_min_speed(void **state) {
@@ -546,7 +546,7 @@ void scs6_down7_active_cc_almost_min_speed(void **state) {
     vehicleSpeed desired = speed_min + 2;
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(desired);
+    set_desired_speed(desired);
     set_cruise_control(true);
 
     lever_down7();
@@ -554,7 +554,7 @@ void scs6_down7_active_cc_almost_min_speed(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, speed_min);
+    assert_int_equal(get_scs_state().desired_speed, speed_min);
 }
 
 void scs6_down7_active_cc_min_speed(void **state) {
@@ -563,7 +563,7 @@ void scs6_down7_active_cc_min_speed(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = start_engine_and_drive(sensor_states, 330);
-    set_target_speed(speed_min);
+    set_desired_speed(speed_min);
     set_cruise_control(true);
 
     lever_down7();
@@ -571,7 +571,7 @@ void scs6_down7_active_cc_min_speed(void **state) {
     lever_release();
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
-    assert_int_equal(get_scs_state().target_speed, speed_min);
+    assert_int_equal(get_scs_state().desired_speed, speed_min);
 }
 
 /*
@@ -590,7 +590,7 @@ void scs7_example(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_target_speed(570);
+    set_desired_speed(570);
     set_cruise_control(true);
     lever_up5();
 
@@ -598,35 +598,35 @@ void scs7_example(void **state) {
     sensor_states = start_engine_and_drive(sensor_states, 570);
     mock_and_execute(sensor_states);
 
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     const size_t granularity = 50; // Time step granularity in ms.
 
     // One second passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     // Two seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 580);
+    assert_true(get_scs_state().desired_speed == 580);
 
     // Three seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 590);
+    assert_true(get_scs_state().desired_speed == 590);
 
     // Four seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 600);
+    assert_true(get_scs_state().desired_speed == 600);
 
     lever_release();
 
     // Five seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 600);
+    assert_true(get_scs_state().desired_speed == 600);
 
     // Six seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 600);
+    assert_true(get_scs_state().desired_speed == 600);
 }
 
 /*
@@ -645,7 +645,7 @@ void scs8_example(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_target_speed(570);
+    set_desired_speed(570);
     set_cruise_control(true);
     lever_up7();
 
@@ -653,35 +653,35 @@ void scs8_example(void **state) {
     sensor_states = start_engine_and_drive(sensor_states, 570);
     mock_and_execute(sensor_states);
 
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     const size_t granularity = 50; // Time step granularity in ms.
 
     // One second passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     // Two seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 600);
+    assert_true(get_scs_state().desired_speed == 600);
 
     // Three seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 600);
+    assert_true(get_scs_state().desired_speed == 600);
 
     // Four seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 700);
+    assert_true(get_scs_state().desired_speed == 700);
 
     lever_release();
 
     // Five seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 700);
+    assert_true(get_scs_state().desired_speed == 700);
 
     // Six seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 700);
+    assert_true(get_scs_state().desired_speed == 700);
 }
 
 /*
@@ -700,7 +700,7 @@ void scs9_example(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_target_speed(570);
+    set_desired_speed(570);
     set_cruise_control(true);
     lever_down5();
 
@@ -708,35 +708,35 @@ void scs9_example(void **state) {
     sensor_states = start_engine_and_drive(sensor_states, 570);
     mock_and_execute(sensor_states);
 
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     const size_t granularity = 50; // Time step granularity in ms.
 
     // One second passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     // Two seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 560);
+    assert_true(get_scs_state().desired_speed == 560);
 
     // Three seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 550);
+    assert_true(get_scs_state().desired_speed == 550);
 
     // Four seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 540);
+    assert_true(get_scs_state().desired_speed == 540);
 
     lever_release();
 
     // Five seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 540);
+    assert_true(get_scs_state().desired_speed == 540);
 
     // Six seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 540);
+    assert_true(get_scs_state().desired_speed == 540);
 }
 
 /*
@@ -751,7 +751,7 @@ void scs10_example(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_target_speed(570);
+    set_desired_speed(570);
     set_cruise_control(true);
     lever_down7();
 
@@ -759,35 +759,35 @@ void scs10_example(void **state) {
     sensor_states = start_engine_and_drive(sensor_states, 570);
     mock_and_execute(sensor_states);
 
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     const size_t granularity = 50; // Time step granularity in ms.
 
     // One second passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 570);
+    assert_true(get_scs_state().desired_speed == 570);
 
     // Two seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 500);
+    assert_true(get_scs_state().desired_speed == 500);
 
     // Three seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 500);
+    assert_true(get_scs_state().desired_speed == 500);
 
     // Four seconds passed.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 400);
+    assert_true(get_scs_state().desired_speed == 400);
 
     lever_release();
 
     // Five seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 400);
+    assert_true(get_scs_state().desired_speed == 400);
 
     // Six seconds passed, but lever was released already.
     sensors_advance_time_and_exec(&sensor_states, 1000, granularity);
-    assert_true(get_scs_state().target_speed == 400);
+    assert_true(get_scs_state().desired_speed == 400);
 }
 
 /*
@@ -813,7 +813,7 @@ void scs11_up5(void **state) {
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().target_speed,
+    assert_int_equal(get_scs_state().desired_speed,
                      400);
 }
 
@@ -832,7 +832,7 @@ void scs11_up7(void **state) {
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().target_speed,
+    assert_int_equal(get_scs_state().desired_speed,
                      400);
 }
 
@@ -851,7 +851,7 @@ void scs11_down5(void **state) {
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().target_speed,
+    assert_int_equal(get_scs_state().desired_speed,
                      400);
 }
 
@@ -870,7 +870,7 @@ void scs11_down7(void **state) {
     sensors_advance_time_and_exec(&sensor_states, 1, 1);
 
     assert_true(!get_scs_state().cruise_control_active);
-    assert_int_equal(get_scs_state().target_speed,
+    assert_int_equal(get_scs_state().desired_speed,
                      400);
 }
 
@@ -884,7 +884,7 @@ void scs12_lever(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_target_speed(400);
+    set_desired_speed(400);
     set_cruise_control(true);
 
     lever_backward();
@@ -896,7 +896,7 @@ void scs12_speed_to_zero(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_target_speed(400);
+    set_desired_speed(400);
     set_cruise_control(true);
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -1073,7 +1073,7 @@ void scs16_brake(void **State) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
-    set_target_speed(400);
+    set_desired_speed(400);
     set_cruise_control(true);
     sensor_states = start_engine_and_drive(sensor_states, 400);
     mock_and_execute(sensor_states);

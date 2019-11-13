@@ -6,7 +6,7 @@
 
 typedef struct {
     bool cruise_control_active;
-    vehicleSpeed target_speed; // Speed the cruise control aims to keep if active.
+    vehicleSpeed desired_speed; // Speed the cruise control aims to keep if active.
     bool has_previous_desired_speed;
     vehicleSpeed previous_desired_speed; // Previously desired speed for cruise control.
     // TODO: Do we want to save the current speed in here?
@@ -28,7 +28,7 @@ void reset(void **state);
 
 void set_cruise_control(bool active);
 
-void set_target_speed(vehicleSpeed desired);
+void set_desired_speed(vehicleSpeed desired);
 
 void set_prev_desired_speed(vehicleSpeed prev);
 
