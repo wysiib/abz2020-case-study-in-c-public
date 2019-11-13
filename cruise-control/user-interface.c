@@ -44,3 +44,13 @@ void lever_backward(void) { set_cruise_control(false); }
 void brakePedal(Pedal deflection) {
     set_cruise_control(false);
 }
+
+void toggle_adaptive_cruise_control(void) {
+    cruiseControlMode current_mode = get_scs_state().mode;
+
+    if (current_mode == simple) {
+        set_scs_mode(adaptive);
+    } else {
+        set_scs_mode(simple);
+    }
+}
