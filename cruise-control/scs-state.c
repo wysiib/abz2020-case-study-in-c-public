@@ -144,6 +144,11 @@ void lever_down7_step(void) {
 //
 // Safety distance.
 //
+void set_vehicle_speed_infront(vehicleSpeed speed) {
+    assert((speed >= speed_min) && (speed <= speed_max));
+    scs.vehicle_speed_infront = speed;
+}
+
 void set_safety_distance(size_t meters) {
     assert(meters >= (size_t)0);
 

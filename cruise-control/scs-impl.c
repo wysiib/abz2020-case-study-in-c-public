@@ -190,10 +190,16 @@ void scs_do_step(void) {
 
     // Calculate safety distance
     if (last_scs.mode == adaptive) {
-        size_t mps = (size_t)last_scs.current_speed / (size_t)36;
-        size_t ms = safety_ms(last_scs.safety_dist_time);
-
-        size_t dist = (mps * ms) / (size_t) 1000;
+        float mps;
+        float ms;
+        if (last_scs.vehicle_speed_infront < (vehicleSpeed)200) {
+            mps = (float)last_scs.vehicle_speed_infront / 36.f;
+            ms = 2500.f;
+        } else {
+            mps = (float)last_scs.current_speed / 36.f;
+            ms = (float)safety_ms(last_scs.safety_dist_time);
+        }
+        size_t dist = (size_t)((mps * ms) / 1000.f);
         set_safety_distance(dist);
         last_scs.safety_dist = dist; // Update for further calculations.
     }

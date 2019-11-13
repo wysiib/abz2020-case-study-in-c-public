@@ -1126,6 +1126,7 @@ void scs20_collision_ahead(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance_time(three_secs);
+    set_vehicle_speed_infront(250);
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 30);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1142,6 +1143,7 @@ void scs20_collision_ahead_non_adaptive(void **state) {
 
     set_scs_mode(simple);
     set_safety_distance_time(three_secs);
+    set_vehicle_speed_infront(250);
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 30);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1155,7 +1157,8 @@ void scs20_no_collision_ahead(void **state) {
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
-    set_safety_distance(100);
+    set_safety_distance_time(three_secs);
+    set_vehicle_speed_infront(250);
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 120);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1177,6 +1180,7 @@ void scs21_insufficient_deceleration(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance(100);
+    set_vehicle_speed_infront(250); // TODO: incorporate this
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 1);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
@@ -1231,6 +1235,7 @@ void scs21_sufficient_deceleration(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance(100);
+    set_vehicle_speed_infront(250); // TODO: incorporate this
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 90);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
@@ -1240,6 +1245,30 @@ void scs21_sufficient_deceleration(void **state) {
 
     assert_true(!(scs.acoustic_warning.is_on));
     assert_true(!(scs.acoustic_warning.playing_sound));
+}
+
+/*
+    SCS-23: If the speed of the preceding vehicle decreases below 20 km/h, the
+    distance is set to 2.5s * currentSpeed, down to a standstill. When
+    both vehicles are standing the absolute distance is regulated to 2m.
+    When the preceding vehicle is accelerating again, the distance is set
+    to 3s * currentSpeed. This distance is valid until the vehicle speed
+    exceeds 20 km/h, independent of the user’s input via the distance
+    level (turning the cruise control lever head).
+ */
+
+void scs23_below_20kmh_two_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 13);
 }
 
 /*
@@ -1256,10 +1285,11 @@ void scs24_two_secs(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance_time(two_secs);
+    set_vehicle_speed_infront(250);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
     mock_and_execute(sensor_states);
 
-    assert_int_equal(get_scs_state().safety_dist, 54);
+    assert_int_equal(get_scs_state().safety_dist, 55);
 }
 
 void scs24_two_point_five_secs(void **state) {
@@ -1268,10 +1298,11 @@ void scs24_two_point_five_secs(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance_time(two_point_five_secs);
+    set_vehicle_speed_infront(250);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
     mock_and_execute(sensor_states);
 
-    assert_int_equal(get_scs_state().safety_dist, 67);
+    assert_int_equal(get_scs_state().safety_dist, 69);
 }
 
 void scs24_three_secs(void **state) {
@@ -1280,10 +1311,11 @@ void scs24_three_secs(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance_time(three_secs);
+    set_vehicle_speed_infront(250);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
     mock_and_execute(sensor_states);
 
-    assert_int_equal(get_scs_state().safety_dist, 81);
+    assert_int_equal(get_scs_state().safety_dist, 83);
 }
 
 /*
@@ -1297,6 +1329,7 @@ void scs25_distance_is_less(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance(100);
+    set_vehicle_speed_infront(250);
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 41);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
@@ -1311,6 +1344,7 @@ void scs25_distance_is_more(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance(100);
+    set_vehicle_speed_infront(250);
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 42);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
@@ -1330,6 +1364,7 @@ void scs26_distance_is_less(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance(100);
+    set_vehicle_speed_infront(250);
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 22);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
@@ -1344,6 +1379,7 @@ void scs26_distance_is_more(void **state) {
 
     set_scs_mode(adaptive);
     set_safety_distance(100);
+    set_vehicle_speed_infront(250);
     sensor_states = update_sensors(sensor_states, sensorRangedRadar, 23);
     sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
     sensor_states = start_engine_and_drive(sensor_states, 1000);
@@ -1442,7 +1478,8 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs21_insufficient_deceleration, reset, reset),
         unit_test_setup_teardown(scs21_sufficient_deceleration, reset, reset),
         // TODO: SCS-22
-        // TODO: SCS-23
+        // SCS-23
+        unit_test_setup_teardown(scs23_below_20kmh_two_secs, reset, reset),
         // SCS-24
         unit_test_setup_teardown(scs24_two_secs, reset, reset),
         unit_test_setup_teardown(scs24_two_point_five_secs, reset, reset),
