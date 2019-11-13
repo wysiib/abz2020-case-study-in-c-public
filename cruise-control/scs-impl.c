@@ -80,19 +80,22 @@ static inline void handle_lever_release(scs_state scs, size_t system_time) {
 
 /** Returns the safety distance in milliseconds. */
 static size_t safety_ms(safetyDistance dist) {
+    size_t ms = 0;
     switch (dist) {
     case two_secs:
-        return 2000;
+        ms = 2000;
         break;
     case two_point_five_secs:
-        return 2500;
+        ms = 2500;
         break;
     case three_secs:
-        return 3000;
+        ms = 3000;
         break;
     default:
         assert(0); // Cannot happen, enum is exhausted.
     }
+
+    return ms;
 }
 
 static bool is_max_deceleration_insufficient(scs_state scs,
@@ -100,7 +103,7 @@ static bool is_max_deceleration_insufficient(scs_state scs,
     assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
 
     float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
-    float braking_dist = (mps * mps) / (2 * -VEHICLE_MAX_DECELERATION);
+    float braking_dist = (mps * mps) / (2.f * -((float)VEHICLE_MAX_DECELERATION));
 
     bool insufficient = ((float)collision_dist < braking_dist);
 
@@ -111,7 +114,7 @@ static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) 
     assert(scs.mode == adaptive);
     assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
 
-    if (scs.safety_dist >= collision_dist) {
+    if (scs.safety_dist >= (size_t)collision_dist) {
         // Welcome to problem town!
         set_acceleration(VEHICLE_MAX_DECELERATION); // Could be smoother, but max works.
 
@@ -124,7 +127,7 @@ static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) 
 
 static inline void run_acoustic_signal(acousticSignal warning, size_t now) {
     assert(warning.is_on && warning.started_playing &&
-           (warning.start_time != 0));
+           (warning.start_time != (size_t)0));
     /* First 0.1 sec: Sound on.
        0.1--0.3 sec: Sound off.
        0.3--0.4 sec: Sound on.
@@ -204,6 +207,8 @@ void scs_do_step(void) {
             start_acoustic_signal(time);
         } else if (last_scs.acoustic_warning.is_on) {
             run_acoustic_signal(last_scs.acoustic_warning, time);
+        } else {
+            // Nothing to play.
         }
     }
 }
