@@ -150,31 +150,18 @@ void set_safety_distance(size_t meters) {
     scs.safety_dist = meters;
 }
 
-void set_visual_warning(bool on) {
-    scs.visual_warning_on = on;
-}
-
-void set_acoustic_signal(bool active) {
-    scs.acoustic_warning = (acousticSignal){0};
-    scs.acoustic_warning.is_on = active;
-    scs.acoustic_warning.started_playing = false;
-    scs.acoustic_warning.playing_sound = false;
-    scs.acoustic_warning.start_time = 0;
-}
-
 void start_acoustic_signal(size_t start_time) {
-    scs.acoustic_warning = (acousticSignal){0};
     scs.acoustic_warning.is_on = true;
     scs.acoustic_warning.started_playing = true;
     scs.acoustic_warning.playing_sound = true;
     scs.acoustic_warning.start_time = start_time;
 }
 
-void set_acoustic_warning_tone(bool on) {
-    acousticSignal *warning = &scs.acoustic_warning;
-    assert(warning->is_on && warning->started_playing);
-
-    warning->playing_sound = on;
+void reset_acoustic_signal(void) {
+    scs.acoustic_warning.is_on = false;
+    scs.acoustic_warning.started_playing = false;
+    scs.acoustic_warning.playing_sound = false;
+    scs.acoustic_warning.start_time = 0;
 }
 
 //
@@ -190,10 +177,13 @@ void set_vehicle_speed(vehicleSpeed target) {
     }
 }
 
-void visual_warning_on(void) {
-    set_visual_warning(true);
+void visual_warning(bool on) {
+    scs.visual_warning_on = on;
 }
 
-void acoustic_warning_on(void) {
-    set_acoustic_signal(true);
+void acoustic_warning(bool on) {
+    acousticSignal *warning = &scs.acoustic_warning;
+    assert(warning->is_on && warning->started_playing);
+
+    warning->playing_sound = on;
 }

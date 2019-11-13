@@ -8,8 +8,8 @@ void set_vehicle_speed(vehicleSpeed speedo);
 
 void set_brake_pressure(percentage p);
 
-void acoustic_warning_on(void);
+void acoustic_warning(bool on);
 
-void visual_warning_on(void);
+void visual_warning(bool on);
 
 #endif

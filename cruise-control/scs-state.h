@@ -71,14 +71,6 @@ void set_current_speed(vehicleSpeed speed);
 
 void set_acceleration(vehicleAcceleration);
 
-void set_visual_warning(bool on);
-
-void set_acoustic_signal(bool on);
-
-void start_acoustic_signal(size_t start_time);
-
-void set_acoustic_warning_tone(bool on);
-
 //
 // Lever handling.
 //
@@ -155,7 +147,6 @@ void lever_down7_step(void);
 
 void set_safety_distance(size_t meters);
 
-void play_acoustic_signal(size_t start_time);
-
+void start_acoustic_signal(size_t start_time);
 
 #endif

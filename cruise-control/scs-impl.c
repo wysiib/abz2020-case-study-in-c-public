@@ -98,7 +98,9 @@ static size_t safety_ms(safetyDistance dist) {
     return ms;
 }
 
-static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) {
+static inline void handle_range_radar(scs_state scs,
+                                      rangeRadar collision_dist,
+                                      size_t system_time) {
     assert(scs.mode == adaptive);
     assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
 
@@ -107,19 +109,23 @@ static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) 
         set_acceleration(VEHICLE_MAX_DECELERATION); // Could be smoother, but max works.
 
         // Check for warning signals.
-        float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
+        float mps = (float)scs.current_speed / 36.f;                        // km/h -> m/s.
         bool need_acoustic_warning = ((float)collision_dist < (mps * 0.8)); // SCS-26
         if (need_acoustic_warning && !(scs.acoustic_warning.is_on)) {
-            acoustic_warning_on();
+            start_acoustic_signal(system_time);
+        } else {
+            // Do nothing.
         }
         bool need_visual_warning = ((float)collision_dist < (mps * 1.5f)); // SCS-25
         if (need_visual_warning) {
-            visual_warning_on();
+            visual_warning(true);
+        } else {
+            visual_warning(false);
         }
     }
 }
 
-static inline void run_acoustic_signal(acousticSignal warning, size_t now) {
+static inline void run_acoustic_warning(acousticSignal warning, size_t now) {
     assert(warning.is_on && warning.started_playing &&
            (warning.start_time != (size_t)0));
     /* First 0.1 sec: Sound on.
@@ -131,13 +137,13 @@ static inline void run_acoustic_signal(acousticSignal warning, size_t now) {
     size_t play_time_ms = now - warning.start_time; // Time the signal is playing already.
 
     if (play_time_ms < (size_t)100) {
-        set_acoustic_warning_tone(true);
+        acoustic_warning(true);
     } else if (play_time_ms < (size_t)300) {
-        set_acoustic_warning_tone(false);
+        acoustic_warning(false);
     } else if (play_time_ms < (size_t)400) {
-        set_acoustic_warning_tone(true);
+        acoustic_warning(true);
     } else {
-        set_acoustic_signal(false);
+        reset_acoustic_signal();
     }
 }
 
@@ -187,7 +193,7 @@ void scs_do_step(void) {
     rangeRadar collision_dist = read_range_radar_sensor();
     if (last_scs.mode == adaptive) {
         if ((collision_dist >= distance_min) && (collision_dist <= distance_max)) {
-            handle_range_radar(last_scs, collision_dist);
+            handle_range_radar(last_scs, collision_dist, time);
         }
     }
 
@@ -200,7 +206,7 @@ void scs_do_step(void) {
             !(current_scs.acoustic_warning.started_playing)) {
             start_acoustic_signal(time);
         } else if (last_scs.acoustic_warning.is_on) {
-            run_acoustic_signal(last_scs.acoustic_warning, time);
+            run_acoustic_warning(last_scs.acoustic_warning, time);
         } else {
             // Nothing to play.
         }
