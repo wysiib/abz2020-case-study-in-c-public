@@ -1242,6 +1242,39 @@ void scs21_sufficient_deceleration(void **state) {
     assert_true(!(scs.acoustic_warning.playing_sound));
 }
 
+/*
+    SCS-26: An acoustic alarm is activated if the actual distance is less than
+    (current speed/3.6) * 0.8.
+*/
+
+void scs26_distance_is_less(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 22);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().acoustic_warning.is_on);
+}
+
+void scs26_distance_is_more(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 23);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_true(!(get_scs_state().acoustic_warning.is_on));
+}
+
 //
 //
 //
@@ -1337,7 +1370,9 @@ int main(int argc, char *argv[]) {
 
         // Distance warning:
         // TODO: SCS-25
-        // TODO: SCS-26
+        // SCS-26
+        unit_test_setup_teardown(scs26_distance_is_less, reset, reset),
+        unit_test_setup_teardown(scs26_distance_is_more, reset, reset),
 
         // Emergency Brake Assistant:
         // TODO: SCS-27

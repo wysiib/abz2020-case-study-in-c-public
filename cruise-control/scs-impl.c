@@ -103,9 +103,12 @@ static bool is_max_deceleration_insufficient(scs_state scs,
     assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
 
     float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
-    float braking_dist = (mps * mps) / (2.f * -((float)VEHICLE_MAX_DECELERATION));
 
-    bool insufficient = ((float)collision_dist < braking_dist);
+    // assert(VEHICLE_MAX_DECELERATION == (vehicleAcceleration)-5);
+    // float braking_dist = (mps * mps) / (2.f * 5.f); // 5.f is max deceleration
+    float warning_free_dist = mps * 0.8; // SCS-26
+
+    bool insufficient = ((float)collision_dist < warning_free_dist);
 
     return insufficient;
 }
