@@ -168,6 +168,15 @@ static void set_blinkers_on(size_t time) {
     blinking = true;
 }
 
+void hb_motor(vehicleSpeed speed) {
+    set_high_beam_motor(7);
+}
+
+void hb_range(vehicleSpeed speed) {
+    // formula for high beam range as given on case study webpage
+    return (7*speed + 60)/9;
+}
+
 void light_loop(void) {
     // used as the verification target for CBMC
     while(true) {
@@ -195,7 +204,6 @@ void light_do_step(void) {
     sensorState camera = get_camera_state();
     (void) camera;
     vehicleSpeed speedo = get_current_speed();
-    (void) speedo;
 
     update_ambient_light_status(last_key_state, ks,
                                last_all_door_closed, all_doors_closed,
@@ -385,8 +393,8 @@ void light_do_step(void) {
     // ELS-31
     if(get_pitman_horizontal() == pa_Backward) {
         set_high_beam(1);
-        set_high_beam_motor(7);
-        set_high_beam_range(100);
+        hb_motor(speedo);
+        hb_range(speedo);
     }
 
     // ELS-41: reverse gear
