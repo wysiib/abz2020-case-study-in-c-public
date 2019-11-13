@@ -1841,6 +1841,7 @@ void els33_34_35(void **state) {
     sensor_states = update_sensors(sensor_states, sensorCameraState, Ready);
     sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, false);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1800);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 90);
 
     mock_and_execute(sensor_states);
 
@@ -1849,7 +1850,7 @@ void els33_34_35(void **state) {
     mock_and_execute(sensor_states);
 
 
-    progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11 /* ? */);
+    progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11);
 
     /* ELS-34 */
     sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, true);
