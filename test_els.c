@@ -1905,6 +1905,7 @@ void els36(void **state) {
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, true);
     sensor_states = update_sensors(sensor_states, sensorCameraState, Ready);
     sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, false);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 90);
 
     mock_and_execute(sensor_states);
 
@@ -2020,6 +2021,7 @@ void els38(void **state) {
     sensor_states = update_sensors(sensor_states, sensorCameraState, Ready);
     sensor_states = update_sensors(sensor_states, sensorOncommingTraffic, false);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 1800);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 90);
 
     mock_and_execute(sensor_states);
 

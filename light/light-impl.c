@@ -168,13 +168,51 @@ static void set_blinkers_on(size_t time) {
     blinking = true;
 }
 
-void hb_motor(vehicleSpeed speed) {
-    set_high_beam_motor(7);
+void hb_motor(sensorState camera, vehicleSpeed speed, bool undervoltage) {
+    // has to be implemented as staircase function, see testcase / article
+    int motor = 0;
+    if(speed < 316) {
+        motor = 0;
+    } else if(316 <= speed && speed < 658) {
+        motor = 1;
+    } else if(658 <= speed && speed < 860) {
+        motor = 2;
+    } else if(860 <= speed && speed < 1016) {
+        motor = 3;
+    } else if(1016 <= speed && speed < 1148) {
+        motor = 4;
+    } else if(1148 <= speed && speed < 1264) {
+        motor = 5;
+    } else if(1264 <= speed && speed < 1368) {
+        motor = 6;
+    } else if(1368 <= speed && speed < 1463) {
+        motor = 7;
+    } else if(1463 <= speed && speed < 1552) {
+        motor = 8;
+    } else if(1552 <= speed && speed < 1635) {
+        motor = 9;
+    } else if(1635 <= speed && speed < 1713) {
+        motor = 10;
+    } else {
+        motor = 11;
+    }
+
+    if(camera != Ready || undervoltage) {
+        motor = 7;
+    }
+    set_high_beam_motor(motor);
 }
 
-void hb_range(vehicleSpeed speed) {
+void hb_range(sensorState camera, vehicleSpeed speed, bool undervoltage) {
     // formula for high beam range as given on case study webpage
-    return (7*speed + 60)/9;
+    int range = (7*speed/10 + 60)/9;
+    if(range > 100) {
+        range = 100;
+    }
+    if(camera != Ready || undervoltage) {
+        range = 100;
+    }
+    set_high_beam_range(range);
 }
 
 void light_loop(void) {
@@ -202,7 +240,6 @@ void light_do_step(void) {
     size_t tt = get_time();
 
     sensorState camera = get_camera_state();
-    (void) camera;
     vehicleSpeed speedo = get_current_speed();
 
     update_ambient_light_status(last_key_state, ks,
@@ -385,16 +422,24 @@ void light_do_step(void) {
     // ELS-30
     if(get_pitman_horizontal() == pa_Forward && !undervoltage) {
         set_high_beam(1);
+        hb_motor(camera, speedo, undervoltage);
+        hb_range(camera, speedo, undervoltage);
     }
     if(get_pitman_horizontal() == pa_fb_Neutral) {
         set_high_beam(0);
     }
 
     // ELS-31
-    if(get_pitman_horizontal() == pa_Backward) {
+    if(get_pitman_horizontal() == pa_Backward && get_light_rotary_switch() == lrs_on) {
         set_high_beam(1);
-        hb_motor(speedo);
-        hb_range(speedo);
+        set_high_beam_range(100);
+        set_high_beam_motor(7);
+    }
+    // ELS-32
+    if(get_pitman_horizontal() == pa_Backward && get_light_rotary_switch() == lrs_auto) {
+        set_high_beam(1);
+        hb_motor(camera, speedo, undervoltage);
+        hb_range(camera, speedo, undervoltage);
     }
 
     // ELS-41: reverse gear
