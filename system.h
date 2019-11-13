@@ -39,5 +39,7 @@ bool get_daytime_running_light(void);
 
 bool get_ambient_light(void);
 
+// for cmbc assertions
+#define implies(x,y) (!(x) || (y))
 
 #endif

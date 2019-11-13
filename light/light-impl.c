@@ -228,10 +228,6 @@ void light_loop(void) {
     // used as the verification target for CBMC
     while(true) {
         light_do_step();
-
-        // assertions for cbmc to verify, i.e. invariants!
-        // ELS-6: USA => light dimmed
-        // assert(get_light_state().blinkLeft == 0);
     }
 }
 
@@ -464,4 +460,8 @@ void light_do_step(void) {
     last_key_state = ks;
     last_all_door_closed = all_doors_closed;
     last_pitman_arm = get_pitman_vertical();
+
+    // assertions for cbmc to verify, i.e. invariants!
+    // ELS-22: low beam => trail lights
+    //assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0));
 }
