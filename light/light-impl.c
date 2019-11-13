@@ -8,6 +8,8 @@
 #include "light-state.h"
 #include "light-impl.h"
 
+#include "../cruise-control/sensors.h"
+
 static size_t when_light_on = 0;
 
 static bool last_engine = 0;
@@ -138,7 +140,7 @@ static void set_blinkers_on(size_t time) {
             assert(0);
             break;
     }
-       
+
     if((get_market_code() == USA) || (get_market_code() == Canada)) {
         switch(blinking_direction) {
             case blink_left:
@@ -217,7 +219,7 @@ void hb_range(sensorState camera, vehicleSpeed speed, bool undervoltage, bool tr
     if(traffic) {
         range = 30;
     }
-    
+
     if(camera != Ready || undervoltage) {
         range = 100;
     }
@@ -240,6 +242,8 @@ void light_do_step(void) {
     bool undervoltage = (voltage_battery <= (voltage) 85);
     steeringAngle angle = get_steering_angle();
     bool oncomming_trafic = get_oncoming_traffic();
+    (void)get_range_radar_state();
+    (void)read_range_radar_sensor();
 
     brightness bb = get_brightness();
     size_t tt = get_time();
@@ -404,7 +408,7 @@ void light_do_step(void) {
     if(((tt - blink_timer) >= (size_t) 333) && blinking && (blinking_direction == hazard) && (ks == NoKeyInserted)) {
         set_blinkers_off(tt);
     }
-    
+
     // default: 500ms pulse for non-hazard
     if(((tt - blink_timer) >= (size_t) 500) && remaining_blinks && !blinking && (blinking_direction != hazard)) {
         set_blinkers_on(tt);
@@ -454,7 +458,7 @@ void light_do_step(void) {
     if(!reverse_gear) {
         set_reverse_light(0);
     }
-    
+
     last_lrs = get_light_rotary_switch();
     last_engine = engine_on;
     last_key_state = ks;
