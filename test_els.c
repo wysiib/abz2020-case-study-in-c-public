@@ -1035,7 +1035,7 @@ void els19b(void **state) {
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
-    //test ambilight activates light when key state change to insert
+    //test ambilight does not activate light when key state change to insert
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
@@ -1050,8 +1050,7 @@ void els19b(void **state) {
     sensor_states = update_sensors(sensor_states, sensorEngineOn, false);
     mock_and_execute(sensor_states);
 
-    assert_true(get_light_state().lowBeamLeft>0);
-    assert_true(get_light_state().lowBeamRight>0);
+    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0); // ambilight will NOT *turn on* light
 
     sensor_states = update_sensors(sensor_states, sensorTime, 32001);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
@@ -1075,7 +1074,6 @@ void els19c(void **state) {
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
     set_light_rotary_switch(lrs_auto);
-    set_light_rotary_switch(lrs_on);
     mock_and_execute(sensor_states);
 
     assert_true(get_light_state().lowBeamLeft>0);
@@ -1198,11 +1196,12 @@ void els19f(void **state) {
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     //test delayed ambilight activates light
-    //(open-door => active light) -> (31s wait => light off) -> (pull out key => active light)
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 199);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
+    set_light_rotary_switch(lrs_auto);
+
     mock_and_execute(sensor_states);
 
     assert_true(get_light_state().lowBeamLeft>0);
@@ -1227,19 +1226,13 @@ void els19f(void **state) {
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
 
-    sensor_states = update_sensors(sensor_states, sensorTime, 34000);
-    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
-    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, false);
-    mock_and_execute(sensor_states);
-    assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
-
-    sensor_states = update_sensors(sensor_states, sensorTime, 35000);
+    sensor_states = update_sensors(sensor_states, sensorTime, 33000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
 
-    sensor_states = update_sensors(sensor_states, sensorTime, 65000);
+    sensor_states = update_sensors(sensor_states, sensorTime, 63000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 999);
     mock_and_execute(sensor_states);
     assert_partial_state2(lowBeamLeft,percentage_high,lowBeamRight,percentage_high);
