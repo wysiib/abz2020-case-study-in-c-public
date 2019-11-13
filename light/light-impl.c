@@ -185,6 +185,7 @@ void light_do_step(void) {
     bool all_doors_closed = get_all_doors_closed();
     bool reverse_gear = get_reverse_gear();
     voltage voltage_battery = get_voltage_battery();
+    bool undervoltage = (voltage_battery <= (voltage) 85);
     steeringAngle angle = get_steering_angle();
     bool oncomming_trafic = get_oncoming_traffic();
 
@@ -230,7 +231,7 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
-    if ((ks != KeyInIgnitionOnPosition) && (get_light_rotary_switch() != lrs_auto) && (voltage_battery >= (voltage) 85)) {
+    if ((ks != KeyInIgnitionOnPosition) && (get_light_rotary_switch() != lrs_auto) && !undervoltage) {
         if (get_pitman_vertical() == pa_Downward7) {
             set_low_beam_left(10);
             set_tail_lamp_left(10);
@@ -374,7 +375,7 @@ void light_do_step(void) {
     }
 
     // ELS-30
-    if(get_pitman_horizontal() == pa_Forward) {
+    if(get_pitman_horizontal() == pa_Forward && !undervoltage) {
         set_high_beam(1);
     }
     if(get_pitman_horizontal() == pa_fb_Neutral) {
