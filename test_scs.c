@@ -1171,6 +1171,77 @@ void scs20_no_collision_ahead(void **state) {
     and by this demands to intervene.
 */
 
+void scs21_insufficient_deceleration(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 1);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+
+    scs_state scs;
+
+    // Play sound for 0.1 sec.
+    for (size_t time = 1000;
+         time < 1100;
+         ++time) {
+        sensor_states = update_sensors(sensor_states, sensorTime, time);
+        mock_and_execute(sensor_states);
+        scs = get_scs_state();
+        assert_true(scs.acoustic_warning.is_on);
+        assert_true(scs.acoustic_warning.playing_sound);
+    }
+
+    // Pause sound for 0.2 sec.
+    for (size_t time = 1100;
+         time < 1300;
+         ++time) {
+        sensor_states = update_sensors(sensor_states, sensorTime, time);
+        mock_and_execute(sensor_states);
+        scs = get_scs_state();
+        assert_true(scs.acoustic_warning.is_on);
+        assert_true(!(scs.acoustic_warning.playing_sound));
+    }
+
+    // Play sound again for 0.1 sec.
+    for (size_t time = 1300;
+         time < 1400;
+         ++time) {
+        sensor_states = update_sensors(sensor_states, sensorTime, time);
+        mock_and_execute(sensor_states);
+    scs = get_scs_state();
+        assert_true(scs.acoustic_warning.is_on);
+        assert_true(scs.acoustic_warning.playing_sound);
+    }
+
+    // No warning anymore after it played.
+    sensor_states = update_sensors(sensor_states, sensorTime, 1400);
+    mock_and_execute(sensor_states);
+    scs = get_scs_state();
+
+    assert_true(!(scs.acoustic_warning.is_on));
+    assert_true(!(scs.acoustic_warning.playing_sound));
+}
+
+void scs21_sufficient_deceleration(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance(100);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 90);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    scs_state scs = get_scs_state();
+
+    assert_true(!(scs.acoustic_warning.is_on));
+    assert_true(!(scs.acoustic_warning.playing_sound));
+}
+
 //
 //
 //
@@ -1257,7 +1328,9 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs20_collision_ahead, reset, reset),
         unit_test_setup_teardown(scs20_collision_ahead_non_adaptive, reset, reset),
         unit_test_setup_teardown(scs20_no_collision_ahead, reset, reset),
-        // TODO: SCS-21
+        // SCS-21
+        unit_test_setup_teardown(scs21_insufficient_deceleration, reset, reset),
+        unit_test_setup_teardown(scs21_sufficient_deceleration, reset, reset),
         // TODO: SCS-22
         // TODO: SCS-23
         // TODO: SCS-24

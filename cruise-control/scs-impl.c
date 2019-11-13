@@ -94,6 +94,19 @@ static size_t safety_ms(safetyDistance dist) {
         assert(0); // Cannot happen, enum is exhausted.
     }
 }
+
+static bool is_max_deceleration_insufficient(scs_state scs,
+                                             rangeRadar collision_dist) {
+    assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
+
+    float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
+    float braking_dist = (mps * mps) / (2 * -VEHICLE_MAX_DECELERATION);
+
+    bool insufficient = ((float)collision_dist < braking_dist);
+
+    return insufficient;
+}
+
 static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) {
     assert(scs.mode == adaptive);
     assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
@@ -101,12 +114,38 @@ static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) 
     if (scs.safety_dist >= collision_dist) {
         // Welcome to problem town!
         set_acceleration(VEHICLE_MAX_DECELERATION); // Could be smoother, but max works.
+
+        if (is_max_deceleration_insufficient(scs, collision_dist) &&
+            !(scs.acoustic_warning.is_on)) {
+            acoustic_warning_on();
+        }
+    }
+}
+
+static inline void run_acoustic_signal(acousticSignal warning, size_t now) {
+    assert(warning.is_on && warning.started_playing &&
+           (warning.start_time != 0));
+    /* First 0.1 sec: Sound on.
+       0.1--0.3 sec: Sound off.
+       0.3--0.4 sec: Sound on.
+       >0.4 sec: Warning off.
+     */
+
+    size_t play_time_ms = now - warning.start_time; // Time the signal is playing already.
+
+    if (play_time_ms < (size_t)100) {
+        set_acoustic_warning_tone(true);
+    } else if (play_time_ms < (size_t)300) {
+        set_acoustic_warning_tone(false);
+    } else if (play_time_ms < (size_t)400) {
+        set_acoustic_warning_tone(true);
+    } else {
+        set_acoustic_signal(false);
     }
 }
 
 void scs_do_step(void) {
     size_t time = get_time();
-    scs_state last_scs = get_scs_state();
 
     // Mock calls are required.
     (void)get_brightness();
@@ -127,6 +166,8 @@ void scs_do_step(void) {
 
     // Note: Speed not actually a sensor in SCS specification.
     set_current_speed(get_current_speed());
+
+    scs_state last_scs = get_scs_state();
 
     // directional lever logic
     if (last_scs.lever_pos != scs_Neutral) {
@@ -150,6 +191,19 @@ void scs_do_step(void) {
     if (last_scs.mode == adaptive) {
         if ((collision_dist >= distance_min) && (collision_dist <= distance_max)) {
             handle_range_radar(last_scs, collision_dist);
+        }
+    }
+
+    // Acoustic signal
+    if (last_scs.mode == adaptive) {
+        // Might be the signal only started playing in this frame.
+        // Query SCS again.
+        scs_state current_scs = get_scs_state();
+        if (current_scs.acoustic_warning.is_on &&
+            !(current_scs.acoustic_warning.started_playing)) {
+            start_acoustic_signal(time);
+        } else if (last_scs.acoustic_warning.is_on) {
+            run_acoustic_signal(last_scs.acoustic_warning, time);
         }
     }
 }

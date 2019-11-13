@@ -150,6 +150,29 @@ void set_safety_distance(size_t meters) {
     scs.safety_dist = meters;
 }
 
+void set_acoustic_signal(bool active) {
+    scs.acoustic_warning = (acousticSignal){0};
+    scs.acoustic_warning.is_on = active;
+    scs.acoustic_warning.started_playing = false;
+    scs.acoustic_warning.playing_sound = false;
+    scs.acoustic_warning.start_time = 0;
+}
+
+void start_acoustic_signal(size_t start_time) {
+    scs.acoustic_warning = (acousticSignal){0};
+    scs.acoustic_warning.is_on = true;
+    scs.acoustic_warning.started_playing = true;
+    scs.acoustic_warning.playing_sound = true;
+    scs.acoustic_warning.start_time = start_time;
+}
+
+void set_acoustic_warning_tone(bool on) {
+    acousticSignal *warning = &scs.acoustic_warning;
+    assert(warning->is_on && warning->started_playing);
+
+    warning->playing_sound = on;
+}
+
 //
 // Actuators
 //
@@ -161,4 +184,8 @@ void set_vehicle_speed(vehicleSpeed target) {
     if (target == speed_min) {
         set_cruise_control(false);
     }
+}
+
+void acoustic_warning_on(void) {
+    set_acoustic_signal(true);
 }
