@@ -11,6 +11,6 @@ C ELS tests: 4h
 C test refactoring: 2h
 CBMC try-outs: 1h + 1h
 C further implementation ELS + fix tests: 11h
-C SCS tests and implementation: 9h
+C SCS tests and implementation: 13h
 C SCS tests refactor: 1h
 C SCS refactor: 1h
