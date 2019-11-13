@@ -23,7 +23,7 @@ void scs_do_step(void) {
     // The two systems are not cleanly divided in the first place, as
     // for instance test_common.c is directly dependend on the light subsystem,
     // which does not really make sense for a common test suit usable by
-    // any subsystem. 🤷‍
+    // any subsystem.
 }
 
 void sequence1(void **state) {
