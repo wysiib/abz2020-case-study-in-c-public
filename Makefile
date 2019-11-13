@@ -26,10 +26,10 @@ clean:
 	rm -f test1
 
 cbmc_light:
-	cbmc light/*.c --function light_loop
+	cbmc light/*.c --unwind 20 --unwinding-assertions --function light_loop
 
 cbmc_light_step:
-	cbmc light/*.c --function light_do_step
+	cbmc light/*.c --unwind 20 --unwinding-assertions --function light_do_step
 
 .Phony: all
 all: clean test
