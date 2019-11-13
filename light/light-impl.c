@@ -281,7 +281,7 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
-    if ((ks != KeyInIgnitionOnPosition) && (get_light_rotary_switch() != lrs_auto) && !undervoltage) {
+    if ((ks != KeyInIgnitionOnPosition) && (get_light_rotary_switch() == lrs_on) && !undervoltage) {
         if (get_pitman_vertical() == pa_Downward7) {
             set_low_beam_left(10);
             set_tail_lamp_left(10);

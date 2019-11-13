@@ -1849,6 +1849,7 @@ void els28_left(void **state) {
     sensors_and_time sensor_states = {0};
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 90);
     mock_and_execute(sensor_states);
 
     set_light_rotary_switch(lrs_auto);
@@ -1865,6 +1866,7 @@ void els28_right(void **state) {
     sensors_and_time sensor_states = {0};
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 90);
     mock_and_execute(sensor_states);
 
     set_light_rotary_switch(lrs_auto);
@@ -1873,7 +1875,7 @@ void els28_right(void **state) {
     pitman_vertical(pa_Upward7);
     mock_and_execute(sensor_states);
 
-    progress_time_partial4(1000, 5000, lowBeamLeft, 10, lowBeamRight, 0, tailLampLeft, 10, tailLampRight, 0);
+    progress_time_partial4(1000, 5000, lowBeamLeft, 0, lowBeamRight, 10, tailLampLeft, 0, tailLampRight, 10);
 }
 
 void els30(void **state) {
