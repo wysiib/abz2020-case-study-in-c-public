@@ -98,21 +98,6 @@ static size_t safety_ms(safetyDistance dist) {
     return ms;
 }
 
-static bool is_max_deceleration_insufficient(scs_state scs,
-                                             rangeRadar collision_dist) {
-    assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
-
-    float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
-
-    // assert(VEHICLE_MAX_DECELERATION == (vehicleAcceleration)-5);
-    // float braking_dist = (mps * mps) / (2.f * 5.f); // 5.f is max deceleration
-    float warning_free_dist = mps * 0.8; // SCS-26
-
-    bool insufficient = ((float)collision_dist < warning_free_dist);
-
-    return insufficient;
-}
-
 static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) {
     assert(scs.mode == adaptive);
     assert((collision_dist >= distance_min) && (collision_dist <= distance_max));
@@ -121,8 +106,10 @@ static inline void handle_range_radar(scs_state scs, rangeRadar collision_dist) 
         // Welcome to problem town!
         set_acceleration(VEHICLE_MAX_DECELERATION); // Could be smoother, but max works.
 
-        if (is_max_deceleration_insufficient(scs, collision_dist) &&
-            !(scs.acoustic_warning.is_on)) {
+        // Check for warning signals.
+        float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
+        bool need_acoustic_warning = ((float)collision_dist < (mps * 0.8)); // SCS-26
+        if (need_acoustic_warning && !(scs.acoustic_warning.is_on)) {
             acoustic_warning_on();
         }
     }
