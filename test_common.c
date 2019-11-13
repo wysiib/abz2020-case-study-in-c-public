@@ -61,6 +61,14 @@ vehicleSpeed get_current_speed(void) {
     return (vehicleSpeed) mock();
 }
 
+sensorState get_range_radar_state(void) {
+    return (sensorState) mock();
+}
+
+rangeRadar read_range_radar_sensor(void) {
+    return (rangeRadar) mock();
+}
+
 sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key, int value) {
     switch (key) {
         case sensorKeyState:
@@ -107,6 +115,15 @@ sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
             assert(value >= speed_min && value <= speed_max);
             data.current_speed = (vehicleSpeed) value;
             break;
+        case sensorRangedRadar:
+            assert((value >= nothing_detected && value <= distance_max) ||
+                   (value == faulty));
+            data.range_radar_distance = (rangeRadar) value;
+            break;
+        case sensorRangedRadarState:
+            assert((value == Ready) || (value == NotReady) || (value == Dirty));
+            data.range_radar_state = (sensorState) value;
+            break;
         default: assert(0);
     }
     return data;
@@ -124,6 +141,8 @@ void mock_all_sensors(sensors_and_time data) {
     will_return(get_oncoming_traffic, data.oncomming_trafic);
     will_return(get_camera_state, data.camera_state);
     will_return(get_current_speed, data.current_speed);
+    will_return(get_range_radar_state, data.range_radar_state);
+    will_return(read_range_radar_sensor, data.range_radar_distance);
 }
 
 void mock_and_execute(sensors_and_time data) {

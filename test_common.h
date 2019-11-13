@@ -6,6 +6,8 @@
 #include "light/light-state.h"
 #include "light/sensors.h"
 
+#include "cruise-control/sensors.h"
+
 brightness get_brightness(void);
 
 keyState get_key_status(void);
@@ -36,6 +38,8 @@ typedef enum sensors_and_time_key {
     sensorTime,
     sensorCameraState,
     sensorCurrentSpeed,
+    sensorRangedRadar,
+    sensorRangedRadarState
 } sensors_and_time_key;
 
 typedef struct sensors_and_time {
@@ -50,6 +54,8 @@ typedef struct sensors_and_time {
     size_t time;
     sensorState camera_state;
     vehicleSpeed current_speed;
+    sensorState range_radar_state;
+    rangeRadar range_radar_distance;
 } sensors_and_time;
 
 sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,

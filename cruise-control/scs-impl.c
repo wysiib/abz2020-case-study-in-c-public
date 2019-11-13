@@ -90,6 +90,8 @@ void scs_do_step(void) {
     (void)get_steering_angle();
     (void)get_oncoming_traffic();
     (void)get_camera_state();
+    (void)get_range_radar_state();
+    (void)read_range_radar_sensor();
 
     int engine_on = get_engine_status();
     if (!engine_on) {
