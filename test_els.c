@@ -759,13 +759,16 @@ void els16conflict17b(void **state) {
     mock_and_execute(sensor_states);
 
     set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
 
     mock_and_execute(sensor_states);
 
     assert_true(get_light_state().lowBeamLeft>0);
     assert_true(get_light_state().lowBeamRight>0);
 
+    set_light_rotary_switch(lrs_auto);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     mock_and_execute(sensor_states);
 
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
