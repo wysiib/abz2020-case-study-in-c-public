@@ -1356,6 +1356,100 @@ void els21(void **state) {
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
 }
 
+void els23_left_a(void **state) {
+    // precedence direction blinking over tail lights
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+    assert_partial_state2(tailLampLeft, 100, tailLampRight, 100); // tail lamps activated
+
+    pitman_vertical(pa_Downward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    int i;
+    for (i = 1; i < 10; i++) {
+        progress_time_partial2(i * 1000,       i * 1000 + 499, tailLampLeft, 100, tailLampRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, tailLampLeft, 0, tailLampRight, 100);
+    }
+}
+
+void els23_right_a(void **state) {
+    // precedence direction blinking over tail lights
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+    assert_partial_state2(tailLampLeft, 100, tailLampRight, 100); // tail lamps activated
+
+    pitman_vertical(pa_Upward7); // direction blinking requested
+    mock_and_execute(sensor_states);
+
+    int i;
+    for (i = 1; i < 10; i++) {
+        progress_time_partial2(i * 1000,       i * 1000 + 499, tailLampLeft, 100, tailLampRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, tailLampLeft, 100, tailLampRight, 0);
+    }
+}
+
+void els23_b(void **state) {
+    // precedence hazard lights over tail lights
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    // ignition: key inserted + ignition on
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    //mock_and_execute(sensor_states);
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    mock_and_execute(sensor_states);
+
+    assert_partial_state2(lowBeamLeft, 100, lowBeamRight, 100); // low beam activated
+    assert_partial_state2(tailLampLeft, 100, tailLampRight, 100); // tail lamps activated
+
+    toggle_hazard_warning();
+    mock_and_execute(sensor_states);
+
+    int i;
+    for (i = 1; i < 10; i++) {
+        progress_time_partial2(i * 1000,       i * 1000 + 499, tailLampLeft, 100, tailLampRight, 100);
+        progress_time_partial2(i * 1000 + 500, i * 1000 + 999, tailLampLeft, 0, tailLampRight, 0);
+    }
+}
+
+
 void els24_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -2313,7 +2407,10 @@ int main(int argc, char* argv[]) {
         // NOTE: ELS-20 is deleted
         unit_test_setup_teardown(els21, reset, reset),
         // TODO: ELS-22
-        // TODO: ELS-23
+        unit_test_setup_teardown(els23_left_a, reset, reset),
+        unit_test_setup_teardown(els23_right_a, reset, reset),
+        unit_test_setup_teardown(els23_b, reset, reset),
+        /* TODO: ELS-23: does tip blinking have precedence over tail lights? */
         unit_test_setup_teardown(els24_left, reset, reset),
         unit_test_setup_teardown(els24_right, reset, reset),
         unit_test_setup_teardown(els25_left, reset, reset),
