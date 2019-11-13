@@ -2028,7 +2028,7 @@ void els38(void **state) {
     mock_and_execute(sensor_states);
 
 
-    progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11 /* ? */);
+    progress_time_partial3(3000, 6000, highBeamOn, true, highBeamRange, 100, highBeamMotor, 11);
 
     pitman_horizontal(pa_fb_Neutral);
     mock_and_execute(sensor_states);
