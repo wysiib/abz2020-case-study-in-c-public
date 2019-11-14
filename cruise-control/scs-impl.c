@@ -193,8 +193,13 @@ void scs_do_step(void) {
         float mps;
         float ms;
         if (last_scs.vehicle_speed_infront < (vehicleSpeed)200) {
+            // SCS-23
             mps = (float)last_scs.vehicle_speed_infront / 36.f;
-            ms = 2500.f;
+            if (last_scs.vehicle_acceleration_infront <= 0) { // Not accelerating.
+                ms = 2500.f;
+            } else {
+                ms = 3000.f;
+            }
         } else {
             mps = (float)last_scs.current_speed / 36.f;
             ms = (float)safety_ms(last_scs.safety_dist_time);

@@ -42,6 +42,7 @@ typedef struct {
     bool lever_continuous; // If true, lever is held continuously -> alter speeds accordingly.
 
     vehicleSpeed vehicle_speed_infront;
+    vehicleAcceleration vehicle_acceleration_infront;
 
     size_t safety_dist; // Safety distance to keep in meters. TODO: needs to be calculated
     safetyDistance safety_dist_time;
@@ -149,6 +150,8 @@ void lever_down7_step(void);
 //
 
 void set_vehicle_speed_infront(vehicleSpeed speed);
+
+void set_vehicle_acceleration_infront(vehicleAcceleration acceleration);
 
 void set_safety_distance(size_t meters);
 

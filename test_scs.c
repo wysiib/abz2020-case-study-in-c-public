@@ -1271,6 +1271,124 @@ void scs23_below_20kmh_two_secs(void **state) {
     assert_int_equal(get_scs_state().safety_dist, 13);
 }
 
+void scs23_below_20kmh_two_point_five_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_point_five_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 13);
+}
+
+void scs23_below_20kmh_three_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(three_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 13);
+}
+
+void scs23_below_20kmh_decelerating_two_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    set_vehicle_acceleration_infront(-2);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 13);
+}
+
+void scs23_below_20kmh_decelerating_two_point_five_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_point_five_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    set_vehicle_acceleration_infront(-2);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 13);
+}
+
+void scs23_below_20kmh_decelerating_three_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(three_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    set_vehicle_acceleration_infront(-2);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 13);
+}
+
+void scs23_below_20kmh_accelerating_two_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    set_vehicle_acceleration_infront(2);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 15);
+}
+
+void scs23_below_20kmh_accelerating_two_point_five_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_point_five_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    set_vehicle_acceleration_infront(2);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 15);
+}
+
+void scs23_below_20kmh_accelerating_three_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(three_secs); // Should not matter
+
+    set_vehicle_speed_infront(190);
+    set_vehicle_acceleration_infront(2);
+    sensor_states = start_engine_and_drive(sensor_states, 300);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 15);
+}
+
 /*
     SCS-24: By turning the cruise control lever head, the distance to be
     maintained to the vehicle ahead can be selected. Three levels are available:
@@ -1278,6 +1396,19 @@ void scs23_below_20kmh_two_secs(void **state) {
     within the velocity window > 20 km/h. Below this level, the system
     autonomously sets the distance according to Req. SCS-23.
  */
+
+void scs24_20kmh_two_secs(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_safety_distance_time(two_secs);
+    set_vehicle_speed_infront(200);
+    sensor_states = start_engine_and_drive(sensor_states, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().safety_dist, 55);
+}
 
 void scs24_two_secs(void **state) {
     init_system(leftHand, false, EU, false, false);
@@ -1480,8 +1611,17 @@ int main(int argc, char *argv[]) {
         // TODO: SCS-22
         // SCS-23
         unit_test_setup_teardown(scs23_below_20kmh_two_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_two_point_five_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_three_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_decelerating_two_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_decelerating_two_point_five_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_decelerating_three_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_accelerating_two_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_accelerating_two_point_five_secs, reset, reset),
+        unit_test_setup_teardown(scs23_below_20kmh_accelerating_three_secs, reset, reset),
         // SCS-24
         unit_test_setup_teardown(scs24_two_secs, reset, reset),
+        unit_test_setup_teardown(scs24_20kmh_two_secs, reset, reset),
         unit_test_setup_teardown(scs24_two_point_five_secs, reset, reset),
         unit_test_setup_teardown(scs24_three_secs, reset, reset),
 

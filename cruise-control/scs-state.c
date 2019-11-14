@@ -149,6 +149,10 @@ void set_vehicle_speed_infront(vehicleSpeed speed) {
     scs.vehicle_speed_infront = speed;
 }
 
+void set_vehicle_acceleration_infront(vehicleAcceleration acceleration) {
+    scs.vehicle_acceleration_infront = acceleration;
+}
+
 void set_safety_distance(size_t meters) {
     assert(meters >= (size_t)0);
 
