@@ -210,8 +210,8 @@ static inline void handle_brake_assist(scs_state scs,
                                        size_t system_time) {
     assert(scs.brake_assistant_available);
     float mps = meters_per_sec(scs.current_speed);
-    size_t standstill_ms = seconds_to_standstill(mps) * 1000;
-    size_t collision_ms = seconds_to_collision(mps, collision_dist) * 1000;
+    size_t standstill_ms = seconds_to_standstill(mps) * (size_t)1000;
+    size_t collision_ms = seconds_to_collision(mps, collision_dist) * (size_t)1000;
 
     if (collision_ms <= standstill_ms) { // exact seconds case
         brake_pressure(100);
@@ -323,9 +323,11 @@ void scs_do_step(void) {
     // Brake assistant.
     if ((collision_dist >= distance_min) && (collision_dist <= distance_max)) {
         // SCS-27
-        if (last_scs.vehicle_speed_infront == 0 && current_speed <= 600) {
+        if ((last_scs.vehicle_speed_infront == (vehicleSpeed)0) &&
+            (current_speed <= (vehicleSpeed)600)) {
             brake_assistant_available(true);
-        } else if (last_scs.vehicle_speed_infront > 0 && current_speed <= 1200) {
+        } else if ((last_scs.vehicle_speed_infront > (vehicleSpeed)0) &&
+                   (current_speed <= (vehicleSpeed)1200)) {
             brake_assistant_available(true);
         } else {
             // NOTE: This case is actually not specified, and I do not see a reason
