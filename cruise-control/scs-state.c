@@ -43,6 +43,11 @@ void reset_prev_desired_speed(void) {
     scs.previous_desired_speed = 0;
 }
 
+void set_target_speed(vehicleSpeed speed) {
+    assert((speed >= speed_min) && (speed <= speed_max));
+    scs.target_speed = speed;
+}
+
 void set_current_speed(vehicleSpeed current) {
     assert((current >= speed_min) && (current <= speed_max));
     scs.current_speed = current;

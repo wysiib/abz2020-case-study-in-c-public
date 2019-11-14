@@ -109,12 +109,10 @@ static inline void handle_range_radar(scs_state scs,
         set_acceleration(VEHICLE_MAX_DECELERATION); // Could be smoother, but max works.
 
         // Check for warning signals.
-        float mps = (float)scs.current_speed / 36.f;                        // km/h -> m/s.
+        float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
         bool need_acoustic_warning = ((float)collision_dist < (mps * 0.8)); // SCS-26
         if (need_acoustic_warning && !(scs.acoustic_warning.is_on)) {
             start_acoustic_signal(system_time);
-        } else {
-            // Do nothing.
         }
         bool need_visual_warning = ((float)collision_dist < (mps * 1.5f)); // SCS-25
         if (need_visual_warning) {
@@ -122,6 +120,16 @@ static inline void handle_range_radar(scs_state scs,
         } else {
             visual_warning(false);
         }
+
+        // Set new target speed.
+        if (scs.vehicle_speed_infront < scs.desired_speed) {
+            set_target_speed(scs.vehicle_speed_infront);
+        } else {
+            set_target_speed(scs.desired_speed);
+        }
+    } else {
+        // Ensure target speed matches desired speed.
+        set_target_speed(scs.desired_speed);
     }
 }
 
@@ -209,13 +217,18 @@ void scs_do_step(void) {
         last_scs.safety_dist = dist; // Update for further calculations.
     }
 
-    // Check distance
+    // Check distance and adjust target speed.
     (void)get_range_radar_state();
     rangeRadar collision_dist = read_range_radar_sensor();
     if (last_scs.mode == adaptive) {
         if ((collision_dist >= distance_min) && (collision_dist <= distance_max)) {
             handle_range_radar(last_scs, collision_dist, time);
+        } else {
+            set_target_speed(get_scs_state().desired_speed);
         }
+    } else {
+        // If the simple cruise control is used, desired_speed == target_speed.
+        set_target_speed(get_scs_state().desired_speed);
     }
 
     // Acoustic signal
@@ -232,4 +245,9 @@ void scs_do_step(void) {
             // Nothing to play.
         }
     }
+
+    // Post conditions/invariants.
+    scs_state new_scs = get_scs_state();
+    // not(adaptive) => target_speed == desired_speed
+    assert((new_scs.mode == adaptive) || (new_scs.target_speed == new_scs.desired_speed));
 }

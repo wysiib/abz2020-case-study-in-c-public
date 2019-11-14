@@ -25,12 +25,13 @@ typedef struct {
     cruiseControlMode mode;
 
     bool cruise_control_active;
-    vehicleSpeed desired_speed; // Speed the cruise control aims to keep if active.
+    vehicleSpeed desired_speed; // Speed the driver wants to go by.
     bool has_previous_desired_speed;
     vehicleSpeed previous_desired_speed; // Previously desired speed for cruise control.
     // TODO: Do we want to save the current speed in here?
     // It should always be equal to the sensor value, but having it saved here
     // eases test mock handling.
+    vehicleSpeed target_speed; // Speed the adaptive cruise control aims for.
     vehicleSpeed current_speed; // Last seen value via sensor.
 
     vehicleAcceleration acceleration; // Desired vehicle acceleration in m/s².
@@ -66,6 +67,8 @@ void set_desired_speed(vehicleSpeed desired);
 void set_prev_desired_speed(vehicleSpeed prev);
 
 void reset_prev_desired_speed(void);
+
+void set_target_speed(vehicleSpeed speed);
 
 void set_current_speed(vehicleSpeed speed);
 

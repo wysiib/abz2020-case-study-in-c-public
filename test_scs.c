@@ -1248,6 +1248,83 @@ void scs21_sufficient_deceleration(void **state) {
 }
 
 /*
+    SCS-22: If the distance to the preceding vehicle increases again above the
+    speed-dependent safety distance, the vehicle accelerates with a
+    maximum of 2m/s 2 until the set speed is reached.
+
+    Example: Figure 10 shows an exemplary situation with a desired
+    speed of 120 km/h. At the beginning, the car drives at this speed
+    until another car appears with 80 km/h. The adaptive cruise control
+    decelerates to 80 km/h with a maximum deceleration of 5m/s 2 . If
+    this is not sufficient, two acoustical signals warn the driver. As soon
+    as the vehicle in front accelerates to 100 km/h, the adaptive cruise
+    control also accelerates with a maximum of 2m/s 2 . When the vehicle
+    in front finally accelerates to a speed of more than 120 km/h the
+    adaptive cruise control increases the speed back to 120 km/h.
+ */
+void scs22_example(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_scs_mode(adaptive);
+    set_desired_speed(1200);
+    set_safety_distance_time(three_secs); // At 12 km/h corresponds to 100 m.
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 0);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    sensor_states = start_engine_and_drive(sensor_states, 1200);
+    sensor_states = update_sensors(sensor_states, sensorTime, 1000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().target_speed, 1200);
+
+    // 80 kmh car incoming, not yet within safety distance.
+    set_vehicle_speed_infront(800);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 120);
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().target_speed, 1200);
+
+    // 80 kmh car incoming, now within safety distance
+    set_vehicle_speed_infront(800);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 90);
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().target_speed, 800);
+    assert_int_equal(get_scs_state().desired_speed, 1200);
+
+    // 80 kmh car accelerates to 100 km/h
+    set_vehicle_speed_infront(1000);
+    set_vehicle_acceleration_infront(2); // NOTE: Don't now if this is a fitting value.
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 100);
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().target_speed, 1000);
+    assert_int_equal(get_scs_state().desired_speed, 1200);
+
+    // 100 kmh car accelerates to >=120 km/h
+    set_vehicle_speed_infront(1300);
+    set_vehicle_acceleration_infront(2); // NOTE: Don't now if this is a fitting value.
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 100);
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().target_speed, 1200);
+    assert_int_equal(get_scs_state().desired_speed, 1200);
+
+    // 100 kmh car leaves safety distance
+    set_vehicle_speed_infront(1300);
+    set_vehicle_acceleration_infront(0);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 140);
+    sensor_states = update_sensors(sensor_states, sensorTime, 3000);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().target_speed, 1200);
+    assert_int_equal(get_scs_state().desired_speed, 1200);
+}
+/*
     SCS-23: If the speed of the preceding vehicle decreases below 20 km/h, the
     distance is set to 2.5s * currentSpeed, down to a standstill. When
     both vehicles are standing the absolute distance is regulated to 2m.
@@ -1609,6 +1686,7 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs21_insufficient_deceleration, reset, reset),
         unit_test_setup_teardown(scs21_sufficient_deceleration, reset, reset),
         // TODO: SCS-22
+        unit_test_setup_teardown(scs22_example, reset, reset),
         // SCS-23
         unit_test_setup_teardown(scs23_below_20kmh_two_secs, reset, reset),
         unit_test_setup_teardown(scs23_below_20kmh_two_point_five_secs, reset, reset),
