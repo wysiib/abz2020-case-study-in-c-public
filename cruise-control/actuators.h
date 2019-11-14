@@ -6,7 +6,7 @@
 /** Sets the target speed for the adaptive cruise control. */
 void set_vehicle_speed(vehicleSpeed speedo);
 
-void set_brake_pressure(percentage p);
+void brake_pressure(percentage p);
 
 void acoustic_warning(bool on);
 

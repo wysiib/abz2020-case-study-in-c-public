@@ -183,6 +183,28 @@ void reset_acoustic_signal(void) {
 }
 
 //
+// Brake assistant.
+//
+
+void brake_assistant_available(bool available) {
+    scs.brake_assistant_available = available;
+}
+
+void start_acoustic_brake_warning(size_t start_time) {
+    start_acoustic_signal(start_time);
+    scs.brake_warning_playing = true;
+}
+
+void reset_acoustic_brake_warning() {
+    scs.acoustic_warning.is_on = false;
+    scs.acoustic_warning.started_playing = false;
+    scs.acoustic_warning.playing_sound = false;
+    scs.acoustic_warning.start_time = 0;
+
+    scs.brake_warning_playing = false;
+}
+
+//
 // Actuators
 //
 
@@ -204,4 +226,8 @@ void acoustic_warning(bool on) {
     assert(warning->is_on && warning->started_playing);
 
     warning->playing_sound = on;
+}
+
+void brake_pressure(percentage p) {
+    scs.brake_pressure = p;
 }

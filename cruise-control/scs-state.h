@@ -49,8 +49,11 @@ typedef struct {
     safetyDistance safety_dist_time;
 
     bool visual_warning_on;
-
     acousticSignal acoustic_warning;
+
+    bool brake_assistant_available; // SCS-27
+    percentage brake_pressure;
+    bool brake_warning_playing; // SCS-28
 } scs_state;
 
 scs_state get_scs_state(void);
@@ -161,5 +164,15 @@ void set_safety_distance(size_t meters);
 void set_safety_distance_time(safetyDistance distance);
 
 void start_acoustic_signal(size_t start_time);
+
+//
+// Brake assistant.
+//
+
+void brake_assistant_available(bool available);
+
+void start_acoustic_brake_warning(size_t start_time);
+
+void reset_acoustic_brake_warning(void);
 
 #endif

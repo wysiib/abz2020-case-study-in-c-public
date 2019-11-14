@@ -98,6 +98,24 @@ static size_t safety_ms(safetyDistance dist) {
     return ms;
 }
 
+static inline float meters_per_sec(vehicleSpeed tens_kmh) {
+    return (float)tens_kmh / 36.f;
+}
+
+static inline size_t meters_to_standstill(float mps) {
+    assert(VEHICLE_MAX_DECELERATION == (vehicleAcceleration)-5);
+    return (size_t)((mps * mps) / 10.f); // 2.f * MAX_DECELERATION (5.f)
+}
+
+static inline size_t seconds_to_standstill(float mps) {
+    assert(VEHICLE_MAX_DECELERATION == (vehicleAcceleration)-5);
+    return (size_t)(mps / 5.f); // 2.f * MAX_DECELERATION (5.f)
+}
+
+static inline size_t seconds_to_collision(float mps, size_t collision_dist) {
+    return (size_t)((float)collision_dist / mps);
+}
+
 static inline void handle_range_radar(scs_state scs,
                                       rangeRadar collision_dist,
                                       size_t system_time) {
@@ -109,7 +127,7 @@ static inline void handle_range_radar(scs_state scs,
         set_acceleration(VEHICLE_MAX_DECELERATION); // Could be smoother, but max works.
 
         // Check for warning signals.
-        float mps = (float)scs.current_speed / 36.f; // km/h -> m/s.
+        float mps = meters_per_sec(scs.current_speed);
         bool need_acoustic_warning = ((float)collision_dist < (mps * 0.8)); // SCS-26
         if (need_acoustic_warning && !(scs.acoustic_warning.is_on)) {
             start_acoustic_signal(system_time);
@@ -135,7 +153,8 @@ static inline void handle_range_radar(scs_state scs,
 
 static inline void run_acoustic_warning(acousticSignal warning, size_t now) {
     assert(warning.is_on && warning.started_playing &&
-           (warning.start_time != (size_t)0));
+           (warning.start_time != (size_t)0) &&
+           (!get_scs_state().brake_warning_playing));
     /* First 0.1 sec: Sound on.
        0.1--0.3 sec: Sound off.
        0.3--0.4 sec: Sound on.
@@ -152,6 +171,60 @@ static inline void run_acoustic_warning(acousticSignal warning, size_t now) {
         acoustic_warning(true);
     } else {
         reset_acoustic_signal();
+    }
+}
+
+static inline void run_brake_warning(acousticSignal warning, size_t now) {
+    assert(warning.is_on && warning.started_playing &&
+           (warning.start_time != (size_t)0) &&
+           get_scs_state().brake_warning_playing);
+    /* First 0.10 sec: Sound on.
+       0.10--0.15 sec: Sound off.
+       0.15--0.25 sec: Sound on.
+       0.25--0.30 sec: Sound off.
+       0.30--0.40 sec: Sound on.
+       >0.4 sec: Sound off.
+     */
+
+    size_t play_time_ms = now - warning.start_time; // Time the signal is playing already.
+
+    if (play_time_ms < (size_t)100) {
+        acoustic_warning(true);
+    } else if (play_time_ms < (size_t)150) {
+        acoustic_warning(false);
+    } else if (play_time_ms < (size_t)250) {
+        acoustic_warning(true);
+    } else if (play_time_ms < (size_t)300) {
+        acoustic_warning(false);
+    } else if (play_time_ms < (size_t)400) {
+        acoustic_warning(true);
+    } else {
+        reset_acoustic_signal();
+    }
+
+    reset_acoustic_brake_warning();
+}
+
+static inline void handle_brake_assist(scs_state scs,
+                                       size_t collision_dist,
+                                       size_t system_time) {
+    assert(scs.brake_assistant_available);
+    float mps = meters_per_sec(scs.current_speed);
+    size_t standstill_ms = seconds_to_standstill(mps) * 1000;
+    size_t collision_ms = seconds_to_collision(mps, collision_dist) * 1000;
+
+    if (collision_ms <= standstill_ms) { // exact seconds case
+        brake_pressure(100);
+        // start_acoustic_brake_warning(system_time);
+    } else if (collision_ms <= (standstill_ms + (size_t)1500)) { // + 1.5 seconds case
+        brake_pressure(60);
+        // start_acoustic_brake_warning(system_time);
+    } else if (collision_ms <= (standstill_ms + (size_t)3000)) { // + 3 seconds case
+        brake_pressure(20);
+        // start_acoustic_brake_warning(system_time);
+    } else {
+        // Do nothing.
+        // TODO: release brake pressure?
     }
 }
 
@@ -176,7 +249,8 @@ void scs_do_step(void) {
     }
 
     // Note: Speed not actually a sensor in SCS specification.
-    set_current_speed(get_current_speed());
+    vehicleSpeed current_speed = get_current_speed();
+    set_current_speed(current_speed);
 
     scs_state last_scs = get_scs_state();
 
@@ -202,14 +276,14 @@ void scs_do_step(void) {
         float ms;
         if (last_scs.vehicle_speed_infront < (vehicleSpeed)200) {
             // SCS-23
-            mps = (float)last_scs.vehicle_speed_infront / 36.f;
+            mps = meters_per_sec(last_scs.vehicle_speed_infront);
             if (last_scs.vehicle_acceleration_infront <= 0) { // Not accelerating.
                 ms = 2500.f;
             } else {
                 ms = 3000.f;
             }
         } else {
-            mps = (float)last_scs.current_speed / 36.f;
+            mps = meters_per_sec(last_scs.current_speed);
             ms = (float)safety_ms(last_scs.safety_dist_time);
         }
         size_t dist = (size_t)((mps * ms) / 1000.f);
@@ -239,11 +313,40 @@ void scs_do_step(void) {
         if (current_scs.acoustic_warning.is_on &&
             !(current_scs.acoustic_warning.started_playing)) {
             start_acoustic_signal(time);
-        } else if (last_scs.acoustic_warning.is_on) {
+        } else if (last_scs.acoustic_warning.is_on && !last_scs.brake_warning_playing) {
             run_acoustic_warning(last_scs.acoustic_warning, time);
         } else {
             // Nothing to play.
         }
+    }
+
+    // Brake assistant.
+    if ((collision_dist >= distance_min) && (collision_dist <= distance_max)) {
+        // SCS-27
+        if (last_scs.vehicle_speed_infront == 0 && current_speed <= 600) {
+            brake_assistant_available(true);
+        } else if (last_scs.vehicle_speed_infront > 0 && current_speed <= 1200) {
+            brake_assistant_available(true);
+        } else {
+            // NOTE: This case is actually not specified, and I do not see a reason
+            // as of why the assistant should be unavailable besides testing the
+            // boundaries.
+            brake_assistant_available(false);
+        }
+    } else {
+        // NOTE: It is also not a requirement for the brake assistant to detect
+        // an object in the safety distance to be active, but otherwise
+        // there should not be any vehicle infront which can be found to be
+        // stationary or not.
+        // Again, for testing reasons, the assistant is deactivated here.
+        brake_assistant_available(false);
+    }
+
+    if (get_scs_state().brake_assistant_available) {
+        handle_brake_assist(get_scs_state(), collision_dist, time);
+    }
+    if (last_scs.brake_warning_playing) {
+        run_brake_warning(last_scs.acoustic_warning, time);
     }
 
     // Post conditions/invariants.

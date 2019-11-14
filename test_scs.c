@@ -122,7 +122,7 @@ void scs1_engine_shutdown(void **state) {
     sensor_states = start_engine(sensor_states);
     mock_and_execute(sensor_states);
     set_prev_desired_speed(1234); // NOTE: Ensure a change in pds.
-    set_cruise_control(true);     // Activate
+    set_cruise_control(true); // Activate
     assert_true(get_scs_state().has_previous_desired_speed);
     assert_true(get_scs_state().cruise_control_active);
 
@@ -1215,7 +1215,7 @@ void scs21_insufficient_deceleration(void **state) {
          ++time) {
         sensor_states = update_sensors(sensor_states, sensorTime, time);
         mock_and_execute(sensor_states);
-    scs = get_scs_state();
+        scs = get_scs_state();
         assert_true(scs.acoustic_warning.is_on);
         assert_true(scs.acoustic_warning.playing_sound);
     }
@@ -1596,6 +1596,215 @@ void scs26_distance_is_more(void **state) {
     assert_true(!(get_scs_state().acoustic_warning.is_on));
 }
 
+/*
+    SCS-27: The emergency brake assistant must be available in the following
+    speed windows: 0 - 60 km/h, for emergency braking to stationary
+    obstacles, 0 – 120 km/h on moving obstacles.
+ */
+
+void scs27_stationary_below_60kmh(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_vehicle_speed_infront(0); // Stationary
+
+    // 59 km/h
+    sensor_states = start_engine_and_drive(sensor_states, 590);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 50);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().brake_assistant_available);
+
+    // 60 km/h
+    sensor_states = start_engine_and_drive(sensor_states, 600);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 50);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().brake_assistant_available);
+}
+
+void scs27_moving_below_120kmh(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    set_vehicle_speed_infront(800); // 80 km/h
+
+    // 119 km/h
+    sensor_states = start_engine_and_drive(sensor_states, 1190);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 90);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().brake_assistant_available);
+
+    // 120 km/h
+    sensor_states = start_engine_and_drive(sensor_states, 1200);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 90);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    mock_and_execute(sensor_states);
+
+    assert_true(get_scs_state().brake_assistant_available);
+}
+
+/*
+    SCS-28: The time necessary to perform braking to standstill is determined by
+    the value for the maximum deceleration. If an object is ahead of the
+    vehicle and the time until an impact is less or equal to the time until a
+    standstill plus 3 seconds, three acoustic signals are given (0.1 seconds
+    long with 0.05 seconds pause between) is issued and the brakes are
+    activated by 20%. If the time until an impact is less or equal to the
+    time until a standstill plus 1.5 seconds, the brake is activated by 60%.
+    If the time until an impact is less or equal to the time until standstill
+    then the brake is activated at 100%.
+ */
+
+void scs28_plus_three_seconds_braking(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.
+
+    // Assuming brake deceleration of 5 m/s²:
+    //  way for standstill: 10 m
+    //  seconds for standstill: 2 s
+    //  seconds for standstill + 3 s: 5 s
+    // Time until impact with object that is <50 m away: <5 s.
+    set_vehicle_speed_infront(0);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 50);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().brake_pressure, 20);
+}
+
+void scs28_plus_one_point_five_seconds_braking(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.
+
+    // Assuming brake deceleration of 5 m/s²:
+    //  way for standstill: 10 m
+    //  seconds for standstill: 2 s
+    //  seconds for standstill + 1.5 s: 3.5 s
+    // Time until impact with object that is <35 m away: <3.5 s.
+    set_vehicle_speed_infront(0);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 35);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().brake_pressure, 60);
+}
+
+void scs28_plus_zero_seconds_braking(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.
+
+    // Assuming brake deceleration of 5 m/s²:
+    //  way for standstill: 10 m
+    //  seconds for standstill: 2 s
+    // Time until impact with object that is <20 m away: <2 s.
+    set_vehicle_speed_infront(0);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadar, 20);
+    sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+    mock_and_execute(sensor_states);
+
+    assert_int_equal(get_scs_state().brake_pressure, 100);
+}
+
+void scs28_audio_warning(void **state) {
+    init_system(leftHand, false, EU, false, false);
+    sensors_and_time sensor_states = {0};
+
+    sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.
+
+    /*
+        FIXME: This test ensures that the audio signal described in SCS-28 is
+        played accordingly. However, implementing the necessary logic to play
+        the sound actually breaks the audio signal tests for SCS-21.
+        This is due to both tests working on the notion of "collision while
+        decelerating with 5 m/s²".
+
+        In the current implementation, the SCS-28 audio signal is not called.
+        To enable it, call `start_acoustic_brake_warning(system_time)` in the
+        `handle_brake_assist(scs_state, size_t, size_t)` function in scs-impl.c.
+        This will however break SCS-21.
+
+        I am rather unsure how to satisfy both specifications or whether I maybe
+        misunderstood when SCS-21 is to be considered, but as of now,
+        both cases overlap.
+     */
+
+    size_t distances[] = {50, 35, 20};
+    for (int i = 0; i < 3; ++i) {
+        size_t dist = distances[i];
+
+        set_vehicle_speed_infront(0);
+        sensor_states = update_sensors(sensor_states, sensorRangedRadar, dist);
+        sensor_states = update_sensors(sensor_states, sensorRangedRadarState, Ready);
+
+        size_t test_granularity = 10;
+
+        // Play sound for 0.1 seconds.
+        for (size_t time = 1000;
+             time < 1100;
+             time += test_granularity) {
+            sensor_states = update_sensors(sensor_states, sensorTime, time);
+            mock_and_execute(sensor_states);
+
+            assert_true(get_scs_state().acoustic_warning.is_on);
+            assert_true(get_scs_state().acoustic_warning.playing_sound);
+        }
+        // Pause sound for 0.05 seconds.
+        for (size_t time = 1100;
+             time < 1150;
+             time += test_granularity) {
+            sensor_states = update_sensors(sensor_states, sensorTime, time);
+            mock_and_execute(sensor_states);
+
+            assert_true(get_scs_state().acoustic_warning.is_on);
+            assert_true(!(get_scs_state().acoustic_warning.playing_sound));
+        }
+        // Play sound for 0.1 seconds.
+        for (size_t time = 1150;
+             time < 1250;
+             time += test_granularity) {
+            sensor_states = update_sensors(sensor_states, sensorTime, time);
+            mock_and_execute(sensor_states);
+
+            assert_true(get_scs_state().acoustic_warning.is_on);
+            assert_true(get_scs_state().acoustic_warning.playing_sound);
+        }
+        // Pause sound for 0.05 seconds.
+        for (size_t time = 1250;
+             time < 1300;
+             time += test_granularity) {
+            sensor_states = update_sensors(sensor_states, sensorTime, time);
+            mock_and_execute(sensor_states);
+
+            assert_true(get_scs_state().acoustic_warning.is_on);
+            assert_true(!(get_scs_state().acoustic_warning.playing_sound));
+        }
+        // Play sound for 0.1 seconds.
+        for (size_t time = 1300;
+             time < 1400;
+             time += test_granularity) {
+            sensor_states = update_sensors(sensor_states, sensorTime, time);
+            mock_and_execute(sensor_states);
+
+            assert_true(get_scs_state().acoustic_warning.is_on);
+            assert_true(get_scs_state().acoustic_warning.playing_sound);
+        }
+
+        assert_true(!(get_scs_state().acoustic_warning.is_on));
+        assert_true(!(get_scs_state().acoustic_warning.playing_sound));
+
+    }
+}
 //
 //
 //
@@ -1712,8 +1921,14 @@ int main(int argc, char *argv[]) {
         unit_test_setup_teardown(scs26_distance_is_more, reset, reset),
 
         // Emergency Brake Assistant:
-        // TODO: SCS-27
-        // TODO: SCS-28
+        // SCS-27
+        unit_test_setup_teardown(scs27_stationary_below_60kmh, reset, reset),
+        unit_test_setup_teardown(scs27_moving_below_120kmh, reset, reset),
+        // SCS-28
+        unit_test_setup_teardown(scs28_plus_three_seconds_braking, reset, reset),
+        unit_test_setup_teardown(scs28_plus_one_point_five_seconds_braking, reset, reset),
+        unit_test_setup_teardown(scs28_plus_zero_seconds_braking, reset, reset),
+        unit_test_setup_teardown(scs28_audio_warning, reset, reset),
 
         // Speed Limit:
         // TODO: SCS-29
