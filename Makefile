@@ -26,7 +26,7 @@ clean:
 	rm -f test1
 
 cbmc_light:
-	cbmc light/*.c --unwind 20 --unwinding-assertions --function light_loop
+	cbmc light/*.c --unwind 20 --unwinding-assertions --function light_loop --trace --beautify
 
 cbmc_light_step:
 	cbmc light/*.c --unwind 20 --unwinding-assertions --function light_do_step
