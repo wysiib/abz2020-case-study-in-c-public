@@ -47,6 +47,14 @@ void set_high_beam_motor(high_beam_motor b) {
     state.highBeamMotor = b;
 }
 
+void set_cornering_light_left(percentage p) {
+    state.corneringLightLeft = p;
+}
+
+void set_cornering_light_right(percentage p) {
+    state.corneringLightRight = p;
+}
+
 void reset_lights(void) {
     state.brakeLight = 0;
     state.blinkLeft = 0;
