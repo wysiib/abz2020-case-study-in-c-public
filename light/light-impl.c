@@ -10,6 +10,8 @@
 
 #include "../cruise-control/sensors.h"
 
+#define __CPROVER_assume(x)
+
 static size_t when_light_on = 0;
 
 static bool last_engine = 0;
