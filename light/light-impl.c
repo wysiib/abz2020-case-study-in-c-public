@@ -237,21 +237,33 @@ void light_loop(void) {
 
 void light_do_step(void) {
     keyState ks = get_key_status();
+    __CPROVER_assume(ks == NoKeyInserted || ks == KeyInserted || ks == KeyInIgnitionOnPosition);
     bool engine_on = get_engine_status();
     bool all_doors_closed = get_all_doors_closed();
     bool reverse_gear = get_reverse_gear();
     voltage voltage_battery = get_voltage_battery();
+    __CPROVER_assume(voltage_battery >= voltage_min && voltage_battery <= voltage_max);
     bool undervoltage = (voltage_battery <= (voltage) 85);
     steeringAngle angle = get_steering_angle();
+    __CPROVER_assume(angle >= st_hard_left_max && angle <= st_hard_right_max);
     bool oncomming_trafic = get_oncoming_traffic();
     (void)get_range_radar_state();
     (void)read_range_radar_sensor();
 
     brightness bb = get_brightness();
+    __CPROVER_assume(bb >= brightness_min && bb <= brightness_max);
     size_t tt = get_time();
+    __CPROVER_assume(implies(ks == KeyInIgnitionOnPosition, engine_on == true));
+    __CPROVER_assume(implies(engine_on == true, ks == KeyInIgnitionOnPosition));
+    __CPROVER_assume(tt >= when_light_on);
+    __CPROVER_assume(tt >= blink_timer);
+    __CPROVER_assume(tt >= ambi_light_timer);
+    __CPROVER_assume(tt >= pitman_arm_move_time);
 
     sensorState camera = get_camera_state();
+    __CPROVER_assume(camera == Ready || camera == NotReady || camera == Dirty);
     vehicleSpeed speedo = get_current_speed();
+    __CPROVER_assume(speedo >= speed_min && speedo <= speed_max);
 
     update_ambient_light_status(last_key_state, ks,
                                last_all_door_closed, all_doors_closed,
