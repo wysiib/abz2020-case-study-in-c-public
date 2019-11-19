@@ -9,8 +9,7 @@
 #include "light-impl.h"
 
 #include "../cruise-control/sensors.h"
-
-#define __CPROVER_assume(x)
+#define __CPROVER_assume(x);
 
 static size_t when_light_on = 0;
 
@@ -75,6 +74,7 @@ static bool ambient_light_prevent_turnoff(size_t tt) {
 static void update_ambient_light_status(keyState old, keyState new,
                                        bool doors_old, bool doors_new,
                                        size_t time, bool engine_on) {
+    __CPROVER_assume(new == NoKeyInserted || new == KeyInserted || new == KeyInIgnitionOnPosition);
     // ELS-19
     // only extend time if it has not yet passed
     if(ambient_light_prevent_turnoff(time)) {
@@ -230,6 +230,9 @@ void hb_range(sensorState camera, vehicleSpeed speed, bool undervoltage, bool tr
 
 void light_loop(void) {
     // used as the verification target for CBMC
+    __CPROVER_assume(get_light_state().lowBeamLeft == 0);
+    __CPROVER_assume(get_light_state().tailLampLeft == 0);
+    __CPROVER_assume(get_light_state().tailLampRight == 0);
     while(true) {
         light_do_step();
     }
@@ -239,14 +242,19 @@ void light_do_step(void) {
     keyState ks = get_key_status();
     __CPROVER_assume(ks == NoKeyInserted || ks == KeyInserted || ks == KeyInIgnitionOnPosition);
     bool engine_on = get_engine_status();
+    __CPROVER_assume(engine_on == true || engine_on == false);
     bool all_doors_closed = get_all_doors_closed();
+    __CPROVER_assume(all_doors_closed == true || all_doors_closed == false);
     bool reverse_gear = get_reverse_gear();
+    __CPROVER_assume(reverse_gear == true || reverse_gear == false);
     voltage voltage_battery = get_voltage_battery();
     __CPROVER_assume(voltage_battery >= voltage_min && voltage_battery <= voltage_max);
     bool undervoltage = (voltage_battery <= (voltage) 85);
+    __CPROVER_assume(undervoltage == true || undervoltage == false);
     steeringAngle angle = get_steering_angle();
     __CPROVER_assume(angle >= st_hard_left_max && angle <= st_hard_right_max);
     bool oncomming_trafic = get_oncoming_traffic();
+    __CPROVER_assume(oncomming_trafic == true || oncomming_trafic == false);
     (void)get_range_radar_state();
     (void)read_range_radar_sensor();
 
@@ -481,7 +489,7 @@ void light_do_step(void) {
 
     // assertions for cbmc to verify, i.e. invariants!
     // ELS-22: low beam => trail lights
-    //assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0));
+    assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0));
 
 
     // ELs-41: reverse gear turns on reverse lights
