@@ -477,13 +477,20 @@ void light_do_step(void) {
     }
 
     // ELS-30
-    if(get_pitman_horizontal() == pa_Forward && !undervoltage) {
+    if(get_pitman_horizontal() == pa_Forward && get_light_rotary_switch() == lrs_auto && !undervoltage) {
         set_high_beam(1);
         hb_motor(camera, speedo, undervoltage, oncomming_trafic);
         hb_range(camera, speedo, undervoltage, oncomming_trafic);
     }
+    if(get_pitman_horizontal() == pa_Forward && get_light_rotary_switch() == lrs_on && !undervoltage) {
+        set_high_beam(1);
+        set_high_beam_motor(7);
+        set_high_beam_range(100);
+    }
     if(get_pitman_horizontal() == pa_fb_Neutral) {
         set_high_beam(0);
+        set_high_beam_motor(0);
+        set_high_beam_range(0);
     }
 
     // ELS-31

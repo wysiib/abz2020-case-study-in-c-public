@@ -625,6 +625,53 @@ void sequence7(void **state) {
     assert_light_state(((light_state) {0, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0}));
 }
 
+void sequence8(void **state) {
+    init_system(leftHand, false, USA, false, false);
+
+    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 90);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    pitman_horizontal(pa_Backward);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+    // fixed test case: light on manually -> low beam and tail lamps on
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 1, 7, 100, 0, 0, 0}));
+
+    pitman_horizontal(pa_fb_Neutral);
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+    // fixed test case: see above
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+    pitman_horizontal(pa_Forward);
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    mock_and_execute(sensor_states);
+    // again, see above
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 1, 7, 100, 0, 0, 0}));
+
+    pitman_horizontal(pa_fb_Neutral);
+    sensor_states = update_sensors(sensor_states, sensorTime, 9000);
+    mock_and_execute(sensor_states);
+    // again, see above
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+}
 int main(int argc, char* argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -635,6 +682,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(sequence5, reset, reset),
         unit_test_setup_teardown(sequence6, reset, reset),
         unit_test_setup_teardown(sequence7, reset, reset),
+        unit_test_setup_teardown(sequence8, reset, reset),
     };
     run_tests(tests);
     return 0;
