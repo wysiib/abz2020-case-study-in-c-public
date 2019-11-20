@@ -1941,7 +1941,7 @@ void els31(void **state) {
 }
 
 void els33_34_35(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false, true);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1982,7 +1982,7 @@ void els33_34_35(void **state) {
 }
 
 void els34_35(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false, true);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2122,7 +2122,7 @@ void els36(void **state) {
 }
 
 void els38(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false, true);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
