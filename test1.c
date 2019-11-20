@@ -681,6 +681,7 @@ void sequence9(void **state) {
     sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 135);
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    sensor_states = update_sensors(sensor_states, sensorCameraState, Ready);
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
     sensor_states = update_sensors(sensor_states, sensorTime, 2000);
@@ -693,12 +694,26 @@ void sequence9(void **state) {
     set_light_rotary_switch(lrs_on);
     sensor_states = update_sensors(sensor_states, sensorTime, 4000);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 1, 7, 100, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
-    pitman_vertical(pa_Backward);
+    pitman_horizontal(pa_Backward);
     sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 200);
     mock_and_execute(sensor_states);
-    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 1, 7, 100, 0, 0, 0}));
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 8000);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 300);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 10000);
+    sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 301);
+    mock_and_execute(sensor_states);
+    // adapted test: we do immediate rampup
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 1, 0, 30, 0, 0, 0}));
+
+    // I dont understand the high beam motor from here on
 }
 
 int main(int argc, char* argv[]) {
