@@ -506,7 +506,7 @@ void light_do_step(void) {
 
     // assertions for cbmc to verify, i.e. invariants!
     // ELS-22: low beam => trail lights
-    assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0));
+    assert(implies(blinking_direction != hazard, implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0)));
 
 
     // ELs-41: reverse gear turns on reverse lights
