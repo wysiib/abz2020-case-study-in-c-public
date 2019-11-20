@@ -1359,7 +1359,7 @@ void els21(void **state) {
 
 void els23_left_a(void **state) {
     // precedence direction blinking over tail lights
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, USA, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1390,7 +1390,7 @@ void els23_left_a(void **state) {
 
 void els23_right_a(void **state) {
     // precedence direction blinking over tail lights
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, USA, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1421,7 +1421,7 @@ void els23_right_a(void **state) {
 
 void els23_b(void **state) {
     // precedence hazard lights over tail lights
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, USA, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
