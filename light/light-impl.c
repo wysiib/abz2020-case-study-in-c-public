@@ -456,14 +456,17 @@ void light_do_step(void) {
     }
 
     // ELS-30
-    if(get_adaptive_high_beam() && get_pitman_horizontal() == pa_Forward && get_light_rotary_switch() == lrs_auto && !undervoltage) {
+    // lrs auto -> adaptive
+    if(get_pitman_horizontal() == pa_Forward && get_light_rotary_switch() == lrs_auto && !undervoltage) {
         if(speedo > 300) {
             set_high_beam(1);
             hb_motor(camera, speedo, undervoltage, oncomming_trafic);
             hb_range(camera, speedo, undervoltage, oncomming_trafic);
         }
     }
-    if(!get_adaptive_high_beam() && get_pitman_horizontal() == pa_Forward && get_light_rotary_switch() == lrs_on && !undervoltage) {
+
+    // lrs on -> no adaptive high beam
+    if(get_pitman_horizontal() == pa_Forward && get_light_rotary_switch() != lrs_auto && !undervoltage) {
         set_high_beam(1);
         set_high_beam_motor(7);
         set_high_beam_range(100);
@@ -475,18 +478,16 @@ void light_do_step(void) {
     }
 
     // ELS-31
-    if(!get_adaptive_high_beam() && get_pitman_horizontal() == pa_Backward && get_light_rotary_switch() != lrs_off) {
+    if(get_pitman_horizontal() == pa_Backward && get_light_rotary_switch() != lrs_auto) {
         set_high_beam(1);
         set_high_beam_range(100);
         set_high_beam_motor(7);
     }
     // ELS-32
-    if(get_adaptive_high_beam() && get_pitman_horizontal() == pa_Backward && get_light_rotary_switch() != lrs_off) {
-        if(speedo > 300) {
-            set_high_beam(1);
-            hb_motor(camera, speedo, undervoltage, oncomming_trafic);
-            hb_range(camera, speedo, undervoltage, oncomming_trafic);
-        }
+    if(get_pitman_horizontal() == pa_Backward && get_light_rotary_switch() == lrs_auto) {
+        set_high_beam(1);
+        hb_motor(camera, speedo, undervoltage, oncomming_trafic);
+        hb_range(camera, speedo, undervoltage, oncomming_trafic);
     }
 
     // ELS-41: reverse gear

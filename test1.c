@@ -674,7 +674,7 @@ void sequence8(void **state) {
 }
 
 void sequence9(void **state) {
-    init_system(leftHand, false, EU, false, false, true);
+    init_system(leftHand, false, EU, false, false);
 
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
