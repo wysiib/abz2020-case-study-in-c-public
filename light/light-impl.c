@@ -349,11 +349,7 @@ void light_do_step(void) {
         set_all_lights(100);
     }
 
-    // turn off hazard warning before new setting
-    if((blinking_direction == hazard) && !get_hazard_warning() && !blinking && ((tt - blink_timer) >= (size_t) 500)) { // wait for dark cycle to complete
-        blinking_direction=none;
-        set_blinkers_off(tt);
-    }
+    
 
     // turn on hazard warning if not yet in mode
     if((blinking_direction == none) && get_hazard_warning()) {
@@ -379,6 +375,12 @@ void light_do_step(void) {
             remaining_blinks = -1;
             set_blinkers_on(tt);
         }
+    }
+
+    // turn off hazard warning before new setting
+    if((blinking_direction == hazard) && !get_hazard_warning() && !blinking && ((tt - blink_timer) >= (size_t) 500)) { // wait for dark cycle to complete
+        blinking_direction=none;
+        set_blinkers_off(tt);
     }
 
     // ELS-2
