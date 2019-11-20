@@ -325,13 +325,13 @@ void light_do_step(void) {
     }
     // stay on as long as key is inserted
     if(daytime_light_was_on && (ks != NoKeyInserted)) {
-        if((get_market_code() == USA) || (get_market_code() == Canada)) {
+        //if((get_market_code() == USA) || (get_market_code() == Canada)) {
             // from szenario 7 but not from specification?
-            set_low_beam_left(100);
-            set_low_beam_right(100);
-        } else {
+        //    set_low_beam_left(100);
+        //    set_low_beam_right(100);
+        //} else {
             set_all_lights(100);
-        }
+        //}
     }
 
     // ELS-16 (has priority over ELS-17)
@@ -387,15 +387,20 @@ void light_do_step(void) {
     }
     // otherwise check if arm was released later on -> stop blinking
     if((get_pitman_vertical() != last_pitman_arm) && (get_pitman_vertical() == pa_ud_Neutral) && ((tt - pitman_arm_move_time) >= (size_t) 500)) {
+        // this is not set-blinkers-off!
+        // not an iteration, this disables fully
         remaining_blinks = 0;
         set_blink_left(0);
         set_blink_right(0);
         blinking = false;
 
-        if((get_market_code() == USA) || (get_market_code() == Canada)) {
-            set_tail_lamp_right(0);
-            set_tail_lamp_left(0);
-        }
+        //if((get_market_code() == USA) || (get_market_code() == Canada)) {
+        //    if(blinking_direction == blink_right) {
+        //        set_tail_lamp_right(0);
+        //    } else {
+        //        set_tail_lamp_left(0);
+        //    }
+        //}
     }
 
     // blinker still on -> keep usa specific stuff
@@ -500,7 +505,7 @@ void light_do_step(void) {
 
     // assertions for cbmc to verify, i.e. invariants!
     // ELS-22: low beam => trail lights
-    assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0));
+    //assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0));
 
 
     // ELs-41: reverse gear turns on reverse lights
