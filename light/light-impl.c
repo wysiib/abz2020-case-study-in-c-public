@@ -91,12 +91,10 @@ static void set_blinkers_off(size_t time) {
     if((get_market_code() == USA) || (get_market_code() == Canada)) {
         switch (blinking_direction) {
             case blink_left:
-            case tip_left:
                 set_low_beam_left(50);
                 set_tail_lamp_left(0);
                 break;
             case blink_right:
-            case tip_right:
                 set_low_beam_right(50);
                 set_tail_lamp_right(0);
                 break;
@@ -126,12 +124,10 @@ static void set_blinkers_on(size_t time) {
     }
 
     switch(blinking_direction) {
-        case tip_left:
         case blink_left:
             set_blink_left(100);
             set_blink_right(0); // in case of fast switches
             break;
-        case tip_right:
         case blink_right:
             set_blink_right(100);
             set_blink_left(0); // in case of fast switches
@@ -149,15 +145,13 @@ static void set_blinkers_on(size_t time) {
 
     if((get_market_code() == USA) || (get_market_code() == Canada)) {
         switch(blinking_direction) {
-            case tip_left:
-                set_tail_lamp_left(100); // continue
             case blink_left:
                 set_low_beam_left(50);
+                set_tail_lamp_left(100);
                 break;
-            case tip_right:
-                set_tail_lamp_right(100); // continue
             case blink_right:
                 set_low_beam_right(50);
+                set_tail_lamp_right(100);
                 break;
             case hazard:
                 set_low_beam_left(50);
@@ -368,16 +362,7 @@ void light_do_step(void) {
 
     // direction / blinking
     // blink as soon as arm is moved unless in dark cycle
-    if((get_pitman_vertical() == pa_Downward5)) {
-        if(engine_on && ((tt - blink_timer) >= (size_t) 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
-            blinking = true;
-            blinking_direction = tip_left;
-            blink_timer = tt;
-            remaining_blinks = -1;
-            set_blinkers_on(tt);
-        }
-    }
-    if((get_pitman_vertical() == pa_Downward7)) {
+    if((get_pitman_vertical() == pa_Downward5) || (get_pitman_vertical() == pa_Downward7)) {
         if(engine_on && ((tt - blink_timer) >= (size_t) 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             blinking = true;
             blinking_direction = blink_left;
@@ -386,16 +371,7 @@ void light_do_step(void) {
             set_blinkers_on(tt);
         }
     }
-    if((get_pitman_vertical() == pa_Upward5)) {
-        if(engine_on && ((tt - blink_timer) >= (size_t) 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
-            blinking = true;
-            blinking_direction = tip_right;
-            blink_timer = tt;
-            remaining_blinks = -1;
-            set_blinkers_on(tt);
-        }
-    }
-    if((get_pitman_vertical() == pa_Upward7)) {
+    if((get_pitman_vertical() == pa_Upward5) || (get_pitman_vertical() == pa_Upward7)) {
         if(engine_on && ((tt - blink_timer) >= (size_t) 500) && !blinking) { // TODO: do we need to track the cycle instead of the timer?
             blinking = true;
             blinking_direction = blink_right;
@@ -427,11 +403,9 @@ void light_do_step(void) {
     if(remaining_blinks && ((get_market_code() == USA) || (get_market_code() == Canada))) {
         switch(blinking_direction) {
             case blink_left:
-            case tip_left:
                 set_low_beam_left(50);
                 break;
             case blink_right:
-            case tip_right:
                 set_low_beam_right(50);
                 break;
             case hazard:
@@ -526,8 +500,7 @@ void light_do_step(void) {
 
     // assertions for cbmc to verify, i.e. invariants!
     // ELS-22: low beam => trail lights
-    // commented out: does not work with scenario 7
-    // assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0));
+    assert(implies(get_light_state().lowBeamLeft > 0, get_light_state().tailLampLeft > 0 || get_light_state().tailLampRight > 0));
 
 
     // ELs-41: reverse gear turns on reverse lights
