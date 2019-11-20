@@ -766,6 +766,7 @@ void els16conflict17b(void **state) {
     assert_true(get_light_state().lowBeamRight>0);
 
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 0);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInserted);
     mock_and_execute(sensor_states);
 
     assert_partial_state2(lowBeamLeft,0,lowBeamRight,0);
