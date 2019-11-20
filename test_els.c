@@ -28,7 +28,7 @@ void scs_do_step(void) {
 }
 
 void els1_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -56,7 +56,7 @@ void els1_left(void **state) {
 }
 
 void els1_right(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -84,7 +84,7 @@ void els1_right(void **state) {
 }
 
 void els2_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -115,7 +115,7 @@ void els2_left(void **state) {
 }
 
 void els3_a_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -152,7 +152,7 @@ void els3_a_left(void **state) {
 }
 
 void els3_b_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -188,7 +188,7 @@ void els3_b_left(void **state) {
 }
 
 void els4_left_a(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -222,7 +222,7 @@ void els4_left_a(void **state) {
 
 
 void els4_left_b(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -255,7 +255,7 @@ void els4_left_b(void **state) {
 }
 
 void els6_left_canada(void **state) {
-    init_system(leftHand, false, Canada, false, true, false);
+    init_system(leftHand, false, Canada, false, true);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -287,7 +287,7 @@ void els6_left_canada(void **state) {
 }
 
 void els6_left_usa(void **state) {
-    init_system(leftHand, false, USA, false, true, false);
+    init_system(leftHand, false, USA, false, true);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -319,7 +319,7 @@ void els6_left_usa(void **state) {
 }
 
 void els7_a_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -362,7 +362,7 @@ void els7_a_left(void **state) {
 }
 
 void els7_b_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -397,7 +397,7 @@ void els7_b_left(void **state) {
 }
 
 void els8_a(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -420,7 +420,7 @@ void els8_a(void **state) {
 }
 
 void els8_b(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -443,7 +443,7 @@ void els8_b(void **state) {
 }
 
 void els9(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -514,7 +514,7 @@ void els9(void **state) {
 }
 
 void els12_a(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -547,7 +547,7 @@ void els12_a(void **state) {
 }
 
 void els12_b(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -582,7 +582,7 @@ void els12_b(void **state) {
 }
 
 void els13_a(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -609,7 +609,7 @@ void els13_a(void **state) {
 }
 
 void els13_b(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -637,7 +637,7 @@ void els13_b(void **state) {
 }
 
 void els14(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -657,7 +657,7 @@ void els14(void **state) {
 }
 
 void els15(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -678,8 +678,7 @@ void els15(void **state) {
 void els16a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=false,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -700,8 +699,7 @@ void els16a(void **state) {
 void els16b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=false,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -727,8 +725,7 @@ void els16b(void **state) {
 void els16conflict17a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=false,
-                          .daytime_running_light=true,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=true});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -749,8 +746,7 @@ void els16conflict17a(void **state) {
 void els16conflict17b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=false,
-                          .daytime_running_light=true,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=true});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -777,8 +773,7 @@ void els16conflict17b(void **state) {
 void els17(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=0,
-                          .daytime_running_light=true,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=true});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -827,8 +822,7 @@ void els17(void **state) {
 void els18a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=false,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -916,8 +910,7 @@ void els18a(void **state) {
 void els18b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=false,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -967,8 +960,7 @@ void els18b(void **state) {
 void els18c(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,.ambient_light=false,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1004,8 +996,7 @@ void els19a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -1039,8 +1030,7 @@ void els19b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1072,8 +1062,7 @@ void els19c(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1143,8 +1132,7 @@ void els19d(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1202,8 +1190,7 @@ void els19f(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1259,8 +1246,7 @@ void els19conflict28a(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1302,8 +1288,7 @@ void els19conflict28b(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=false,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1346,8 +1331,7 @@ void els21(void **state) {
     init_system_v2((init){.pos=leftHand,.armored_vehicle=true,
                           .market_code=EU,
                           .ambient_light=true,
-                          .daytime_running_light=false,
-                          .adaptive_high_beam=false});
+                          .daytime_running_light=false});
     sensors_and_time sensor_states = {0};
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -1375,7 +1359,7 @@ void els21(void **state) {
 
 void els23_left_a(void **state) {
     // precedence direction blinking over tail lights
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1406,7 +1390,7 @@ void els23_left_a(void **state) {
 
 void els23_right_a(void **state) {
     // precedence direction blinking over tail lights
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1437,7 +1421,7 @@ void els23_right_a(void **state) {
 
 void els23_b(void **state) {
     // precedence hazard lights over tail lights
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1468,7 +1452,7 @@ void els23_b(void **state) {
 
 
 void els24_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1510,7 +1494,7 @@ void els24_left(void **state) {
 }
 
 void els24_right(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1552,7 +1536,7 @@ void els24_right(void **state) {
 }
 
 void els25_left(void **state) {
-    init_system(leftHand, true, EU, false, false, false);
+    init_system(leftHand, true, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1579,7 +1563,7 @@ void els25_left(void **state) {
 }
 
 void els25_right(void **state) {
-    init_system(leftHand, true, EU, false, false, false);
+    init_system(leftHand, true, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1606,7 +1590,7 @@ void els25_right(void **state) {
 }
 
 void els26_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1648,7 +1632,7 @@ void els26_left(void **state) {
 }
 
 void els26_right(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1690,7 +1674,7 @@ void els26_right(void **state) {
 }
 
 void els27_left_a(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1733,7 +1717,7 @@ void els27_left_a(void **state) {
 }
 
 void els27_right_a(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1776,7 +1760,7 @@ void els27_right_a(void **state) {
 }
 
 void els27_left_b(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1819,7 +1803,7 @@ void els27_left_b(void **state) {
 }
 
 void els27_right_b(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1862,7 +1846,7 @@ void els27_right_b(void **state) {
 }
 
 void els28_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
@@ -1879,7 +1863,7 @@ void els28_left(void **state) {
 }
 
 void els28_right(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorKeyState, NoKeyInserted);
@@ -1896,7 +1880,7 @@ void els28_right(void **state) {
 }
 
 void els30(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1918,7 +1902,7 @@ void els30(void **state) {
 }
 
 void els31(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1941,7 +1925,7 @@ void els31(void **state) {
 }
 
 void els33_34_35(void **state) {
-    init_system(leftHand, false, EU, false, false, true);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -1982,7 +1966,7 @@ void els33_34_35(void **state) {
 }
 
 void els34_35(void **state) {
-    init_system(leftHand, false, EU, false, false, true);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2008,7 +1992,7 @@ void els34_35(void **state) {
 }
 
 void els36(void **state) {
-    init_system(leftHand, false, EU, false, false, true);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
 
@@ -2122,7 +2106,7 @@ void els36(void **state) {
 }
 
 void els38(void **state) {
-    init_system(leftHand, false, EU, false, false, true);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2153,7 +2137,7 @@ void els38(void **state) {
 }
 
 void els41(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2178,7 +2162,7 @@ static voltage volt(int num) {
 }
 
 void els42(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2201,7 +2185,7 @@ void els42(void **state) {
 }
 
 void els43(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2246,7 +2230,7 @@ void els44(void **state) {
 }
 
 void els45_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2271,7 +2255,7 @@ void els45_left(void **state) {
 }
 
 void els45_right(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2296,7 +2280,7 @@ void els45_right(void **state) {
 }
 
 void els46_left(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2316,7 +2300,7 @@ void els46_left(void **state) {
 }
 
 void els46_right(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2336,7 +2320,7 @@ void els46_right(void **state) {
 }
 
 void els49a(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -2359,7 +2343,7 @@ void els49a(void **state) {
 }
 
 void els49b(void **state) {
-    init_system(leftHand, false, EU, false, false, false);
+    init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
