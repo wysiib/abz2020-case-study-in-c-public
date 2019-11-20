@@ -12,3 +12,5 @@ test_scs
 
 *.dump
 *.pyc
+
+*.dSYM
