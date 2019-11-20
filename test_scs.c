@@ -74,7 +74,7 @@ sensors_and_time start_engine_and_drive(sensors_and_time sensor_states,
 
 /* SCS-1: "After [engine] start, there is no previous desired speed." */
 void scs1(void **state) {
-    init_system(leftHand, false, EU, false, false); // TODO: Other settings?
+    init_system(leftHand, false, EU, false, false, false); // TODO: Other settings?
     sensors_and_time sensor_states = {0};
 
     assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
@@ -87,7 +87,7 @@ void scs1(void **state) {
 }
 
 void scs1_engine_restart(void **state) {
-    init_system(leftHand, false, EU, false, false); // TODO: Other settings?
+    init_system(leftHand, false, EU, false, false, false); // TODO: Other settings?
     sensors_and_time sensor_states = {0};
 
     assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
@@ -112,7 +112,7 @@ void scs1_engine_restart(void **state) {
 }
 
 void scs1_engine_shutdown(void **state) {
-    init_system(leftHand, false, EU, false, false); // TODO: Other settings?
+    init_system(leftHand, false, EU, false, false, false); // TODO: Other settings?
     sensors_and_time sensor_states = {0};
 
     assert_true(!get_scs_state().has_previous_desired_speed); // No pds after init.
@@ -142,7 +142,7 @@ void scs1_engine_shutdown(void **state) {
 */
 
 void scs2_no_prev_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -162,7 +162,7 @@ void scs2_no_prev_speed(void **state) {
 }
 
 void scs2_with_prev_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     const vehicleSpeed pre = 500;
@@ -193,7 +193,7 @@ void scs2_with_prev_speed(void **state) {
 */
 
 void scs3_at_20kmh(void **state) { // TODO: Is this test necessary?
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     const vehicleSpeed spe = 200;
@@ -208,7 +208,7 @@ void scs3_at_20kmh(void **state) { // TODO: Is this test necessary?
 }
 
 void scs3_below_20kmh(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     const vehicleSpeed spe = 190;
@@ -223,7 +223,7 @@ void scs3_below_20kmh(void **state) {
 }
 
 void scs3_below_20kmh_with_prev_desired_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     const vehicleSpeed spe = 190;
@@ -247,7 +247,7 @@ void scs3_below_20kmh_with_prev_desired_speed(void **state) {
  */
 
 void scs4_active_cc(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
@@ -266,7 +266,7 @@ void scs4_active_cc(void **state) {
 }
 
 void scs4_active_cc_twice(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
@@ -290,7 +290,7 @@ void scs4_active_cc_twice(void **state) {
 }
 
 void scs4_active_cc_max_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = speed_max;
@@ -316,7 +316,7 @@ void scs4_active_cc_max_speed(void **state) {
  */
 
 void scs5_active_cc(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 310;
@@ -336,7 +336,7 @@ void scs5_active_cc(void **state) {
 }
 
 void scs5_active_cc_twice(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 310;
@@ -360,7 +360,7 @@ void scs5_active_cc_twice(void **state) {
 }
 
 void scs5_active_cc_already_multiple_of_ten(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
@@ -379,7 +379,7 @@ void scs5_active_cc_already_multiple_of_ten(void **state) {
 }
 
 void scs5_active_cc_almost_max_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = speed_max - 2;
@@ -397,7 +397,7 @@ void scs5_active_cc_almost_max_speed(void **state) {
 }
 
 void scs5_active_cc_max_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -419,7 +419,7 @@ void scs5_active_cc_max_speed(void **state) {
  */
 
 void scs6_down5_active_cc(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
@@ -437,7 +437,7 @@ void scs6_down5_active_cc(void **state) {
 }
 
 void scs6_down5_active_cc_twice(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
@@ -460,7 +460,7 @@ void scs6_down5_active_cc_twice(void **state) {
 }
 
 void scs6_down5_active_cc_min_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = speed_min;
@@ -478,7 +478,7 @@ void scs6_down5_active_cc_min_speed(void **state) {
 }
 
 void scs6_down7_active_cc(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 310;
@@ -497,7 +497,7 @@ void scs6_down7_active_cc(void **state) {
 }
 
 void scs6_down7_active_cc_twice(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 310;
@@ -521,7 +521,7 @@ void scs6_down7_active_cc_twice(void **state) {
 }
 
 void scs6_down7_active_cc_already_multiple_of_ten(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = 300;
@@ -540,7 +540,7 @@ void scs6_down7_active_cc_already_multiple_of_ten(void **state) {
 }
 
 void scs6_down7_active_cc_almost_min_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     vehicleSpeed desired = speed_min + 2;
@@ -558,7 +558,7 @@ void scs6_down7_active_cc_almost_min_speed(void **state) {
 }
 
 void scs6_down7_active_cc_min_speed(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -587,7 +587,7 @@ void scs6_down7_active_cc_min_speed(void **state) {
  */
 
 void scs7_example(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_desired_speed(570);
@@ -642,7 +642,7 @@ void scs7_example(void **state) {
 */
 
 void scs8_example(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_desired_speed(570);
@@ -697,7 +697,7 @@ void scs8_example(void **state) {
 */
 
 void scs9_example(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_desired_speed(570);
@@ -748,7 +748,7 @@ void scs9_example(void **state) {
  */
 
 void scs10_example(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_desired_speed(570);
@@ -797,7 +797,7 @@ void scs10_example(void **state) {
  */
 
 void scs11_up5(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -818,7 +818,7 @@ void scs11_up5(void **state) {
 }
 
 void scs11_up7(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -837,7 +837,7 @@ void scs11_up7(void **state) {
 }
 
 void scs11_down5(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -856,7 +856,7 @@ void scs11_down5(void **state) {
 }
 
 void scs11_down7(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
@@ -881,7 +881,7 @@ void scs11_down7(void **state) {
  */
 
 void scs12_lever(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_desired_speed(400);
@@ -893,7 +893,7 @@ void scs12_lever(void **state) {
 }
 
 void scs12_speed_to_zero(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_desired_speed(400);
@@ -914,7 +914,7 @@ void scs12_speed_to_zero(void **state) {
 */
 
 void scs13_forward(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -926,7 +926,7 @@ void scs13_forward(void **State) {
 }
 
 void scs13_forward_below20(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 190);
@@ -938,7 +938,7 @@ void scs13_forward_below20(void **State) {
 }
 
 void scs13_up5(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -954,7 +954,7 @@ void scs13_up5(void **State) {
 }
 
 void scs13_up7(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -970,7 +970,7 @@ void scs13_up7(void **State) {
 }
 
 void scs13_down5(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -986,7 +986,7 @@ void scs13_down5(void **State) {
 }
 
 void scs13_down7(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1002,7 +1002,7 @@ void scs13_down7(void **State) {
 }
 
 void scs13_long_up5(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1018,7 +1018,7 @@ void scs13_long_up5(void **State) {
 }
 
 void scs13_long_up7(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1034,7 +1034,7 @@ void scs13_long_up7(void **State) {
 }
 
 void scs13_long_down5(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1050,7 +1050,7 @@ void scs13_long_down5(void **State) {
 }
 
 void scs13_long_down7(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1070,7 +1070,7 @@ void scs13_long_down7(void **State) {
     activated again.
  */
 void scs16_brake(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_desired_speed(400);
@@ -1089,7 +1089,7 @@ void scs16_brake(void **State) {
  */
 
 void scs17_backward_inactive(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1101,7 +1101,7 @@ void scs17_backward_inactive(void **State) {
 }
 
 void scs17_backward_active(void **State) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 400);
@@ -1121,7 +1121,7 @@ void scs17_backward_active(void **State) {
 */
 
 void scs20_collision_ahead(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1138,7 +1138,7 @@ void scs20_collision_ahead(void **state) {
 }
 
 void scs20_collision_ahead_non_adaptive(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(simple);
@@ -1153,7 +1153,7 @@ void scs20_collision_ahead_non_adaptive(void **state) {
 }
 
 void scs20_no_collision_ahead(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1175,7 +1175,7 @@ void scs20_no_collision_ahead(void **state) {
 */
 
 void scs21_insufficient_deceleration(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1230,7 +1230,7 @@ void scs21_insufficient_deceleration(void **state) {
 }
 
 void scs21_sufficient_deceleration(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1263,7 +1263,7 @@ void scs21_sufficient_deceleration(void **state) {
     adaptive cruise control increases the speed back to 120 km/h.
  */
 void scs22_example(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1335,7 +1335,7 @@ void scs22_example(void **state) {
  */
 
 void scs23_below_20kmh_two_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1349,7 +1349,7 @@ void scs23_below_20kmh_two_secs(void **state) {
 }
 
 void scs23_below_20kmh_two_point_five_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1363,7 +1363,7 @@ void scs23_below_20kmh_two_point_five_secs(void **state) {
 }
 
 void scs23_below_20kmh_three_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1377,7 +1377,7 @@ void scs23_below_20kmh_three_secs(void **state) {
 }
 
 void scs23_below_20kmh_decelerating_two_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1392,7 +1392,7 @@ void scs23_below_20kmh_decelerating_two_secs(void **state) {
 }
 
 void scs23_below_20kmh_decelerating_two_point_five_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1407,7 +1407,7 @@ void scs23_below_20kmh_decelerating_two_point_five_secs(void **state) {
 }
 
 void scs23_below_20kmh_decelerating_three_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1422,7 +1422,7 @@ void scs23_below_20kmh_decelerating_three_secs(void **state) {
 }
 
 void scs23_below_20kmh_accelerating_two_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1437,7 +1437,7 @@ void scs23_below_20kmh_accelerating_two_secs(void **state) {
 }
 
 void scs23_below_20kmh_accelerating_two_point_five_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1452,7 +1452,7 @@ void scs23_below_20kmh_accelerating_two_point_five_secs(void **state) {
 }
 
 void scs23_below_20kmh_accelerating_three_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1475,7 +1475,7 @@ void scs23_below_20kmh_accelerating_three_secs(void **state) {
  */
 
 void scs24_20kmh_two_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1488,7 +1488,7 @@ void scs24_20kmh_two_secs(void **state) {
 }
 
 void scs24_two_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1501,7 +1501,7 @@ void scs24_two_secs(void **state) {
 }
 
 void scs24_two_point_five_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1514,7 +1514,7 @@ void scs24_two_point_five_secs(void **state) {
 }
 
 void scs24_three_secs(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1532,7 +1532,7 @@ void scs24_three_secs(void **state) {
  */
 
 void scs25_distance_is_less(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1547,7 +1547,7 @@ void scs25_distance_is_less(void **state) {
 }
 
 void scs25_distance_is_more(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1567,7 +1567,7 @@ void scs25_distance_is_more(void **state) {
 */
 
 void scs26_distance_is_less(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1582,7 +1582,7 @@ void scs26_distance_is_less(void **state) {
 }
 
 void scs26_distance_is_more(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_scs_mode(adaptive);
@@ -1603,7 +1603,7 @@ void scs26_distance_is_more(void **state) {
  */
 
 void scs27_stationary_below_60kmh(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_vehicle_speed_infront(0); // Stationary
@@ -1626,7 +1626,7 @@ void scs27_stationary_below_60kmh(void **state) {
 }
 
 void scs27_moving_below_120kmh(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     set_vehicle_speed_infront(800); // 80 km/h
@@ -1661,7 +1661,7 @@ void scs27_moving_below_120kmh(void **state) {
  */
 
 void scs28_plus_three_seconds_braking(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.
@@ -1680,7 +1680,7 @@ void scs28_plus_three_seconds_braking(void **state) {
 }
 
 void scs28_plus_one_point_five_seconds_braking(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.
@@ -1699,7 +1699,7 @@ void scs28_plus_one_point_five_seconds_braking(void **state) {
 }
 
 void scs28_plus_zero_seconds_braking(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.
@@ -1717,7 +1717,7 @@ void scs28_plus_zero_seconds_braking(void **state) {
 }
 
 void scs28_audio_warning(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0};
 
     sensor_states = start_engine_and_drive(sensor_states, 360); // 10 m/s.

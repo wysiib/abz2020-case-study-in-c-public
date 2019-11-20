@@ -27,7 +27,7 @@ void scs_do_step(void) {
 }
 
 void sequence1(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -149,7 +149,7 @@ void sequence1(void **state) {
 }
 
 void sequence2(void **state) {
-    init_system(leftHand, false, EU, true, false);
+    init_system(leftHand, false, EU, true, false, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
@@ -231,7 +231,7 @@ void sequence2(void **state) {
 
 
 void sequence3(void **state) {
-    init_system(leftHand, false, EU, false, true);
+    init_system(leftHand, false, EU, false, true, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -285,7 +285,7 @@ void sequence3(void **state) {
 }
 
 void sequence4(void **state) {
-    init_system(leftHand, false, EU, true, true);
+    init_system(leftHand, false, EU, true, true, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
 
@@ -323,7 +323,7 @@ void sequence4(void **state) {
 }
 
 void sequence5(void **state) {
-    init_system(leftHand, false, EU, true, false);
+    init_system(leftHand, false, EU, true, false, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
@@ -368,7 +368,7 @@ void sequence5(void **state) {
 }
 
 void sequence6(void **state) {
-    init_system(leftHand, false, EU, false, false);
+    init_system(leftHand, false, EU, false, false, false);
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
     sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
@@ -512,7 +512,7 @@ void sequence6(void **state) {
 }
 
 void sequence7(void **state) {
-    init_system(leftHand, false, USA, false, true);
+    init_system(leftHand, false, USA, false, true, false);
 
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
@@ -626,7 +626,7 @@ void sequence7(void **state) {
 }
 
 void sequence8(void **state) {
-    init_system(leftHand, false, USA, false, false);
+    init_system(leftHand, false, USA, false, false, false);
 
     sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
 
@@ -672,6 +672,35 @@ void sequence8(void **state) {
     assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0}));
 
 }
+
+void sequence9(void **state) {
+    init_system(leftHand, false, EU, false, false, true);
+
+    sensors_and_time sensor_states = {0}; // TODO: maybe not a TODO
+
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, 135);
+    sensor_states = update_sensors(sensor_states, sensorAllDoorsClosed, 1);
+    sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    sensor_states = update_sensors(sensor_states, sensorTime, 2000);
+    sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+
+    set_light_rotary_switch(lrs_auto);
+    set_light_rotary_switch(lrs_on);
+    sensor_states = update_sensors(sensor_states, sensorTime, 4000);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 1, 7, 100, 0, 0, 0}));
+
+    pitman_vertical(pa_Backward);
+    sensor_states = update_sensors(sensor_states, sensorTime, 6000);
+    mock_and_execute(sensor_states);
+    assert_light_state(((light_state) {0, 0, 0, 100, 100, 100, 100, 1, 7, 100, 0, 0, 0}));
+}
+
 int main(int argc, char* argv[]) {
     // please please remember to reset state
     const UnitTest tests[] = {
@@ -683,6 +712,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(sequence6, reset, reset),
         unit_test_setup_teardown(sequence7, reset, reset),
         unit_test_setup_teardown(sequence8, reset, reset),
+        unit_test_setup_teardown(sequence9, reset, reset),
     };
     run_tests(tests);
     return 0;

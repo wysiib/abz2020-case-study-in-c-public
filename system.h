@@ -23,11 +23,12 @@ typedef struct init{
     marketCode market_code;
     bool ambient_light;
     bool daytime_running_light;
+    bool adaptive_high_beam;
 }init;
 
 void init_system_v2(init i);
 
-void init_system(driverPosition pos, bool armored_vehicle, marketCode code, bool ambient_light, bool daytime_running_light);
+void init_system(driverPosition pos, bool armored_vehicle, marketCode code, bool ambient_light, bool daytime_running_light, bool adaptive_high_beam);
 
 driverPosition get_driver_position(void);
 
