@@ -58,6 +58,8 @@ typedef struct sensors_and_time {
     rangeRadar range_radar_distance;
 } sensors_and_time;
 
+bool sensors_and_time_equal(sensors_and_time s1, sensors_and_time s2);
+
 sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
                                 int value);
 
@@ -82,4 +84,8 @@ void mock_and_execute(sensors_and_time data);
 #define progress_time_partial3(start, end, field1, value1, field2, value2, field3, value3) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state3(field1, value1, field2, value2, field3, value3); } }
 #define progress_time_partial4(start, end, field1, value1, field2, value2, field3, value3, field4, value4) { size_t time; for (time = start; time <= end; time++) { sensor_states = update_sensors(sensor_states, sensorTime, time); mock_and_execute(sensor_states); assert_partial_state4(field1, value1, field2, value2, field3, value3, field4, value4); } }
 
+#endif
+
+#if vis
+void print_and_reset();
 #endif

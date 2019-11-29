@@ -26,7 +26,6 @@ void scs_do_step(void) {
     // which does not really make sense for a common test suit usable by
     // any subsystem. 🤷‍
 }
-
 void els1_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -2366,9 +2365,23 @@ void els49b(void **state) {
     progress_time_partial1(3000, 6000, highBeamOn, false);
 }
 
+#if vis
+void vis_reset(void** state){
+    reset(state);
+    print_and_reset();
+}
+#endif
 
 int main(int argc, char* argv[]) {
     // please please remember to reset state
+    #if vis
+        const UnitTest vistest[] = {
+            unit_test_setup_teardown(els18c, vis_reset, vis_reset)
+        };
+        run_tests(vistest);
+        return 0;
+    #endif
+
     const UnitTest tests[] = {
         unit_test_setup_teardown(els1_left, reset, reset),
         unit_test_setup_teardown(els1_right, reset, reset),

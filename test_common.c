@@ -16,6 +16,16 @@
 #include "cruise-control/sensors.h"
 
 #include "test_common.h"
+#define vis 1
+#if vis
+    #include "stdio.h"
+    #include "vis.h"
+    static int mock_count = 0;
+    static statenode head = {0};
+    static statenode* latest = &head;
+
+    static sensors_and_time init_sensor_state;
+#endif
 
 brightness get_brightness(void) {
     return (brightness) mock();
@@ -129,6 +139,23 @@ sensors_and_time update_sensors(sensors_and_time data, sensors_and_time_key key,
     return data;
 }
 
+bool sensors_and_time_equal(sensors_and_time s1, sensors_and_time s2){
+    return
+    s1.time == s2.time &&
+    s1.engine_on == s2.engine_on &&
+    s1.key_state == s2.key_state &&
+    s1.camera_state == s2.camera_state &&
+    s1.reverse_gear == s2.reverse_gear &&
+    s1.current_speed == s2.current_speed &&
+    s1.steering_angle == s2.steering_angle &&
+    s1.voltage_battery == s2.voltage_battery &&
+    s1.all_doors_closed == s2.all_doors_closed &&
+    s1.oncomming_trafic == s2.oncomming_trafic &&
+    s1.brightness_sensor == s2.brightness_sensor &&
+    s1.range_radar_state == s2.range_radar_state &&
+    s1.range_radar_distance == s2.range_radar_distance;
+}
+
 void mock_all_sensors(sensors_and_time data) {
     will_return(get_brightness, data.brightness_sensor);
     will_return(get_time, data.time);
@@ -145,8 +172,151 @@ void mock_all_sensors(sensors_and_time data) {
     will_return(read_range_radar_sensor, data.range_radar_distance);
 }
 
+#if vis
+scs_state get_scs_state(){
+    scs_state s = {0};
+    return s;
+}
+#endif
+
 void mock_and_execute(sensors_and_time data) {
     mock_all_sensors(data);
     light_do_step();
     scs_do_step();
+    #if vis
+        if(mock_count == 0){
+            head.light_state = get_light_state();
+            head.scs_state = get_scs_state();
+            char* namebuf = malloc(128);
+            sprintf(namebuf,"State%d",mock_count);
+            head.name = namebuf;
+            mock_count++;
+
+            init_sensor_state = data;
+            head.prev.sensors_and_time = data;
+            head.prev.name = "InitialSensorState";
+
+            return;
+        }
+        light_state light_state = get_light_state();
+        scs_state scs_state = get_scs_state();
+
+            sensors_and_time in_sensors_without_time = data;
+            in_sensors_without_time.time = 0;
+            sensors_and_time old_sensors_without_time = latest->prev.sensors_and_time;
+            old_sensors_without_time.time = 0;
+
+        if(sensors_and_time_equal(in_sensors_without_time,old_sensors_without_time) &&
+           light_state_equal(light_state,latest->light_state) &&
+           scs_state_equals(scs_state,latest->scs_state)){
+            return;
+        }
+        statenode* new_statenode = malloc(sizeof (statenode));
+        new_statenode->light_state = light_state;
+        new_statenode->scs_state = scs_state;
+        char* namebuf = malloc(128);
+        sprintf(namebuf,"State%d",mock_count);
+        new_statenode->name = namebuf;
+
+        char* transition_name_buf = malloc(128);
+        sprintf(transition_name_buf,"%dTo%d",mock_count-1,mock_count);
+
+        new_statenode->prev = (transition){transition_name_buf,data,latest,new_statenode};
+        latest->succ = new_statenode->prev;
+
+        mock_count++;
+
+        latest = new_statenode;
+
+    #endif
 }
+
+#if vis
+
+    void print_els_visualization(){
+        statenode* node = &head;
+        char* init_sensors_str = emit_sensor_state_str(head.prev);
+        printf("@startuml\n");
+        printf("%s\n",init_sensors_str);
+        printf("%s --> %s : read init sensor state\n",head.prev.name,head.name);
+        while(node != NULL){
+            char* light = emit_light_state_str(*node);
+            printf("%s\n\n",light);
+            if(node->succ.to != NULL){
+                char* sensors_str = emit_sensor_state_str(node->succ);
+                printf("%s --> %s : sensor change\n",node->succ.from->name,node->succ.name);
+
+                printf("\n%s\n",sensors_str);
+
+                printf("%s --> %s : sensor read\n",node->succ.name,node->succ.to->name);
+                printf("%s --> %s : state change\n",node->succ.from->name,node->succ.to->name);
+            }
+            node = node->succ.to;
+        }
+        printf("\n@enduml\n");
+    }
+    void print_els_visualization_v2(){
+        statenode* node = &head;
+
+
+        printf("@startuml\n");
+        printf("[*] --> %s : init\n",node->name);
+        while(node != NULL){
+            printf("state %s{\n",node->name);
+
+            if(node->prev.name == NULL){
+                printf("previous name not set. skipping...\n");
+                return;
+            }
+
+            char* old_prev_name = node->prev.name;
+            char* new_prev_name = calloc(128,sizeof(char));
+            strcat(new_prev_name,"SensorS");
+            strcat(new_prev_name,node->name+1);
+            node->prev.name = new_prev_name;
+            char* sensors_str = emit_sensor_state_str(node->prev);
+            printf("state %s{\n%s\n}\n",node->prev.name,sensors_str);
+
+
+
+            char* old_node_name = node->name;
+            char* new_node_name = calloc(128,sizeof(char));
+            strcat(new_node_name,"LightS");
+            strcat(new_node_name,node->name+1);
+            node->name=new_node_name;
+            char* light = emit_light_state_str(*node);
+            printf("state %s{\n%s\n}\n",node->name,light);
+
+
+            printf("%s -right-> %s : causes\n",node->prev.name,node->name);
+
+            printf("\n}\n");
+
+            node->name = old_node_name;
+            free(new_node_name);
+
+            node->prev.name = old_prev_name;
+            free(new_prev_name);
+
+
+            if(node->succ.to != NULL){
+                printf("%s --> %s : state change diff\n",node->succ.from->name,node->succ.to->name);
+            }
+
+            /* This arrow makes plantuml layout the whole diagram in questionable fashion.
+            if(node->prev.from != NULL){
+                printf("Light%s --> Light%s \n",node->prev.from->name,node->name);
+            }
+            */
+            node = node->succ.to;
+        }
+        printf("\n@enduml\n");
+    }
+
+    void print_and_reset(){
+        print_els_visualization_v2();
+        //just leak memory. The output string buffers shouldn't be to big to be an issue.
+        statenode empty = {0};
+        head = empty;
+    }
+#endif

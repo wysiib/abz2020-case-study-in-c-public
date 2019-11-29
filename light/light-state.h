@@ -24,6 +24,8 @@ typedef struct light_state {
 
 light_state get_light_state(void);
 
+bool light_state_equal(light_state s1, light_state s2);
+
 void reset_lights(void);
 
 #endif

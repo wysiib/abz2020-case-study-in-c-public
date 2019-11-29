@@ -70,3 +70,19 @@ void reset_lights(void) {
     state.corneringLightRight = 0;
     state.reverseLight = 0;
 }
+
+bool light_state_equal(light_state s1, light_state s2){
+    return
+    s1.brakeLight == s2.brakeLight &&
+    s1.blinkLeft == s2.blinkLeft &&
+    s1.blinkRight == s2.blinkRight &&
+    s1.lowBeamLeft == s2.lowBeamLeft &&
+    s1.lowBeamRight == s2.lowBeamRight &&
+    s1.tailLampLeft == s2.tailLampLeft &&
+    s1.tailLampRight == s2.tailLampRight &&
+    s1.highBeamOn == s2.highBeamOn &&
+    s1.highBeamMotor == s2.highBeamMotor &&
+    s1.highBeamRange == s2.highBeamRange &&
+    s1.corneringLightLeft == s2.corneringLightLeft &&
+    s1.corneringLightRight == s2.corneringLightRight ;
+}

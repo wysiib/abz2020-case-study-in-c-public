@@ -56,6 +56,36 @@ typedef struct {
     bool brake_warning_playing; // SCS-28
 } scs_state;
 
+bool scs_state_equals(scs_state s1, scs_state s2){
+    return
+    s1.cruise_control_active == s2.cruise_control_active &&
+    s1.desired_speed == s2.desired_speed &&
+    s1.has_previous_desired_speed == s2.has_previous_desired_speed &&
+    s1.previous_desired_speed == s2.previous_desired_speed &&
+    s1.target_speed == s2.target_speed &&
+    s1.current_speed == s2.current_speed &&
+    s1.acceleration == s2.acceleration &&
+    s1.lever_pos == s2.lever_pos &&
+    s1.lever_prev_pos == s2.lever_prev_pos &&
+    s1.lever_last_tic == s2.lever_last_tic &&
+    s1.lever_release_processed == s2.lever_release_processed &&
+    s1.lever_continuous == s2.lever_continuous &&
+    s1.vehicle_speed_infront == s2.vehicle_speed_infront &&
+    s1.vehicle_acceleration_infront == s2.vehicle_acceleration_infront &&
+    s1.safety_dist == s2.safety_dist &&
+    s1.safety_dist_time == s2.safety_dist_time &&
+    s1.visual_warning_on == s2.visual_warning_on &&
+
+    s1.acoustic_warning.is_on == s2.acoustic_warning.is_on &&
+    s1.acoustic_warning.start_time == s2.acoustic_warning.start_time &&
+    s1.acoustic_warning.playing_sound == s2.acoustic_warning.playing_sound &&
+    s1.acoustic_warning.started_playing == s2.acoustic_warning.started_playing &&
+
+    s1.brake_assistant_available == s2.brake_assistant_available &&
+    s1.brake_pressure == s2.brake_pressure &&
+    s1.brake_warning_playing == s2.brake_warning_playing;
+}
+
 scs_state get_scs_state(void);
 
 /** Zeroes the SCS state. */
