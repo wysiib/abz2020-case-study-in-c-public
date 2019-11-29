@@ -205,4 +205,9 @@ void start_acoustic_brake_warning(size_t start_time);
 
 void reset_acoustic_brake_warning(void);
 
+
+
+// unsorted
+void reset_acoustic_signal(void);
+
 #endif
