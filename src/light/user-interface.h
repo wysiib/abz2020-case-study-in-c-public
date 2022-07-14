@@ -12,7 +12,7 @@ typedef enum {pa_fb_Neutral, pa_Backward, pa_Forward} pitmanArmForthBack;
 void reset_user_interface(void);
 
 void set_light_rotary_switch(lightRotarySwitch val);
-lightRotarySwitch get_light_rotary_switch(void);
+lightRotarySwitch nondet_get_light_rotary_switch(void);
 
 // trigger direction indicator (which one: unspecified so far)
 // temporary activation: 5-7 degree
@@ -21,17 +21,17 @@ void pitman_vertical(pitmanArmUpDown deflection);
 
 // change boolean value
 void toggle_hazard_warning(void);
-bool get_hazard_warning(void);
+bool nondet_get_hazard_warning(void);
 
 // change boolean value, armoured vehicle only
 void toggle_darkness_mode(void);
-bool get_darkness_mode(void);
+bool nondet_get_darkness_mode(void);
 
-pitmanArmUpDown get_pitman_vertical(void);
+pitmanArmUpDown nondet_get_pitman_vertical(void);
 
 void pitman_horizontal(pitmanArmForthBack deflection);
 
-pitmanArmForthBack get_pitman_horizontal(void);
+pitmanArmForthBack nondet_get_pitman_horizontal(void);
 
 
 #endif

@@ -27,55 +27,55 @@
     static sensors_and_time init_sensor_state;
 #endif
 
-brightness get_brightness(void) {
+brightness nondet_get_brightness(void) {
     return (brightness) mock();
 }
 
-keyState get_key_status(void) {
+keyState nondet_get_key_status(void) {
     return (keyState) mock();
 }
 
-bool get_engine_status(void) {
+bool nondet_get_engine_status(void) {
     return (bool) mock();
 }
 
-bool get_all_doors_closed(void) {
+bool nondet_get_all_doors_closed(void) {
     return (bool) mock();
 }
 
-bool get_reverse_gear(void) {
+bool nondet_get_reverse_gear(void) {
     return (bool) mock();
 }
 
-voltage get_voltage_battery(void) {
+voltage nondet_get_voltage_battery(void) {
     return (voltage) mock();
 }
 
-steeringAngle get_steering_angle(void) {
+steeringAngle nondet_get_steering_angle(void) {
     return (steeringAngle) mock();
 }
 
-bool get_oncoming_traffic(void) {
+bool nondet_get_oncoming_traffic(void) {
     return (bool) mock();
 }
 
-size_t get_time(void) {
+size_t nondet_get_time(void) {
     return (size_t) mock();
 }
 
-sensorState get_camera_state(void) {
+sensorState nondet_get_camera_state(void) {
     return (sensorState) mock();
 }
 
-vehicleSpeed get_current_speed(void) {
+vehicleSpeed nondet_get_current_speed(void) {
     return (vehicleSpeed) mock();
 }
 
-sensorState get_range_radar_state(void) {
+sensorState nondet_get_range_radar_state(void) {
     return (sensorState) mock();
 }
 
-rangeRadar read_range_radar_sensor(void) {
+rangeRadar nondet_read_range_radar_sensor(void) {
     return (rangeRadar) mock();
 }
 
@@ -157,19 +157,19 @@ bool sensors_and_time_equal(sensors_and_time s1, sensors_and_time s2){
 }
 
 void mock_all_sensors(sensors_and_time data) {
-    will_return(get_brightness, data.brightness_sensor);
-    will_return(get_time, data.time);
-    will_return(get_key_status, data.key_state);
-    will_return(get_engine_status, data.engine_on);
-    will_return(get_all_doors_closed, data.all_doors_closed);
-    will_return(get_reverse_gear, data.reverse_gear);
-    will_return(get_voltage_battery, data.voltage_battery);
-    will_return(get_steering_angle, data.steering_angle);
-    will_return(get_oncoming_traffic, data.oncomming_trafic);
-    will_return(get_camera_state, data.camera_state);
-    will_return(get_current_speed, data.current_speed);
-    will_return(get_range_radar_state, data.range_radar_state);
-    will_return(read_range_radar_sensor, data.range_radar_distance);
+    will_return(nondet_get_brightness, data.brightness_sensor);
+    will_return(nondet_get_time, data.time);
+    will_return(nondet_get_key_status, data.key_state);
+    will_return(nondet_get_engine_status, data.engine_on);
+    will_return(nondet_get_all_doors_closed, data.all_doors_closed);
+    will_return(nondet_get_reverse_gear, data.reverse_gear);
+    will_return(nondet_get_voltage_battery, data.voltage_battery);
+    will_return(nondet_get_steering_angle, data.steering_angle);
+    will_return(nondet_get_oncoming_traffic, data.oncomming_trafic);
+    will_return(nondet_get_camera_state, data.camera_state);
+    will_return(nondet_get_current_speed, data.current_speed);
+    will_return(nondet_get_range_radar_state, data.range_radar_state);
+    will_return(nondet_read_range_radar_sensor, data.range_radar_distance);
 }
 
 #if vis
@@ -181,7 +181,8 @@ scs_state get_scs_state(){
 
 void mock_and_execute(sensors_and_time data) {
     mock_all_sensors(data);
-    light_do_step();
+    light_do_step(nondet_sys_get_driver_position(), nondet_sys_is_armoured_vehicle(),
+            nondet_sys_get_market_code(), nondet_sys_get_ambient_light(), nondet_sys_get_daytime_running_light());
     scs_do_step();
     #if vis
         if(mock_count == 0){
@@ -207,8 +208,8 @@ void mock_and_execute(sensors_and_time data) {
             old_sensors_without_time.time = 0;
 
         if(sensors_and_time_equal(in_sensors_without_time,old_sensors_without_time) &&
-           light_state_equal(light_state,latest->light_state) &&
-           scs_state_equals(scs_state,latest->scs_state)){
+           light_state_equal(light_state,latest->light_state) /* &&
+           scs_state_equals(scs_state,latest->scs_state) */ ){
             return;
         }
         statenode* new_statenode = malloc(sizeof (statenode));

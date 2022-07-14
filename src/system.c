@@ -2,6 +2,7 @@
 
 #include "system.h"
 
+
 static driverPosition pos;
 static bool armoured;
 static marketCode code;
@@ -25,27 +26,27 @@ void init_system(driverPosition apos, bool av, marketCode acode, bool ambient_li
     initialised = true;
 }
 
-driverPosition get_driver_position(void) {
+driverPosition nondet_sys_get_driver_position(void) {
     assert(initialised);
     return pos;
 }
 
-bool is_armoured_vehicle(void) {
+bool nondet_sys_is_armoured_vehicle(void) {
     assert(initialised);
     return armoured;
 }
 
-marketCode get_market_code(void) {
+marketCode nondet_sys_get_market_code(void) {
     assert(initialised);
     return code;
 }
 
-bool get_ambient_light(void) {
+bool nondet_sys_get_ambient_light(void) {
     assert(initialised);
     return ambi_light;
 }
 
-bool get_daytime_running_light(void) {
+bool nondet_sys_get_daytime_running_light(void) {
     assert(initialised);
     return daytime_light;
 }

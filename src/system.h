@@ -29,15 +29,15 @@ void init_system_v2(init i);
 
 void init_system(driverPosition pos, bool armored_vehicle, marketCode code, bool ambient_light, bool daytime_running_light);
 
-driverPosition get_driver_position(void);
+driverPosition nondet_sys_get_driver_position(void);
 
-bool is_armoured_vehicle(void);
+bool nondet_sys_is_armoured_vehicle(void);
 
-marketCode get_market_code(void);
+marketCode nondet_sys_get_market_code(void);
 
-bool get_daytime_running_light(void);
+bool nondet_sys_get_daytime_running_light(void);
 
-bool get_ambient_light(void);
+bool nondet_sys_get_ambient_light(void);
 
 // for cmbc assertions
 #define implies(x,y) ((!(x)) || (y))

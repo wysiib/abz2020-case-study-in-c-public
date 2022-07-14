@@ -232,16 +232,16 @@ void scs_do_step(void) {
     size_t time = get_time();
 
     // Mock calls are required.
-    (void)get_brightness();
-    (void)get_key_status();
-    (void)get_all_doors_closed();
-    (void)get_reverse_gear();
-    (void)get_voltage_battery();
-    (void)get_steering_angle();
-    (void)get_oncoming_traffic();
-    (void)get_camera_state();
+    (void)nondet_get_brightness();
+    (void)nondet_get_key_status();
+    (void)nondet_get_all_doors_closed();
+    (void)nondet_get_reverse_gear();
+    (void)nondet_get_voltage_battery();
+    (void)nondet_get_steering_angle();
+    (void)nondet_get_oncoming_traffic();
+    (void)nondet_get_camera_state();
 
-    int engine_on = get_engine_status();
+    bool engine_on = nondet_get_engine_status();
     if (!engine_on) {
         // Engine was turned off, SCS-1 requires the prev. desired speed to reset
         reset_prev_desired_speed();
@@ -249,7 +249,7 @@ void scs_do_step(void) {
     }
 
     // Note: Speed not actually a sensor in SCS specification.
-    vehicleSpeed current_speed = get_current_speed();
+    vehicleSpeed current_speed = nondet_get_current_speed();
     set_current_speed(current_speed);
 
     scs_state last_scs = get_scs_state();
@@ -292,7 +292,7 @@ void scs_do_step(void) {
     }
 
     // Check distance and adjust target speed.
-    (void)get_range_radar_state();
+    (void)nondet_get_range_radar_state();
     rangeRadar collision_dist = read_range_radar_sensor();
     if (last_scs.mode == adaptive) {
         if ((collision_dist >= distance_min) && (collision_dist <= distance_max)) {

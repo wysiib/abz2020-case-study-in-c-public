@@ -11,18 +11,18 @@ typedef enum {
     faulty = 255
 } rangeRadar;
 
-extern keyState get_key_status(void);
+extern keyState nondet_get_key_status(void);
 
-extern bool get_engine_status(void);
+extern bool nondet_get_engine_status(void);
 
-extern Pedal get_brake_pedal_deflection(void);
+extern Pedal nondet_get_brake_pedal_deflection(void);
 
-sensorState get_range_radar_state(void);
+sensorState nondet_get_range_radar_state(void);
 
-rangeRadar read_range_radar_sensor(void);
+rangeRadar nondet_read_range_radar_sensor(void);
 
 // Note: Below are sensors we assume to exists, which however are not specified
 // in Section 5 of the case study description as of version 1.9.
-vehicleSpeed get_current_speed(void);
+vehicleSpeed nondet_get_current_speed(void);
 
 #endif

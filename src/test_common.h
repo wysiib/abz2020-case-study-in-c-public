@@ -8,23 +8,23 @@
 
 #include "cruise-control/sensors.h"
 
-brightness get_brightness(void);
+brightness nondet_get_brightness(void);
 
-keyState get_key_status(void);
+keyState nondet_get_key_status(void);
 
-bool get_engine_status(void);
+bool nondet_get_engine_status(void);
 
-bool get_all_doors_closed(void);
+bool nondet_get_all_doors_closed(void);
 
-bool get_reverse_gear(void);
+bool nondet_get_reverse_gear(void);
 
-voltage get_voltage_battery(void);
+voltage nondet_get_voltage_battery(void);
 
-steeringAngle get_steering_angle(void);
+steeringAngle nondet_get_steering_angle(void);
 
-bool get_oncoming_traffic(void);
+bool nondet_get_oncoming_traffic(void);
 
-size_t get_time(void);
+size_t nondet_get_time(void);
 
 typedef enum sensors_and_time_key {
     sensorKeyState,

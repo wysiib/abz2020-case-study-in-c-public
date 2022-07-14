@@ -26,6 +26,11 @@ void scs_do_step(void) {
     // which does not really make sense for a common test suit usable by
     // any subsystem. 🤷‍
 }
+
+static voltage volt(int num) {
+    return num * 10;
+}
+
 void els1_left(void **state) {
     init_system(leftHand, false, EU, false, false);
     sensors_and_time sensor_states = {0};
@@ -1462,6 +1467,8 @@ void els24_left(void **state) {
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
 
@@ -1486,6 +1493,7 @@ void els24_left(void **state) {
 
     sensor_states = update_sensors(sensor_states, sensorTime, 7501); // gentle fade-out
     mock_and_execute(sensor_states);
+
     assert_partial_state2(corneringLightLeft, 49, corneringLightRight, 0); // FIXME: or 50?
 
     sensor_states = update_sensors(sensor_states, sensorTime, 8000);
@@ -1503,6 +1511,8 @@ void els24_right(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1545,6 +1555,8 @@ void els25_left(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1572,6 +1584,8 @@ void els25_right(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1599,6 +1613,8 @@ void els26_left(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1641,6 +1657,8 @@ void els26_right(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1684,6 +1702,8 @@ void els27_left_a(void **state) {
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1727,6 +1747,8 @@ void els27_right_a(void **state) {
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1770,6 +1792,8 @@ void els27_left_b(void **state) {
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1813,6 +1837,8 @@ void els27_right_b(void **state) {
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
     sensor_states = update_sensors(sensor_states, sensorEngineOn, 1);
+    sensor_states = update_sensors(sensor_states, sensorSteeringAngle, st_neutral);
+    sensor_states = update_sensors(sensor_states, sensorVoltageBattery, volt(9));
     sensor_states = update_sensors(sensor_states, sensorReverseGear, 1);
     sensor_states = update_sensors(sensor_states, sensorCurrentSpeed, 50); // less than 10 km/h
     //mock_and_execute(sensor_states);
@@ -1911,6 +1937,7 @@ void els31(void **state) {
     sensor_states = update_sensors(sensor_states, sensorTime, 1000);
     sensor_states = update_sensors(sensor_states, sensorBrightnessSensor, 500);
     sensor_states = update_sensors(sensor_states, sensorKeyState, KeyInIgnitionOnPosition);
+    sensor_states = update_sensors(sensor_states, sensorEngineOn, true);
     mock_and_execute(sensor_states);
 
     set_light_rotary_switch(lrs_auto);
@@ -2155,10 +2182,6 @@ void els41(void **state) {
     mock_and_execute(sensor_states);
 
     progress_time_partial1(3000, 6000, reverseLight, 0);
-}
-
-static voltage volt(int num) {
-    return num * 10;
 }
 
 void els42(void **state) {

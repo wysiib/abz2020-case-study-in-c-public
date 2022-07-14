@@ -4,7 +4,7 @@
 
 #include "user-interface.h"
 
-static lightRotarySwitch lrs_state = 0;
+static lightRotarySwitch lrs_state = lrs_off;
 static pitmanArmUpDown pacman_vertical = pa_ud_Neutral;
 static pitmanArmForthBack pacman_horizontal = pa_fb_Neutral;
 static bool darkness_mode = false;
@@ -23,7 +23,7 @@ void set_light_rotary_switch(lightRotarySwitch val) {
     lrs_state = val;
 }
 
-lightRotarySwitch get_light_rotary_switch(void) {
+lightRotarySwitch nondet_get_light_rotary_switch(void) {
     return lrs_state;
 }
 
@@ -31,7 +31,7 @@ void pitman_vertical(pitmanArmUpDown deflection) {
     pacman_vertical = deflection;
 }
 
-pitmanArmUpDown get_pitman_vertical(void) {
+pitmanArmUpDown nondet_get_pitman_vertical(void) {
     return pacman_vertical;
 }
 
@@ -39,7 +39,7 @@ void toggle_hazard_warning(void) {
     hazard_warning = !hazard_warning;
 }
 
-bool get_hazard_warning(void) {
+bool nondet_get_hazard_warning(void) {
     return hazard_warning;
 }
 
@@ -47,7 +47,7 @@ void pitman_horizontal(pitmanArmForthBack deflection) {
     pacman_horizontal = deflection;
 }
 
-pitmanArmForthBack get_pitman_horizontal(void) {
+pitmanArmForthBack nondet_get_pitman_horizontal(void) {
     return pacman_horizontal;
 }
 
@@ -55,6 +55,6 @@ void toggle_darkness_mode(void) {
     darkness_mode = !darkness_mode;
 }
 
-bool get_darkness_mode(void) {
+bool nondet_get_darkness_mode(void) {
     return darkness_mode;
 }
